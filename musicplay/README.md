@@ -7,5 +7,5 @@ A React Native (Expo) mobile app starter template to get you up and running easy
 yarn install
 
 # Start the App
-yarn ios
+yarn android
 ```
