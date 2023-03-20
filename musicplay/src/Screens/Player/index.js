@@ -15,9 +15,11 @@ const Player = ({ navigation, route }) => {
     const [sliderValue, setSliderValue] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
+    const [isReadyToSpin, setIsReadyToSpin] = useState(false);
 
     const spinValue = useRef(new Animated.Value(0)).current;
-
+    
+    // Load nhạc
     async function loadSound() {
         console.log('Loading Sound');
         const { sound } = await Audio.Sound.createAsync( require('Assets/audio/13.mp3')
@@ -25,43 +27,37 @@ const Player = ({ navigation, route }) => {
         setSound(sound);
         console.log('Loaded Sound');
       }
-
+    
+    // Khởi động component
     useEffect(() => {
         let { selectedMusic } = route.params;
         setSelectedMusic(selectedMusic);
-
-        // Load nhạc
         loadSound();
-        
+        setIsReadyToSpin(true);
     }, []);
 
     // Cập nhật vị trí chấm trên thanh slider
     useEffect(() => {
         let interval;
         if (isPlaying && sound) {
-            spinAnimation();
             interval = setInterval(async () => {
                 const status = await sound.getStatusAsync();
                 setCurrentTime(status.positionMillis);
                 setDuration(status.durationMillis);
                 setSliderValue(status.positionMillis / status.durationMillis);
             }, 1000);
-        } else spinValue.stopAnimation();
+        }
         return () => clearInterval(interval);
     }, [isPlaying, sound]);
 
-    // useEffect(() => {
-    //     if (isPlaying) {
-    //         Animated.timing(spinValue, {
-    //             toValue: 1,
-    //             duration: 6000,
-    //             easing: Easing.linear,
-    //             useNativeDriver: true,
-    //         }).start(() => spinValue.setValue(0));
-    //     } else {
-    //         spinValue.stopAnimation();
-    //     }
-    // }, [isPlaying]);
+    // Khởi động vòng đĩa quay
+    useEffect(() => {
+        if (isReadyToSpin) {
+            spinAnimation();
+        } else {
+            spinValue.stopAnimation();
+        }
+    }, [isReadyToSpin]);
 
     // Phát nhạc đoạn ấn vào trên thanh slider
     const handleSlidingComplete = async (value) => {
@@ -95,11 +91,13 @@ const Player = ({ navigation, route }) => {
         return `${minutes}:${seconds.toString().padStart(2, '0')}`;
     };
 
+    // Thiết lập giá trị vòng quay
     const spin = spinValue.interpolate({
         inputRange: [0, 1],
         outputRange: ['0deg', '360deg'],
     });
-
+    
+    // Tạo hoạt ảnh quay
     const spinAnimation = () => {
         Animated.timing(spinValue, {
             toValue: 1,
@@ -134,7 +132,7 @@ const Player = ({ navigation, route }) => {
                     width: 214,
                     height: 214,
                     borderRadius: 214/2,
-                    // transform: [{ rotate: spin }]
+                    transform: [{ rotate: spin }]
                 }}/>
                 <View style={{
                     marginTop:16,
