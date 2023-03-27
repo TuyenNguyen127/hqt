@@ -16,17 +16,23 @@ const Player = ({ navigation, route }) => {
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [isReadyToSpin, setIsReadyToSpin] = useState(false);
+    const [isSliding, setIsSliding] = useState(false);
 
     const spinValue = useRef(new Animated.Value(0)).current;
     
     // Load nhạc
     async function loadSound() {
-        console.log('Loading Sound');
-        const { sound } = await Audio.Sound.createAsync( require('Assets/audio/13.mp3')
-        );
-        setSound(sound);
-        console.log('Loaded Sound');
-      }
+        try {
+            console.log('Loading Sound');
+            const { sound } = await Audio.Sound.createAsync(
+                require('Assets/audio/13.mp3')
+            );
+            setSound(sound);
+            console.log('Loaded Sound');
+        } catch (error) {
+            console.error(error);
+        }
+    }
     
     // Khởi động component
     useEffect(() => {
@@ -39,16 +45,16 @@ const Player = ({ navigation, route }) => {
     // Cập nhật vị trí chấm trên thanh slider
     useEffect(() => {
         let interval;
-        if (isPlaying && sound) {
+        if (sound && !isSliding) {
             interval = setInterval(async () => {
                 const status = await sound.getStatusAsync();
                 setCurrentTime(status.positionMillis);
                 setDuration(status.durationMillis);
                 setSliderValue(status.positionMillis / status.durationMillis);
-            }, 1000);
+            }, 300);
         }
         return () => clearInterval(interval);
-    }, [isPlaying, sound]);
+    }, [sound, isSliding]);
 
     // Khởi động vòng đĩa quay
     useEffect(() => {
@@ -61,6 +67,7 @@ const Player = ({ navigation, route }) => {
 
     // Phát nhạc đoạn ấn vào trên thanh slider
     const handleSlidingComplete = async (value) => {
+        setIsSliding(false)
         if (sound) {
             const status = await sound.getStatusAsync();
             const newPosition = value * status.durationMillis;
@@ -101,7 +108,7 @@ const Player = ({ navigation, route }) => {
     const spinAnimation = () => {
         Animated.timing(spinValue, {
             toValue: 1,
-            duration: 6000,
+            duration: 50000,
             easing: Easing.linear,
             useNativeDriver: true,
         }).start(() => {
@@ -150,6 +157,7 @@ const Player = ({ navigation, route }) => {
                     minimumValue={0}
                     maximumValue={1}
                     value={sliderValue}
+                    onSlidingStart={() => setIsSliding(true)}
                     onValueChange={(value) => setSliderValue(value)}
                     onSlidingComplete={handleSlidingComplete}
                     minimumTrackTintColor={Colors.primary}
@@ -226,12 +234,6 @@ const ControlSection = styled.View`
     margin: 32px 24px;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
-`;
-
-const LyricSetion = styled.View`
-    margin: 14px 0px;
-    justify-content: center;
     align-items: center;
 `;
 

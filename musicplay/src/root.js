@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
+import {AppearanceProvider} from 'react-native-appearance';
 import * as Font from 'expo-font';
 
 import {AppNavigator} from 'Navigation'; 
-import ThemeManager from 'Themes';
 import { Fonts } from 'Constants';
 
 const App = ({ params }) => {
@@ -20,9 +20,9 @@ const App = ({ params }) => {
     });
 
   return assetsLoaded ? (
-    <ThemeManager>
+    <AppearanceProvider>
       <AppNavigator />
-    </ThemeManager>
+    </AppearanceProvider>
   ) : (
     <ActivityIndicator size="small"></ActivityIndicator>
   );
