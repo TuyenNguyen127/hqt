@@ -3,7 +3,6 @@
  */
 
 const home = require('Assets/images/home.png');
-const profile = require('Assets/images/profile.png');
 
 const find = require('Assets/images/find.png');
 const stop = require('Assets/images/stop.png');
@@ -21,7 +20,9 @@ const left = require('Assets/images/left.png');
 const up = require('Assets/images/up.png');
 const right_arrow = require('Assets/images/right_arrow.png');
 const thumb = require('Assets/images/thumb.png');
-
+const profile = require('Assets/images/Account.png');
+const bell = require('Assets/images/Bell.png');
+const bellnt = require('Assets/images/Bellnt.png');
 /** 
  * export the images object
  */
@@ -43,5 +44,8 @@ export default {
   left,
   up,
   right_arrow,
-  thumb
+  thumb,
+  profile,
+  bell,
+  bellnt
 };

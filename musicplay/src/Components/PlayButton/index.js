@@ -1,5 +1,4 @@
 import React from "react";
-import { Text, View } from "react-native";
 import styled from "styled-components";
 import { LinearGradient } from "expo-linear-gradient";
 import McImage from "../McImage";

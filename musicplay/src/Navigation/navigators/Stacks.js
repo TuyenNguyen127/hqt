@@ -7,7 +7,7 @@ import { Home, Profile, Onboarding, Library, Player} from 'Screens';
 const Stack = createStackNavigator();
 
 const Stacks = ({ params }) => (
-  <Stack.Navigator initialRouteName="Onboarding">
+  <Stack.Navigator initialRouteName="Home">
     <Stack.Screen
       name="Home"
       component={Home}

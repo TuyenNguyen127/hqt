@@ -10,7 +10,6 @@ module.exports = function (api) {
           alias: {
             Config: './src/Config',
             Constants: './src/Constants',
-            Themes: './src/Themes',
             Assets: './assets',
             Navigation: './src/Navigation',
             Components: './src/Components',
