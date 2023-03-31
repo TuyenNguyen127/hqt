@@ -23,6 +23,8 @@ const thumb = require('Assets/images/thumb.png');
 const profile = require('Assets/images/Account.png');
 const bell = require('Assets/images/Bell.png');
 const bellnt = require('Assets/images/Bellnt.png');
+const share = require('Assets/images/Share.png')
+
 /** 
  * export the images object
  */
@@ -47,5 +49,6 @@ export default {
   thumb,
   profile,
   bell,
-  bellnt
+  bellnt,
+  share
 };

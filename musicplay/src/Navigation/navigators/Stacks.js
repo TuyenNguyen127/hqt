@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { Home, Profile, Onboarding, Library, Player} from 'Screens';
+import { Home, Profile, Onboarding, Library, Player, Thealbums} from 'Screens';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +20,13 @@ const Stacks = ({ params }) => (
       component={Profile}
       options={{
         headerShown: true,
+      }}
+    />
+    <Stack.Screen
+      name="Thealbums"
+      component={Thealbums}
+      options={{
+        headerShown: false,
       }}
     />
     <Stack.Screen

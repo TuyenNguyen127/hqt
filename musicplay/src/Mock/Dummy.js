@@ -35,18 +35,24 @@ export const Artist = [{
 
 export const Albums = [{
   id: '001',
-  name: "Albums'22'",
+  name: '"22"',
   artist: 'Mono',
+  songs: 16,
+  description: 'Ú òa! Mono chỉ là người đến sau',
   thumbnail: require('Assets/images/album22_mono.png')
 },{
   id: '002',
-  name: "Albums'99%'",
+  name: '"99%"',
   artist: 'RPT MCK',
+  songs: 16,
+  description: 'Va vào giai điệu cùng MCK',
   thumbnail: require('Assets/images/album99%_mck.png')
 },{
   id: '003',
-  name: "Albums'22'",
+  name: '"22"',
   artist: 'Mono',
+  songs: 16,
+  description: 'Ú òa! Mono chỉ là người đến sau',
   thumbnail: require('Assets/images/album22_mono.png')
 }]
 

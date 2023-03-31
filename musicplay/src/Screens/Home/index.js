@@ -5,25 +5,30 @@ import styled from 'styled-components/native';
 import Swiper from 'react-native-swiper';
 
 import { Fonts, Images, Metrics, Colors } from 'Constants';
-import { McText, McImage, McAvatar } from 'Components';
+import { McText, McImage, McAvatar, PlayButton } from 'Components';
 import { dummyData } from 'Mock';
+import BottomBar from '../Library/BottomBar';
 
 const Home = ({ navigation }) => {
     const [selectedEnv, setSelectedEnv] = useState('vn');
 
     const _renderAlbums = ({ item, index}) => {
         return(
-            <View>
-                <View style={{
-                    marginTop:16,
-                    marginLeft: index === 0? 24:0,
-                    marginRight:index === dummyData.Albums.length - 1?0:24
-                }}>
-                    <McImage key={index} source={item.thumbnail} style={{marginBottom:12, borderRadius:20}}/>
-                    <McText semi size={16} color={Colors.grey5}>{item.name}</McText>
-                    <McText medium size={12} color={Colors.grey3} style={{marginTop: 4, width: 153}}>{item.artist}</McText>
+            <TouchableWithoutFeedback onPress={() => {
+                navigation.navigate('Thealbums',{selectedAlbum: item})
+            }}>
+                <View>
+                    <View style={{
+                        marginTop:16,
+                        marginLeft: index === 0? 24:0,
+                        marginRight:index === dummyData.Albums.length - 1?0:24
+                    }}>
+                        <McImage key={index} source={item.thumbnail} style={{marginBottom:12, borderRadius:20}}/>
+                        <McText semi size={16} color={Colors.grey5}>Albums {item.name}</McText>
+                        <McText bold size={12} color={Colors.grey3} style={{marginTop: 4, width: 153}}>{item.artist}</McText>
+                    </View>
                 </View>
-            </View>
+            </TouchableWithoutFeedback>
         )
     }
 
@@ -65,6 +70,8 @@ const Home = ({ navigation }) => {
                 </SearchSetion>
                 <McImage source={Images.bell}/>
             </HeaderSection>
+
+            {/* Nội dung thanh cuộn */}
             <FlatList
                 data={[]}
                 ListHeaderComponent={
@@ -232,11 +239,44 @@ const Home = ({ navigation }) => {
                             renderItem={_renderAlbums}
                         />
                     </View>
+
+                    <View style={{
+                        height:84,
+                        marginTop: 30
+                    }}
+                    ></View>
                     </>
                 }
                 renderItem={null}
             />
             
+            <BottomSection>
+                <BottomBar>
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        marginHorizontal: 16,
+                        marginVertical: 12
+                    }}>
+                        <View style={{
+                            flexDirection: 'row',
+                            alignItems: 'center'
+                        }}>
+                            <McImage source={require('Assets/images/thumb_3.png')} style={{
+                                width: 38,
+                                height: 38
+                            }}/>
+                            <View style={{marginLeft:12}}>
+                                <McText bold size={16} color={Colors.grey5}>Chưa hề yêu em</McText>
+                                <McText medium size={12} color={Colors.grey3} style={{marginTop: 4}}>Văn Tuyển</McText>
+                            </View>
+                        </View>
+                        <PlayButton size={46} circle={41.28} icon={Images.stop}></PlayButton>
+                    </View>
+                </BottomBar>
+            </BottomSection>
 
         </Container>
     );
@@ -304,6 +344,18 @@ const MusicCirle = styled.View`
     background_color: ${Colors.secondary};
     justify-content: center;
     align-items: center;
+`;
+
+const BottomSection = styled.View`
+    margin: 0px 24px;
+    marginTop: 10px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start; 
+    position: absolute;
+    bottom: 5px;
+    left: 0px;
+    z-index: 1;
 `;
 
 export default Home;
