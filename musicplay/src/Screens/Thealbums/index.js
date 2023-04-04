@@ -7,14 +7,39 @@ import {Colors, Images, Metrics} from '/Constants';
 import { McText, McImage, PlayButton } from 'Components';
 import { dummyData } from 'Mock';
 import BottomBar from '../Library/BottomBar';
+import { or } from "react-native-reanimated";
 
 const Thealbums = ({ navigation, route }) => {
     const [selectedAlbum, setSelectedAlbum] = useState(null);
+    const [likeAlbum, setlikeAlbum] = useState(false);
 
+    const initialLikeState = dummyData.Favorite.reduce((likeSongState, item) => {
+        likeSongState[item.id] = item.like;
+        return likeSongState;
+      }, {});
+    
+    const [likeSongState, setLikeSongState] = useState(initialLikeState);
+    
     useEffect(() => {
         let { selectedAlbum } = route.params;
         setSelectedAlbum(selectedAlbum);
+        setlikeAlbum(selectedAlbum.like);
     }, []);
+
+    const touchContactAlbums = async () => {
+        if (likeAlbum) {
+            setlikeAlbum(false);
+        } else {
+            setlikeAlbum(true);
+        }
+    }
+
+    const touchContactSongs = async (itemId) => {
+        setLikeSongState(prevState => ({
+            ...prevState,
+            [itemId]: !prevState[itemId]
+          }));
+    }
 
     return (
         <Container>
@@ -48,7 +73,12 @@ const Thealbums = ({ navigation, route }) => {
             </DetailSection> 
             
             <SelectOptionSection>
-                <McImage source={Images.like}/>
+                <TouchableWithoutFeedback onPress={touchContactAlbums}>
+                    <McImage source={likeAlbum ? Images.fullLike : Images.like} style={{
+                        marginLeft: 10
+                    }}/>
+                </TouchableWithoutFeedback>
+                
                 <TouchableOpacity style={{
                     height: 40,
                     width: 200,
@@ -59,7 +89,9 @@ const Thealbums = ({ navigation, route }) => {
                 }}>
                     <McText bold color={Colors.grey5} size={14}>Phát ngẫu nhiên</McText>
                 </TouchableOpacity>
-                <McImage source={Images.share}/>
+                <McImage source={Images.share} style={{
+                    marginRight: 10
+                }}/>
             </SelectOptionSection>
             
             <McText semi align='center' size={12} style={{
@@ -71,28 +103,32 @@ const Thealbums = ({ navigation, route }) => {
                 <FlatList
                     data={dummyData.Favorite}
                     keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                        <TouchableWithoutFeedback onPress={() => {
-                            navigation.navigate('Player',{selectedMusic: item})
-                        }}>
-                        <FavoriteItemView>
-                            <View style={{ flexDirection: "row" }}>
-                            <MusicCirle>
-                                <McImage source={Images.music} />
-                            </MusicCirle>
-                            <View style={{ marginLeft: 12 }}>
-                                <McText semi size={14} color={Colors.grey5}>
-                                {item.title}
-                                </McText>
-                                <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
-                                {item.artist}
-                                </McText>
-                            </View>
-                            </View>
-                            <McImage source={Images.like} />
-                        </FavoriteItemView>
-                        </TouchableWithoutFeedback>
-                    )}
+                    renderItem={({ item }) => {
+                        if (item.album === selectedAlbum?.name) {
+                            return (
+                                <TouchableWithoutFeedback onPress={() => {
+                                    navigation.navigate('Player',{selectedMusic: item})
+                                }}>
+                                <FavoriteItemView>
+                                    <View style={{ flexDirection: "row" }}>
+                                    <MusicCirle>
+                                        <McImage source={Images.music} />
+                                    </MusicCirle>
+                                    <View style={{ marginLeft: 12, width: 246 }}>
+                                        <McText semi size={14} color={Colors.grey5}>
+                                        {item.title}
+                                        </McText>
+                                        <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
+                                        {item.artist}
+                                        </McText>
+                                    </View>
+                                    </View>
+                                    <TouchableOpacity onPress={() => touchContactSongs(item.id)}><McImage source={likeSongState[item.id] ? Images.fullLike : Images.like} /></TouchableOpacity>
+                                </FavoriteItemView>
+                                </TouchableWithoutFeedback>
+                            )
+                        }
+                    }}   
                 />
             </View>
 
@@ -162,7 +198,7 @@ const SelectOptionSection = styled.View`
 const FavoriteItemView = styled.View`
     marginBottom: 12px;
     flex-direction: row;
-    justify-content: space-between;
+    
     align-items: flex-start;
 `;
 

@@ -23,8 +23,11 @@ const thumb = require('Assets/images/thumb.png');
 const profile = require('Assets/images/Account.png');
 const bell = require('Assets/images/Bell.png');
 const bellnt = require('Assets/images/Bellnt.png');
-const share = require('Assets/images/Share.png')
-
+const share = require('Assets/images/Share.png');
+const speedUp = require('Assets/images/SpeedUp.png');
+const download = require('Assets/images/download.png');
+const inplayList = require('Assets/images/inplayList.png');
+const fullLike = require('Assets/images/like_full.png');
 /** 
  * export the images object
  */
@@ -50,5 +53,9 @@ export default {
   profile,
   bell,
   bellnt,
-  share
+  share,
+  download,
+  speedUp,
+  inplayList,
+  fullLike
 };

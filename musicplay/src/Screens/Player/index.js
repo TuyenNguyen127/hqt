@@ -258,9 +258,18 @@ const Player = ({ navigation, route }) => {
                         <McImage source={Images.next} style={{marginRight: 24}}/>
                     </View>
                 </View>
-                <McImage source={Images.like}/>
+                <McImage source={Images.speedUp}/>
             </ControlSection>
-
+            <ButtonSection>
+                <McImage source={Images.like} style={{
+                    marginLeft: 24
+                }}/>
+                <McImage source={Images.inplayList}/>
+                <McImage source={Images.download}/>
+                <McImage source={Images.share} style={{
+                    marginRight: 24
+                }}/>
+            </ButtonSection>
         </Container>
     );}
 
@@ -295,6 +304,12 @@ const SliderSection = styled.View`
 
 const ControlSection = styled.View`
     margin: 32px 24px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+`;
+
+const ButtonSection = styled.View`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
