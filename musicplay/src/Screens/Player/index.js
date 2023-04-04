@@ -136,7 +136,28 @@ const Player = ({ navigation, route }) => {
             
             {/* Thông tin bài hát */}
             <SwiperBanner>
-                <Swiper>
+                <Swiper style={{borderRadius: 10}}
+                            paginationStyle={{ top: -450}}
+                            dot={<View style={{
+                                    backgroundColor:'#464646', 
+                                    width: 5, 
+                                    height: 5,
+                                    borderRadius: 5, 
+                                    marginLeft: 3, 
+                                    marginRight: 3, 
+                                    marginTop: 3, 
+                                    marginBottom: 3,}} 
+                            
+                                />}
+                            activeDot={<View style={{
+                                    backgroundColor: '#B90078',
+                                    width: 20,
+                                    height: 5,
+                                    borderRadius: 40, 
+                                    marginLeft: 3, 
+                                    marginRight: 3, 
+                                    marginTop: 3, 
+                                    marginBottom: 3,}} />}>
                     <MusicDetailSection>
                         <Animated.Image source={selectedMusic?.thumbnail} style={{
                             marginHorizontal: 81,
@@ -155,15 +176,33 @@ const Player = ({ navigation, route }) => {
                             <McText medium size={14} color={Colors.grey3} style={{marginTop: 8}} align='center'>{selectedMusic?.artist}</McText>
                         </View>
                     </MusicDetailSection>
-                    <ScrollView>
-                        {lyrics?.map((sentence, index) => (
-                            <McText key={index} color={Colors.primary} size={18} style={{
-                                
-                            }}>
-                            {sentence.trim()}
-                            </McText>
-                        ))}
-                    </ScrollView>
+                    <View>
+                        <DetailLyricSection>
+                            <McImage source={selectedMusic?.thumbnail} style={{
+                                width: 50,
+                                height:50,
+                                borderRadius: 10
+                            }}></McImage>
+                            <View style={{ marginLeft: 12 }}>
+                                <McText semi size={14} color={Colors.grey5}>
+                                    {selectedMusic?.title}
+                                </McText>
+                                <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
+                                    {selectedMusic?.artist}
+                                </McText>
+                            </View>
+                        </DetailLyricSection>
+                        <ScrollView>
+                            {lyrics?.map((sentence, index) => (
+                                <McText key={index} color={Colors.primary} size={18} style={{
+                                    marginVertical: 3
+                                }}>
+                                {sentence.trim()}
+                                </McText>
+                            ))}
+                        </ScrollView>
+                    </View>
+                    
                 </Swiper>
             </SwiperBanner>
 
@@ -255,11 +294,15 @@ const SliderSection = styled.View`
 `;
 
 const ControlSection = styled.View`
-
     margin: 32px 24px;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+`;
+
+const DetailLyricSection = styled.View`
+    flex-direction: row;
+    height: 54px;
 `;
 
 export default Player;
