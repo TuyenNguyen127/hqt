@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { StatusBar, Text, TouchableOpacity, View, Animated, Easing } from "react-native";
+import { StatusBar, Text, TouchableOpacity, View, Animated, Easing, ScrollView } from "react-native";
 import styled from "styled-components";
 import Slider from "@react-native-community/slider";
 import { Audio } from 'expo-av';
 
 import { Colors, Images, Metrics } from "/Constants";
 import { McText, McImage, PlayButton } from "Components";
-import { dummyData } from "Mock";
+import Swiper from "react-native-swiper";
 
 const Player = ({ navigation, route }) => {
     const [selectedMusic, setSelectedMusic] = useState(null);
@@ -17,17 +17,20 @@ const Player = ({ navigation, route }) => {
     const [duration, setDuration] = useState(0);
     const [isReadyToSpin, setIsReadyToSpin] = useState(false);
     const [isSliding, setIsSliding] = useState(false);
+    const [lyrics, setLyrics] = useState(null);
 
     const spinValue = useRef(new Animated.Value(0)).current;
     
     // Load nhạc
-    async function loadSound() {
+    
+    async function loadSound(selectedMusic) {
         try {
+            const lyrics = selectedMusic.lyric;
             console.log('Loading Sound');
-            const { sound } = await Audio.Sound.createAsync(
-                require('Assets/audio/13.mp3')
-            );
+            const { sound } = await Audio.Sound.createAsync(selectedMusic.audio_filepath);
+            const sentences = lyrics.split(/\n/);
             setSound(sound);
+            setLyrics(sentences);
             console.log('Loaded Sound');
         } catch (error) {
             console.error(error);
@@ -38,7 +41,7 @@ const Player = ({ navigation, route }) => {
     useEffect(() => {
         let { selectedMusic } = route.params;
         setSelectedMusic(selectedMusic);
-        loadSound();
+        loadSound(selectedMusic);
         setIsReadyToSpin(true);
     }, []);
 
@@ -132,25 +135,39 @@ const Player = ({ navigation, route }) => {
             </HeaderSection>
             
             {/* Thông tin bài hát */}
-            <MusicDetailSection>
-                <Animated.Image source={selectedMusic?.thumbnail} style={{
-                    marginHorizontal: 81,
-                    marginVertical: 81,
-                    width: 214,
-                    height: 214,
-                    borderRadius: 214/2,
-                    transform: [{ rotate: spin }]
-                }}/>
-                <View style={{
-                    marginTop:16,
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}>
-                    <McText semi size={24} color={Colors.grey5} align='center'>{selectedMusic?.title}</McText>
-                    <McText medium size={14} color={Colors.grey3} style={{marginTop: 8}} align='center'>{selectedMusic?.artist}</McText>
-                </View>
-            </MusicDetailSection> 
-            
+            <SwiperBanner>
+                <Swiper>
+                    <MusicDetailSection>
+                        <Animated.Image source={selectedMusic?.thumbnail} style={{
+                            marginHorizontal: 81,
+                            marginVertical: 50,
+                            width: 250,
+                            height: 250,
+                            borderRadius: 250/2,
+                            transform: [{ rotate: spin }]
+                        }}/>
+                        <View style={{
+                            marginTop:16,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <McText semi size={24} color={Colors.grey5} align='center'>{selectedMusic?.title}</McText>
+                            <McText medium size={14} color={Colors.grey3} style={{marginTop: 8}} align='center'>{selectedMusic?.artist}</McText>
+                        </View>
+                    </MusicDetailSection>
+                    <ScrollView>
+                        {lyrics?.map((sentence, index) => (
+                            <McText key={index} color={Colors.primary} size={18} style={{
+                                
+                            }}>
+                            {sentence.trim()}
+                            </McText>
+                        ))}
+                    </ScrollView>
+                </Swiper>
+            </SwiperBanner>
+
+
             {/* Thanh phát nhạc */}
             <SliderSection style={{marginTop: 8}}>
                 <Slider
@@ -202,7 +219,7 @@ const Player = ({ navigation, route }) => {
                         <McImage source={Images.next} style={{marginRight: 24}}/>
                     </View>
                 </View>
-                <McImage source={Images.sound}/>
+                <McImage source={Images.like}/>
             </ControlSection>
 
         </Container>
@@ -226,11 +243,19 @@ const MusicDetailSection = styled.View`
     align-items: center;
 `;
 
+const SwiperBanner = styled.View`
+    marginTop: 30px;
+    height: 429px;
+    width: 327px;
+    alignSelf: center;
+`;
+
 const SliderSection = styled.View`
     margin: 0px 24px;
 `;
 
 const ControlSection = styled.View`
+
     margin: 32px 24px;
     flex-direction: row;
     justify-content: space-between;

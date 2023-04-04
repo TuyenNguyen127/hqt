@@ -7,25 +7,25 @@ import {AppNavigator} from 'Navigation';
 import { Fonts } from 'Constants';
 
 const App = ({ params }) => {
-  const [assetsLoaded, setAssetsLoaded] = useState(false);
+    const [assetsLoaded, setAssetsLoaded] = useState(false);
 
     /* Loading custom fonts in async */
     const _loadAssetsAsync = async () => {
-      await Font.loadAsync(Fonts.customFonts);
-      setAssetsLoaded(true);
+        await Font.loadAsync(Fonts.customFonts);
+        setAssetsLoaded(true);
     };
   
     useEffect(() => {
-      _loadAssetsAsync();
+        _loadAssetsAsync();
     });
 
-  return assetsLoaded ? (
-    <AppearanceProvider>
-      <AppNavigator />
-    </AppearanceProvider>
-  ) : (
-    <ActivityIndicator size="small"></ActivityIndicator>
-  );
+    return assetsLoaded ? (
+        <AppearanceProvider>
+            <AppNavigator />
+        </AppearanceProvider>
+    ) : (
+        <ActivityIndicator size="small"></ActivityIndicator>
+    );
 };
 
 export default App;

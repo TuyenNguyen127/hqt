@@ -64,25 +64,100 @@ export const Favorite = [{
   album: '99%',
   artist: 'RPT MCK',
   thumbnail: require('Assets/audio/13.png'),
-  audio_filepath:''
+  audio_filepath:require('Assets/audio/13.mp3'),
+  lyric: `Your butt is mine... gonna tell you right
+  Just show your face... throughout daylight
+  I'm telling you... on how I feel
+  Gonna hurt your mind... gonna shoot to kill
+  Come on, come on, lay it on me
+  All right
+  I'm giving you... on the count of three
+  To show your stuff... or let it be
+  I'm telling you... just watch your mouth
+  I know your game... what you're about
+  Well they say the sky's the limit
+  And to me that's really true
+  But my friend you have seen nothing
+  Just wait 'till I get through
+  Because I'm bad (bad-bad), I'm bad, come on (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, you know it (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, come on (really, really bad) you know
+  And the whole world has to answer right now
+  Just to tell you once again
+  Who's bad
+  The word is out... you're doing wrong
+  Gonna lock you up... before too long
+  Your lying eyes... don't tell you right
+  So listen up... don't make a fight
+  Your talk is cheap...`
 },{
   id: '002',
-  url: '',
   env: 'vn',
-  title: 'Đánh mất anh là lỗi của em',
-  album: 'AYE',
-  artist: 'Duy Tân',
-  thumbnail: require('Assets/images/thumb_3.png'),
-  audio_filepath:''
+  url: '',
+  title: 'Thôi em đừng đi!',
+  album: '99%',
+  artist: 'RPT MCK',
+  thumbnail: require('Assets/audio/13.png'),
+  audio_filepath:require('Assets/audio/13.mp3'),
+  lyric: `Your butt is mine... gonna tell you right
+  Just show your face... throughout daylight
+  I'm telling you... on how I feel
+  Gonna hurt your mind... gonna shoot to kill
+  Come on, come on, lay it on me
+  All right
+  I'm giving you... on the count of three
+  To show your stuff... or let it be
+  I'm telling you... just watch your mouth
+  I know your game... what you're about
+  Well they say the sky's the limit
+  And to me that's really true
+  But my friend you have seen nothing
+  Just wait 'till I get through
+  Because I'm bad (bad-bad), I'm bad, come on (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, you know it (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, come on (really, really bad) you know
+  And the whole world has to answer right now
+  Just to tell you once again
+  Who's bad
+  The word is out... you're doing wrong
+  Gonna lock you up... before too long
+  Your lying eyes... don't tell you right
+  So listen up... don't make a fight
+  Your talk is cheap...`
 },{
   id: '003',
-  url: '',
   env: 'vn',
-  title: 'Đánh mất anh là lỗi của em',
-  album: 'AYE',
-  artist: 'Duy Tân',
-  thumbnail: require('Assets/images/thumb_3.png'),
-  audio_filepath:''
+  url: '',
+  title: 'Ai Mới Là Kẻ Xấu Xa',
+  album: '99%',
+  artist: 'RPT MCK',
+  thumbnail: require('Assets/audio/13.png'),
+  audio_filepath:require('Assets/audio/13.mp3'),
+  lyric: `Your butt is mine... gonna tell you right
+  Just show your face... throughout daylight
+  I'm telling you... on how I feel
+  Gonna hurt your mind... gonna shoot to kill
+  Come on, come on, lay it on me
+  All right
+  I'm giving you... on the count of three
+  To show your stuff... or let it be
+  I'm telling you... just watch your mouth
+  I know your game... what you're about
+  Well they say the sky's the limit
+  And to me that's really true
+  But my friend you have seen nothing
+  Just wait 'till I get through
+  Because I'm bad (bad-bad), I'm bad, come on (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, you know it (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, come on (really, really bad) you know
+  And the whole world has to answer right now
+  Just to tell you once again
+  Who's bad
+  The word is out... you're doing wrong
+  Gonna lock you up... before too long
+  Your lying eyes... don't tell you right
+  So listen up... don't make a fight
+  Your talk is cheap...`
 },{
   id: '005',
   url: '',
@@ -91,7 +166,8 @@ export const Favorite = [{
   album: 'AYE',
   artist: 'Duy Tân',
   thumbnail: require('Assets/images/thumb_3.png'),
-  audio_filepath:''
+  lyric: "Assets/lyrics/lyric1.txt",
+  audio_filepath:require('Assets/audio/13.mp3')
 },{
   id: '006',
   url: '',
@@ -100,7 +176,8 @@ export const Favorite = [{
   album: 'AYE',
   artist: 'Duy Tân',
   thumbnail: require('Assets/images/thumb_3.png'),
-  audio_filepath:''
+  lyric: "Assets/lyrics/lyric1.txt",
+  audio_filepath:'Assets/audio/13.mp3'
 },{
   id: '007',
   url: '',
@@ -109,7 +186,8 @@ export const Favorite = [{
   album: 'AYE',
   artist: 'Duy Tân',
   thumbnail: require('Assets/images/thumb_3.png'),
-  audio_filepath:''
+  lyric: "Assets/lyrics/lyric1.txt",
+  audio_filepath:require('Assets/audio/13.mp3')
 }]
 
 const dummyData = { Albums,Artist, Playlists, Favorite };
