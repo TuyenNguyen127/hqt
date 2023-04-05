@@ -12,6 +12,20 @@ import BottomBar from '../Library/BottomBar';
 const Home = ({ navigation }) => {
     const [selectedEnv, setSelectedEnv] = useState('vn');
 
+    const initialLikeState = dummyData.Favorite.reduce((likeSongState, item) => {
+        likeSongState[item.id] = item.like;
+        return likeSongState;
+      }, {});
+    
+    const [likeSongState, setLikeSongState] = useState(initialLikeState);
+
+    const clickLikeSong = async (itemId) => {
+        setLikeSongState(prevState => ({
+            ...prevState,
+            [itemId]: !prevState[itemId]
+          }));
+    }
+
     const _renderAlbums = ({ item, index}) => {
         return(
             <TouchableWithoutFeedback onPress={() => {
@@ -191,7 +205,10 @@ const Home = ({ navigation }) => {
                                                     </McText>
                                                 </View>
                                             </View>
-                                            <McImage source={Images.like} />
+                                            <TouchableOpacity onPress={() => clickLikeSong(item.id)}>
+                                                <McImage source={likeSongState[item.id] ? Images.fullLike : Images.like} />
+                                            </TouchableOpacity>
+                                            
                                         </FavoriteItemView>
                                         </TouchableWithoutFeedback>
                                     )

@@ -7,7 +7,6 @@ import {Colors, Images, Metrics} from '/Constants';
 import { McText, McImage, PlayButton } from 'Components';
 import { dummyData } from 'Mock';
 import BottomBar from '../Library/BottomBar';
-import { or } from "react-native-reanimated";
 
 const Thealbums = ({ navigation, route }) => {
     const [selectedAlbum, setSelectedAlbum] = useState(null);
@@ -19,14 +18,14 @@ const Thealbums = ({ navigation, route }) => {
       }, {});
     
     const [likeSongState, setLikeSongState] = useState(initialLikeState);
-    
+
     useEffect(() => {
         let { selectedAlbum } = route.params;
         setSelectedAlbum(selectedAlbum);
         setlikeAlbum(selectedAlbum.like);
     }, []);
 
-    const touchContactAlbums = async () => {
+    const clickLikeAlbum = async () => {
         if (likeAlbum) {
             setlikeAlbum(false);
         } else {
@@ -34,7 +33,7 @@ const Thealbums = ({ navigation, route }) => {
         }
     }
 
-    const touchContactSongs = async (itemId) => {
+    const clickLikeSong = async (itemId) => {
         setLikeSongState(prevState => ({
             ...prevState,
             [itemId]: !prevState[itemId]
@@ -73,7 +72,7 @@ const Thealbums = ({ navigation, route }) => {
             </DetailSection> 
             
             <SelectOptionSection>
-                <TouchableWithoutFeedback onPress={touchContactAlbums}>
+                <TouchableWithoutFeedback onPress={clickLikeAlbum}>
                     <McImage source={likeAlbum ? Images.fullLike : Images.like} style={{
                         marginLeft: 10
                     }}/>
@@ -123,7 +122,7 @@ const Thealbums = ({ navigation, route }) => {
                                         </McText>
                                     </View>
                                     </View>
-                                    <TouchableOpacity onPress={() => touchContactSongs(item.id)}><McImage source={likeSongState[item.id] ? Images.fullLike : Images.like} /></TouchableOpacity>
+                                    <TouchableOpacity onPress={() => clickLikeSong(item.id)}><McImage source={likeSongState[item.id] ? Images.fullLike : Images.like} /></TouchableOpacity>
                                 </FavoriteItemView>
                                 </TouchableWithoutFeedback>
                             )

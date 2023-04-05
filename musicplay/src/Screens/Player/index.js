@@ -21,17 +21,26 @@ const Player = ({ navigation, route }) => {
 
     const spinValue = useRef(new Animated.Value(0)).current;
     
+    const [likeSong, setLikeSong] = useState(false);
+
+    const clickLike = () => {
+        if (likeSong) {
+            setLikeSong(false);
+        } else {
+            setLikeSong(true);
+        }
+    }
+    
     // Load nhạc
     
     async function loadSound(selectedMusic) {
         try {
+            setLikeSong(selectedMusic.like);
             const lyrics = selectedMusic.lyric;
-            console.log('Loading Sound');
             const { sound } = await Audio.Sound.createAsync(selectedMusic.audio_filepath);
             const sentences = lyrics.split(/\n/);
             setSound(sound);
             setLyrics(sentences);
-            console.log('Loaded Sound');
         } catch (error) {
             console.error(error);
         }
@@ -261,9 +270,11 @@ const Player = ({ navigation, route }) => {
                 <McImage source={Images.speedUp}/>
             </ControlSection>
             <ButtonSection>
-                <McImage source={Images.like} style={{
-                    marginLeft: 24
-                }}/>
+                <TouchableOpacity onPress={clickLike}>
+                    <McImage source={likeSong ? Images.fullLike : Images.like} style={{
+                        marginLeft: 24
+                    }}/>
+                </TouchableOpacity>
                 <McImage source={Images.inplayList}/>
                 <McImage source={Images.download}/>
                 <McImage source={Images.share} style={{

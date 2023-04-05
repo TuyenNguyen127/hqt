@@ -1,5 +1,5 @@
-import React from "react";
-import { Text, View, StatusBar, TextInput, TouchableWithoutFeedback, FlatList, ScrollView} from "react-native";
+import React, {useState} from "react";
+import { TouchableOpacity, View, StatusBar, TextInput, TouchableWithoutFeedback, FlatList, ScrollView} from "react-native";
 import styled from "styled-components";
 
 import {Colors, Images, Metrics} from '/Constants';
@@ -8,6 +8,20 @@ import { dummyData } from 'Mock';
 import BottomBar from './BottomBar';
 
 const Library = ({navigation}) => {
+
+    const initialLikeState = dummyData.Favorite.reduce((likeSongState, item) => {
+        likeSongState[item.id] = item.like;
+        return likeSongState;
+      }, {});
+    
+    const [likeSongState, setLikeSongState] = useState(initialLikeState);
+
+    const touchContactSongs = async (itemId) => {
+        setLikeSongState(prevState => ({
+            ...prevState,
+            [itemId]: !prevState[itemId]
+          }));
+    }
     
     const _renderItem = ({ item, index}) => {
         return(
@@ -95,19 +109,22 @@ const Library = ({navigation}) => {
                 }}>
                 <FavoriteItemView>
                     <View style={{ flexDirection: "row" }}>
-                    <MusicCirle>
-                        <McImage source={Images.music} />
-                    </MusicCirle>
-                    <View style={{ marginLeft: 12 }}>
-                        <McText semi size={14} color={Colors.grey5}>
-                        {item.title}
-                        </McText>
-                        <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
-                        {item.artist}
-                        </McText>
+                        <MusicCirle>
+                            <McImage source={Images.music} />
+                        </MusicCirle>
+                        <View style={{ marginLeft: 12 }}>
+                            <McText semi size={14} color={Colors.grey5}>
+                            {item.title}
+                            </McText>
+                            <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
+                            {item.artist}
+                            </McText>
+                        </View>
                     </View>
-                    </View>
-                    <McImage source={Images.like} />
+                    <TouchableOpacity onPress={() => touchContactSongs(item.id)}>
+                        <McImage source={likeSongState[item.id] ? Images.fullLike: Images.like} />
+                    </TouchableOpacity>
+                    
                 </FavoriteItemView>
                 </TouchableWithoutFeedback>
             )}
@@ -191,7 +208,7 @@ const BottomSection = styled.View`
     justify-content: space-between;
     align-items: flex-start; 
     position: absolute;
-    bottom: 50px;
+    bottom: 10px;
     left: 0px;
     z-index: 1;
 `;
