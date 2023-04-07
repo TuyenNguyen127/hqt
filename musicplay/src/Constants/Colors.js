@@ -4,6 +4,8 @@ const Colors = {
   primary: '#ED1BA3',
   secondary: '#361E60',
   accent: '#22DDF2',
+  accent1: '#35BCF6',
+  accent2: 'rgba(10, 28, 190, 1)',
   grey0: '#393e42',
   grey1: '#090909',
   grey2: '#464646',

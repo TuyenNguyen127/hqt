@@ -60,10 +60,10 @@ const Player = ({ navigation, route }) => {
         if (sound && !isSliding) {
             interval = setInterval(async () => {
                 const status = await sound.getStatusAsync();
+                setSliderValue(status.positionMillis / status.durationMillis);
                 setCurrentTime(status.positionMillis);
                 setDuration(status.durationMillis);
-                setSliderValue(status.positionMillis / status.durationMillis);
-            }, 300);
+            }, 500);
         }
         return () => clearInterval(interval);
     }, [sound, isSliding]);
@@ -185,7 +185,7 @@ const Player = ({ navigation, route }) => {
                             <McText medium size={14} color={Colors.grey3} style={{marginTop: 8}} align='center'>{selectedMusic?.artist}</McText>
                         </View>
                     </MusicDetailSection>
-                    <View>
+                    <View style={{marginLeft: 10}}>
                         <DetailLyricSection>
                             <McImage source={selectedMusic?.thumbnail} style={{
                                 width: 50,

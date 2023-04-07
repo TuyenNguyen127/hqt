@@ -2,12 +2,13 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { Home, Profile, Onboarding, Library, Player, Thealbums} from 'Screens';
+import { Home, Profile, Library, Player, Thealbums} from 'Screens';
+import { Login, Register, ForgetPassword, ResetPassword } from '../../Screens/Onboarding';
 
 const Stack = createStackNavigator();
 
 const Stacks = ({ params }) => (
-  <Stack.Navigator initialRouteName="Home">
+  <Stack.Navigator initialRouteName="Login">
     <Stack.Screen
       name="Home"
       component={Home}
@@ -30,8 +31,29 @@ const Stacks = ({ params }) => (
       }}
     />
     <Stack.Screen
-      name="Onboarding"
-      component={Onboarding}
+      name="Login"
+      component={Login}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <Stack.Screen
+      name="Register"
+      component={Register}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <Stack.Screen
+      name="ForgetPassword"
+      component={ForgetPassword}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <Stack.Screen
+      name="ResetPassword"
+      component={ResetPassword}
       options={{
         headerShown: false,
       }}

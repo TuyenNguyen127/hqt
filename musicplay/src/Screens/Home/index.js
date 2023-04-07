@@ -132,18 +132,14 @@ const Home = ({ navigation }) => {
                     </SwiperBanner>
 
                     <TitleSection>
-                        <McText medium size={20} color={Colors.grey4}>Top bài hát yêu thích</McText>
-                        <TouchableWithoutFeedback onPress={()=>{
-                            console.log('..')
-                        }}>
-                            <McImage source={Images.right}/>
-                        </TouchableWithoutFeedback>
+                        <McText medium size={20} color={Colors.grey4}>Top bài hát yêu thích</McText>                   
+                        <McImage source={Images.right}/>
                     </TitleSection>
             
                     <ViewEnv>
                         <TouchableOpacity
                             style={{
-                                backgroundColor: selectedEnv === 'vn' ? 'rgba(10, 28, 190, 1)' : Colors.grey2,
+                                backgroundColor: selectedEnv === 'vn' ? Colors.accent2 : Colors.grey2,
                                 marginRight: 10, 
                                 height: 20,
                                 borderRadius: 40,
@@ -162,7 +158,7 @@ const Home = ({ navigation }) => {
 
                         <TouchableOpacity
                             style={{
-                                backgroundColor: selectedEnv === 'uk' ? 'rgba(10, 28, 190, 1)' : Colors.grey2,
+                                backgroundColor: selectedEnv === 'uk' ? Colors.accent2 : Colors.grey2,
                                 marginRight: 10, 
                                 height: 20,
                                 borderRadius: 40,
@@ -219,11 +215,7 @@ const Home = ({ navigation }) => {
 
                     <TitleSection>
                         <McText medium size={20} color={Colors.grey4}>Nghệ sĩ thịnh hành</McText>
-                        <TouchableWithoutFeedback onPress={()=>{
-                            console.log('..')
-                        }}>
-                            <McImage source={Images.right}/>
-                        </TouchableWithoutFeedback>
+                        <McImage source={Images.right}/>
                     </TitleSection>
 
                     <View>
@@ -239,11 +231,7 @@ const Home = ({ navigation }) => {
 
                     <TitleSection>
                         <McText medium size={20} color={Colors.grey4}>Albums được yêu thích</McText>
-                        <TouchableWithoutFeedback onPress={()=>{
-                            console.log('..')
-                        }}>
-                            <McImage source={Images.right}/>
-                        </TouchableWithoutFeedback>
+                        <McImage source={Images.right}/>
                     </TitleSection>
 
                     <View>

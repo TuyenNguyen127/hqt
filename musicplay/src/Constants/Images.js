@@ -28,6 +28,7 @@ const speedUp = require('Assets/images/SpeedUp.png');
 const download = require('Assets/images/download.png');
 const inplayList = require('Assets/images/inplayList.png');
 const fullLike = require('Assets/images/like_full.png');
+const password = require('Assets/images/lock_open.png');
 /** 
  * export the images object
  */
@@ -50,12 +51,12 @@ export default {
   up,
   right_arrow,
   thumb,
-  profile,
   bell,
   bellnt,
   share,
   download,
   speedUp,
   inplayList,
-  fullLike
+  fullLike,
+  password
 };

@@ -1,43 +1,6 @@
-import React from "react";
-import { Text, View, StatusBar} from "react-native";
-import styled from "styled-components";
+import Login from "./Login";
+import Register from "./Register";
+import ForgetPassword from "./ForgetPassword";
+import ResetPassword from "./ResetPassword";
 
-import {Colors, Images, Metrics} from 'Constants';
-import { McText, McImage, PlayButton } from 'Components';
-
-const Onboarding = ({navigation}) => (
-    <Container>
-        <StatusBar barStyle='light-content'/>
-        <McImage source={Images.logo} style={{marginTop: 204 - 40}}/>
-
-        <McText color={Colors.primary} size={24} black style={{
-            marginTop: 28
-        }}>Hello</McText>
-
-        <McText color={Colors.grey4} size={14} medium align='center' style={{
-            marginHorizontal: 51,
-            marginTop: 8,
-
-        }}> Onboarding </McText>
-
-        <View style={{marginTop: 202}}>
-            <PlayButton 
-                size={78} 
-                circle={70} 
-                icon={Images.right_arrow}
-                onPress={ ()=>{
-                    navigation.navigate("Library")
-                }}
-            />
-        </View>
-    </Container>
-)
-
-const Container = styled.SafeAreaView`
-    flex: 1;
-    background_color: ${Colors.background};
-    justify-content: flex-start;
-    align-items: center;
-`;
-
-export default Onboarding;
+export { Login, Register, ForgetPassword, ResetPassword };
