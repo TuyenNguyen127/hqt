@@ -5,13 +5,12 @@ const AlbumSchema = new Schema({
     name: String,
     artist: {
         type: [mongoose.Types.ObjectId],
-        ref: 'Artist',
+        ref: "Artist"        
     },
     song: {
         type: [mongoose.Types.ObjectId],
         ref: 'Song',
     },
-
     description: String,
     thumbnail: {
         type: String,
