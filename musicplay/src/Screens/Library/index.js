@@ -46,15 +46,24 @@ const Library = ({navigation}) => {
     <Container>
        <StatusBar barStyle='light-content'/>
 
-        <McText 
+       <HeaderSection>
+            <TouchableOpacity onPress={()=> navigation.navigate('Option')}>
+                <McImage source={Images.profile} style={{height: 30, width: 30}}></McImage>
+            </TouchableOpacity>
+                
+            <McText 
             bold 
+            align='center'
             size={28} 
             color={Colors.primary}
-            style={{
-                marginLeft: Metrics.padding,
-                marginTop: 12
-            }}
-        >Library</McText>
+            >My Library</McText>
+
+            <TouchableOpacity onPress={()=> navigation.navigate('Home')}>
+                <McImage source={Images.home}/>
+            </TouchableOpacity>
+                
+        </HeaderSection>
+        
 
         <SearchSetion>
             <McImage 
@@ -62,7 +71,7 @@ const Library = ({navigation}) => {
                 style={{marginLeft: 16, marginRight:12}}
             ></McImage>
             <TextInput 
-                placeholder="Song or Artist"
+                placeholder="Nhập tên bài hát, nghệ sĩ"
                 placeholderTextColor={Colors.grey3}
                 style={{
                     color: Colors.grey4
@@ -71,7 +80,7 @@ const Library = ({navigation}) => {
         </SearchSetion>
 
         <TitleSection>
-            <McText medium size={20} color={Colors.grey4}>Playlists</McText>
+            <McText medium size={20} color={Colors.grey4}>Danh sách kết hợp</McText>
             <TouchableWithoutFeedback onPress={()=>{
                 console.log('Go to Playlist page')
             }}>
@@ -91,7 +100,7 @@ const Library = ({navigation}) => {
         </View>
 
         <TitleSection>
-            <McText medium size={20} color={Colors.grey4}>Favorite</McText>
+            <McText medium size={20} color={Colors.grey4}>Bài hát yêu thích</McText>
             <TouchableWithoutFeedback onPress={()=>{
                 console.log('Go to Favorite page')
             }}>
@@ -168,8 +177,18 @@ const Container = styled.SafeAreaView`
     background_color: ${Colors.background};
 `;
 
-const SearchSetion = styled.View`
+const HeaderSection = styled.View`
+    marginTop: 12px;
     width: 327px;
+    height: 30px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    alignSelf: center;
+`;
+
+const SearchSetion = styled.View`
+    width: 317px;
     height: 52px;
     border-radius: 30px;
     background_color: ${Colors.secondary};
