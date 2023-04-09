@@ -21,7 +21,7 @@ const ResetPassword = ({navigation}) => {
         if (!numS)
             return (
                 <View style={{
-                    height: 275,
+                    height: 270,
                     justifyContent: 'center',
                     alignItems: 'center'
                 }}>
@@ -57,7 +57,7 @@ const ResetPassword = ({navigation}) => {
         ) 
         else return (
             <View style={{
-                height: 275,
+                height: 270,
                 justifyContent: 'center',
                 alignItems: 'center'
             }}>
@@ -110,9 +110,18 @@ const ResetPassword = ({navigation}) => {
     return (
     <Container>
         <StatusBar barStyle='light-content'/>
-        <McImage source={Images.logo} style={{marginTop: 40}}/>
+        <TouchableOpacity onPress={()=>{
+            navigation.goBack();
+        }} style={{
+            marginLeft: 24,
+            marginTop: 5
+        }}>
+            <McImage source={Images.left}/>
+        </TouchableOpacity>
 
-        <McText color={Colors.primary} size={24} black>The sound of life</McText>
+        <McImage source={Images.logo} style={{marginHorizontal: 100,marginTop: 20}}/>
+
+        <McText color={Colors.primary} align='center' size={24} black>The sound of life</McText>
 
         <McText color={Colors.grey4} size={14} medium align='center' style={{
             marginHorizontal: 51,
@@ -125,7 +134,7 @@ const ResetPassword = ({navigation}) => {
 
         {renderScreen_(numS)}
 
-        <View style={{marginTop: 639, position:"absolute"}}>
+        <View style={{marginTop: 639, position:"absolute", alignSelf: 'center'}}>
             <PlayButton 
                 size={78} 
                 circle={70} 
@@ -141,8 +150,7 @@ const ResetPassword = ({navigation}) => {
 const Container = styled.SafeAreaView`
     flex: 1;
     background_color: ${Colors.background};
-    justify-content: flex-start;
-    align-items: center;
+    justify-content: flex-start;  
 `;
 
 const InputSection = styled.View`
