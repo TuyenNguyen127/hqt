@@ -31,7 +31,7 @@ const Register = ({navigation}) => (
             <InputSection>
                 <McImage 
                     source={Images.profile}
-                    style={{marginLeft: 16, marginRight:12}}
+                    style={{height: 24, width: 24, marginLeft: 16, marginRight:12}}
                 ></McImage>
                 <TextInput 
                     placeholder="Email đăng nhập"
