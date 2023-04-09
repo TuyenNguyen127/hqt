@@ -9,7 +9,7 @@ import { dummyData } from 'Mock';
 import BottomBar from '../Library/BottomBar';
 
 const Thealbums = ({ navigation, route }) => {
-    const [selectedAlbum, setSelectedAlbum] = useState(null);
+    const [selected, setSelected] = useState(null);
     const [likeAlbum, setlikeAlbum] = useState(false);
 
     const initialLikeState = dummyData.Favorite.reduce((likeSongState, item) => {
@@ -20,9 +20,9 @@ const Thealbums = ({ navigation, route }) => {
     const [likeSongState, setLikeSongState] = useState(initialLikeState);
 
     useEffect(() => {
-        let { selectedAlbum } = route.params;
-        setSelectedAlbum(selectedAlbum);
-        setlikeAlbum(selectedAlbum.like);
+        let { selected } = route.params;
+        setSelected(selected);
+        setlikeAlbum(selected.like);
     }, []);
 
     const clickLikeAlbum = async () => {
@@ -54,7 +54,7 @@ const Thealbums = ({ navigation, route }) => {
             </HeaderSection>
             
             <DetailSection>
-                <McImage source={selectedAlbum?.thumbnail} style={{
+                <McImage source={selected?.thumbnail} style={{
                     alignItems: 'center',
                     marginVertical: 4,
                     width: 180,
@@ -66,8 +66,8 @@ const Thealbums = ({ navigation, route }) => {
                     justifyContent: 'center',
                     alignItems: 'center'
                 }}>
-                    <McText semi size={24} color={Colors.grey5} align='center'>{selectedAlbum?.name} the album</McText>
-                    <McText medium size={14} color={Colors.grey3} style={{marginTop: 8}} align='center'>{selectedAlbum?.artist} - {selectedAlbum?.songs} bài hát</McText>
+                    <McText semi size={24} color={Colors.grey5} align='center'>{selected?.name} the album</McText>
+                    <McText medium size={14} color={Colors.grey3} style={{marginTop: 8}} align='center'>{selected?.artist} - {selected?.songs} bài hát</McText>
                 </View>
             </DetailSection> 
             
@@ -96,17 +96,17 @@ const Thealbums = ({ navigation, route }) => {
             <McText semi align='center' size={12} style={{
                 marginVertical: 25,
                 color: Colors.grey3
-            }}>{selectedAlbum?.description}</McText>
+            }}>{selected?.description}</McText>
 
             <View style={{height: 204, width: 327, alignSelf: 'center'}}>
                 <FlatList
                     data={dummyData.Favorite}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => {
-                        if (item.album === selectedAlbum?.name) {
+                        if (item.album === selected?.name) {
                             return (
                                 <TouchableWithoutFeedback onPress={() => {
-                                    navigation.navigate('Player',{selectedMusic: item})
+                                    navigation.navigate('Player',{selected: item})
                                 }}>
                                 <FavoriteItemView>
                                     <View style={{ flexDirection: "row" }}>

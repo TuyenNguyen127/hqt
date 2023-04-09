@@ -4,7 +4,7 @@ import styled, { useTheme } from 'styled-components/native';
 
 import { Fonts, Images, Metrics } from 'Constants';
 import { McText, McImage, McAvatar } from 'Components';
-function Banner( url ) {
+function Download( url ) {
     return (
         <View
             style={{
@@ -31,4 +31,4 @@ const Container = styled.SafeAreaView`
     background_color: ${Colors.background};
 `;
 
-export default Banner
+export default Download;

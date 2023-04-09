@@ -105,7 +105,7 @@ const Library = ({navigation}) => {
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
                 <TouchableWithoutFeedback onPress={() => {
-                    navigation.navigate('Player',{selectedMusic: item})
+                    navigation.navigate('Player',{selected: item})
                 }}>
                 <FavoriteItemView>
                     <View style={{ flexDirection: "row" }}>

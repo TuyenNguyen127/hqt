@@ -2,16 +2,38 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { Home, Profile, Library, Player, Thealbums} from 'Screens';
+import { Profile, Library, Player, Thealbums} from 'Screens';
 import { Login, Register, ForgetPassword, ResetPassword } from '../../Screens/Onboarding';
+import { Home, Option, Notification, NotificationLink } from '../../Screens/Home';
 
 const Stack = createStackNavigator();
 
 const Stacks = ({ params }) => (
-  <Stack.Navigator initialRouteName="Login">
+  <Stack.Navigator initialRouteName="Home">
     <Stack.Screen
       name="Home"
       component={Home}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <Stack.Screen
+      name="Notification"
+      component={Notification}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <Stack.Screen
+      name="NotificationLink"
+      component={NotificationLink}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <Stack.Screen
+      name="Option"
+      component={Option}
       options={{
         headerShown: false,
       }}

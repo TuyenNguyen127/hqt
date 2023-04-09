@@ -166,37 +166,148 @@ export const Favorite = [{
   Your talk is cheap...`
 },{
   id: '005',
+  env: 'vn',
   url: '',
-  env: 'uk',
-  title: 'Đánh mất anh là lỗi của em',
+  title: 'Badtrip',
   album: '"99%"',
-  artist: 'Duy Tân',
-  thumbnail: require('Assets/images/thumb_3.png'),
-  lyric: "Assets/lyrics/lyric1.txt",
+  artist: 'RPT MCK',
+  like: true,
+  thumbnail: require('Assets/audio/13.png'),
   audio_filepath:require('Assets/audio/13.mp3'),
-
+  lyric: `Your butt is mine... gonna tell you right
+  Just show your face... throughout daylight
+  I'm telling you... on how I feel
+  Gonna hurt your mind... gonna shoot to kill
+  Come on, come on, lay it on me
+  All right
+  I'm giving you... on the count of three
+  To show your stuff... or let it be
+  I'm telling you... just watch your mouth
+  I know your game... what you're about
+  Well they say the sky's the limit
+  And to me that's really true
+  But my friend you have seen nothing
+  Just wait 'till I get through
+  Because I'm bad (bad-bad), I'm bad, come on (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, you know it (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, come on (really, really bad) you know
+  And the whole world has to answer right now
+  Just to tell you once again
+  Who's bad
+  The word is out... you're doing wrong
+  Gonna lock you up... before too long
+  Your lying eyes... don't tell you right
+  So listen up... don't make a fight
+  Your talk is cheap...`
 },{
   id: '006',
-  url: '',
   env: 'uk',
-  title: 'Đ mmm',
-  album: '"99%"',
-  artist: 'Duy Tân',
-  thumbnail: require('Assets/images/thumb_3.png'),
-  lyric: "Assets/lyrics/lyric1.txt",
-  audio_filepath:'Assets/audio/13.mp3'
+  url: '',
+  title: 'Stay',
+  album: '',
+  artist: 'Justin Belie',
+  like: true,
+  thumbnail: require('Assets/audio/13.png'),
+  audio_filepath:require('Assets/audio/13.mp3'),
+  lyric: `Your butt is mine... gonna tell you right
+  Just show your face... throughout daylight
+  I'm telling you... on how I feel
+  Gonna hurt your mind... gonna shoot to kill
+  Come on, come on, lay it on me
+  All right
+  I'm giving you... on the count of three
+  To show your stuff... or let it be
+  I'm telling you... just watch your mouth
+  I know your game... what you're about
+  Well they say the sky's the limit
+  And to me that's really true
+  But my friend you have seen nothing
+  Just wait 'till I get through
+  Because I'm bad (bad-bad), I'm bad, come on (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, you know it (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, come on (really, really bad) you know
+  And the whole world has to answer right now
+  Just to tell you once again
+  Who's bad
+  The word is out... you're doing wrong
+  Gonna lock you up... before too long
+  Your lying eyes... don't tell you right
+  So listen up... don't make a fight
+  Your talk is cheap...`
 },{
   id: '007',
-  url: '',
   env: 'uk',
-  title: 'COncac',
-  album: 'AYE',
-  artist: 'Duy Tân',
-  thumbnail: require('Assets/images/thumb_3.png'),
-  lyric: "Assets/lyrics/lyric1.txt",
-  audio_filepath:require('Assets/audio/13.mp3')
+  url: '',
+  title: "THAT'S NOT HOW THIS WORKS (FEAT. DAN + SHAY)",
+  album: '',
+  artist: 'Charlie Puth',
+  like: true,
+  thumbnail: require('Assets/audio/13.png'),
+  audio_filepath:require('Assets/audio/13.mp3'),
+  lyric: `Your butt is mine... gonna tell you right
+  Just show your face... throughout daylight
+  I'm telling you... on how I feel
+  Gonna hurt your mind... gonna shoot to kill
+  Come on, come on, lay it on me
+  All right
+  I'm giving you... on the count of three
+  To show your stuff... or let it be
+  I'm telling you... just watch your mouth
+  I know your game... what you're about
+  Well they say the sky's the limit
+  And to me that's really true
+  But my friend you have seen nothing
+  Just wait 'till I get through
+  Because I'm bad (bad-bad), I'm bad, come on (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, you know it (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, come on (really, really bad) you know
+  And the whole world has to answer right now
+  Just to tell you once again
+  Who's bad
+  The word is out... you're doing wrong
+  Gonna lock you up... before too long
+  Your lying eyes... don't tell you right
+  So listen up... don't make a fight
+  Your talk is cheap...`
 }]
 
-const dummyData = { Albums,Artist, Playlists, Favorite };
+export const Notification = [{
+  id: '01',
+  title: 'Hôm nay nghe gì',
+  description: 'Mai là cuối tuần',
+  thumbnail: require('Assets/images/thumb_3.png')
+},{
+  id: '02',
+  title: 'Tháng tư nghe gì',
+  description: 'Âm nhạc tháng 4',
+  thumbnail: require('Assets/images/thumb_3.png')
+},{
+  id: '03',
+  title: 'GENZ nghe gì',
+  description: 'Nhạc trẻ chất lượng',
+  thumbnail: require('Assets/images/thumb_3.png')
+}]
+
+export const NotificationLink = [{
+  id_noti: '01',
+  title: 'Bài này vui phết',
+  description: 'Bài hát với giai điệu vui vẻ free style thỏa mãn người nghe',
+  navigator_link: 'Player',
+  thumbnail: require('Assets/images/thumb_3.png')
+},{
+  id_noti: '01',
+  title: 'Ưng quá chừng',
+  description: 'Bài hát dễ thương đến từ cô nàng siêu đáng yêu',
+  navigator_link: 'Player',
+  thumbnail: require('Assets/images/thumb_3.png')
+},{
+  id_noti: '01',
+  title: '"99%" và 1% chưa hoàn thiện (có lẽ vậy) ',
+  description: 'Album nhạc chất lượng từ rapper siêu hot MCK',
+  navigator_link: 'Thealbum',
+  thumbnail: require('Assets/images/thumb_3.png')
+}]
+
+const dummyData = { Albums,Artist, Playlists, Favorite, Notification, NotificationLink };
 
 export default dummyData;

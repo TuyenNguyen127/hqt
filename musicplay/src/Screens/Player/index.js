@@ -9,7 +9,7 @@ import { McText, McImage, PlayButton } from "Components";
 import Swiper from "react-native-swiper";
 
 const Player = ({ navigation, route }) => {
-    const [selectedMusic, setSelectedMusic] = useState(null);
+    const [selected, setSelected] = useState(null);
     const [sound, setSound] = React.useState();
     const [isPlaying, setIsPlaying] = useState(false);
     const [sliderValue, setSliderValue] = useState(0);
@@ -33,11 +33,11 @@ const Player = ({ navigation, route }) => {
     
     // Load nhạc
     
-    async function loadSound(selectedMusic) {
+    async function loadSound(selected) {
         try {
-            setLikeSong(selectedMusic.like);
-            const lyrics = selectedMusic.lyric;
-            const { sound } = await Audio.Sound.createAsync(selectedMusic.audio_filepath);
+            setLikeSong(selected.like);
+            const lyrics = selected.lyric;
+            const { sound } = await Audio.Sound.createAsync(selected.audio_filepath);
             const sentences = lyrics.split(/\n/);
             setSound(sound);
             setLyrics(sentences);
@@ -48,9 +48,9 @@ const Player = ({ navigation, route }) => {
     
     // Khởi động component
     useEffect(() => {
-        let { selectedMusic } = route.params;
-        setSelectedMusic(selectedMusic);
-        loadSound(selectedMusic);
+        let { selected } = route.params;
+        setSelected(selected);
+        loadSound(selected);
         setIsReadyToSpin(true);
     }, []);
 
@@ -168,7 +168,7 @@ const Player = ({ navigation, route }) => {
                                     marginTop: 3, 
                                     marginBottom: 3,}} />}>
                     <MusicDetailSection>
-                        <Animated.Image source={selectedMusic?.thumbnail} style={{
+                        <Animated.Image source={selected?.thumbnail} style={{
                             marginHorizontal: 81,
                             marginVertical: 50,
                             width: 250,
@@ -181,23 +181,23 @@ const Player = ({ navigation, route }) => {
                             justifyContent: 'center',
                             alignItems: 'center'
                         }}>
-                            <McText semi size={24} color={Colors.grey5} align='center'>{selectedMusic?.title}</McText>
-                            <McText medium size={14} color={Colors.grey3} style={{marginTop: 8}} align='center'>{selectedMusic?.artist}</McText>
+                            <McText semi size={24} color={Colors.grey5} align='center'>{selected?.title}</McText>
+                            <McText medium size={14} color={Colors.grey3} style={{marginTop: 8}} align='center'>{selected?.artist}</McText>
                         </View>
                     </MusicDetailSection>
                     <View style={{marginLeft: 10}}>
                         <DetailLyricSection>
-                            <McImage source={selectedMusic?.thumbnail} style={{
+                            <McImage source={selected?.thumbnail} style={{
                                 width: 50,
                                 height:50,
                                 borderRadius: 10
                             }}></McImage>
                             <View style={{ marginLeft: 12 }}>
                                 <McText semi size={14} color={Colors.grey5}>
-                                    {selectedMusic?.title}
+                                    {selected?.title}
                                 </McText>
                                 <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
-                                    {selectedMusic?.artist}
+                                    {selected?.artist}
                                 </McText>
                             </View>
                         </DetailLyricSection>
