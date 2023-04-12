@@ -29,7 +29,7 @@ const Home = ({ navigation }) => {
     const _renderAlbums = ({ item, index}) => {
         return(
             <TouchableWithoutFeedback onPress={() => {
-                navigation.navigate('Thealbums',{selectedAlbum: item})
+                navigation.navigate('Thealbums',{selected: item})
             }}>
                 <View>
                     <View style={{
@@ -180,40 +180,50 @@ const Home = ({ navigation }) => {
                     </ViewEnv>
                 
                     <View style={{marginTop: 12, height: 180}}>
-                        <FlatList
-                            
-                            data={dummyData.Favorite}
-                            keyExtractor={(item) => item.id}
-                            renderItem={({ item }) => {
-                                if (item.env === selectedEnv) {
-                                    return (
-                                        <TouchableWithoutFeedback onPress={() => {
-                                            navigation.navigate('Player',{selected: item})
-                                        }}>
-                                        <FavoriteItemView>
-                                            <View style={{ flexDirection: "row" }}>
-                                                <MusicCirle>
-                                                    <McImage source={Images.music} />
-                                                </MusicCirle>
-                                                <View style={{ marginLeft: 12 }}>
-                                                    <McText semi size={14} color={Colors.grey5}>
-                                                    {item.title}
-                                                    </McText>
-                                                    <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
-                                                    {item.artist}
-                                                    </McText>
+                        <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            directionalLockEnabled={true}
+                            alwaysBounceVertical={false}
+                            >
+                            <FlatList
+                                data={dummyData.Favorite}
+                                contentContainerStyle={{alignSelf: 'flex-start'}}
+                                numColumns={Math.ceil(dummyData.Favorite.length / 4)}
+                                showsVerticalScrollIndicator={false}
+                                showsHorizontalScrollIndicator={false}
+                                keyExtractor={(item) => item.id}
+                                renderItem={({ item }) => {
+                                    if (item.env === selectedEnv) {
+                                        return (
+                                            <TouchableWithoutFeedback onPress={() => {
+                                                navigation.navigate('Player',{selected: item})
+                                            }}>
+                                            <FavoriteItemView>
+                                                <View style={{ flexDirection: "row" }}>
+                                                    <MusicCirle>
+                                                        <McImage source={Images.music} />
+                                                    </MusicCirle>
+                                                    <View style={{ marginLeft: 12, width: 259 - 24 }}>
+                                                        <McText semi size={14} color={Colors.grey5}>
+                                                        {item.title}
+                                                        </McText>
+                                                        <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
+                                                        {item.artist}
+                                                        </McText>
+                                                    </View>
                                                 </View>
-                                            </View>
-                                            <TouchableOpacity onPress={() => clickLikeSong(item.id)}>
-                                                <McImage source={likeSongState[item.id] ? Images.fullLike : Images.like} />
-                                            </TouchableOpacity>
-                                            
-                                        </FavoriteItemView>
-                                        </TouchableWithoutFeedback>
-                                    )
-                                }
-                            }}
-                        />
+                                                <TouchableOpacity onPress={() => clickLikeSong(item.id)}>
+                                                    <McImage source={likeSongState[item.id] ? Images.fullLike : Images.like} />
+                                                </TouchableOpacity>
+                                                
+                                            </FavoriteItemView>
+                                            </TouchableWithoutFeedback>
+                                        )
+                                    }
+                                }}
+                            />
+                        </ScrollView>
                     </View>
 
                     <TitleSection>
@@ -253,7 +263,7 @@ const Home = ({ navigation }) => {
                         marginTop: 30
                     }}
                     ></View>
-                    </ScrollView>
+            </ScrollView>
             
             <BottomSection>
                 <BottomBar>

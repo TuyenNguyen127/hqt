@@ -121,7 +121,7 @@ const Library = ({navigation}) => {
                         <MusicCirle>
                             <McImage source={Images.music} />
                         </MusicCirle>
-                        <View style={{ marginLeft: 12 }}>
+                        <View style={{ marginLeft: 12,width: 259 - 24 }}>
                             <McText semi size={14} color={Colors.grey5}>
                             {item.title}
                             </McText>

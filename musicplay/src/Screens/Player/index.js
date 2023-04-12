@@ -170,7 +170,7 @@ const Player = ({ navigation, route }) => {
                     <MusicDetailSection>
                         <Animated.Image source={selected?.thumbnail} style={{
                             marginHorizontal: 81,
-                            marginVertical: 50,
+                            marginVertical: 20,
                             width: 250,
                             height: 250,
                             borderRadius: 250/2,
@@ -181,7 +181,7 @@ const Player = ({ navigation, route }) => {
                             justifyContent: 'center',
                             alignItems: 'center'
                         }}>
-                            <McText semi size={24} color={Colors.grey5} align='center'>{selected?.title}</McText>
+                            <McText semi size={20} color={Colors.grey5} align='center'>{selected?.title}</McText>
                             <McText medium size={14} color={Colors.grey3} style={{marginTop: 8}} align='center'>{selected?.artist}</McText>
                         </View>
                     </MusicDetailSection>
