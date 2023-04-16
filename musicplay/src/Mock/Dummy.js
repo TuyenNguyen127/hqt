@@ -211,7 +211,7 @@ export const Favorite = [{
   url: '',
   title: 'Stay',
   album: '',
-  artist: 'Justin Belier',
+  artist: 'Justin Bieber',
   like: false,
   thumbnail: require('Assets/audio/13.png'),
   audio_filepath:require('Assets/audio/13.mp3'),
