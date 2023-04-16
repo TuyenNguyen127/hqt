@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from 'styled-components/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { View, TouchableOpacity, StatusBar, FlatList, TouchableWithoutFeedback } from 'react-native';
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {Colors, Images, Metrics} from '/Constants';
 import { McText, McImage, PlayButton } from 'Components';
 import { dummyData } from 'Mock';
@@ -11,6 +11,7 @@ import BottomBar from '../Library/BottomBar';
 const Thealbums = ({ navigation, route }) => {
     const [selected, setSelected] = useState(null);
     const [likeAlbum, setlikeAlbum] = useState(false);
+    const [currentSong, setCurrentSong] = useState(null);
 
     const initialLikeState = dummyData.Favorite.reduce((likeSongState, item) => {
         likeSongState[item.id] = item.like;
@@ -39,6 +40,17 @@ const Thealbums = ({ navigation, route }) => {
             [itemId]: !prevState[itemId]
           }));
     }
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            getDataMusic().then(song => {
+                setCurrentSong(song);
+            });
+            
+        });
+        
+        return unsubscribe;
+    }, [navigation]);
 
     return (
         <Container>
@@ -71,12 +83,14 @@ const Thealbums = ({ navigation, route }) => {
                 </View>
             </DetailSection> 
             
-            <SelectOptionSection>
-                <TouchableWithoutFeedback onPress={clickLikeAlbum}>
-                    <McImage source={likeAlbum ? Images.fullLike : Images.like} style={{
-                        marginLeft: 10
-                    }}/>
-                </TouchableWithoutFeedback>
+            <SelectOptionSection>   
+                <ContactSection style={{marginLeft: 10}}>
+                    <TouchableWithoutFeedback onPress={clickLikeAlbum}>
+                        <McImage source={likeAlbum ? Images.fullLike : Images.like}/>
+                    </TouchableWithoutFeedback>
+                    <McText medium color={Colors.grey3} size={10}>{selected?.likeNumber}</McText>
+                </ContactSection>
+                
                 
                 <TouchableOpacity style={{
                     height: 40,
@@ -88,9 +102,11 @@ const Thealbums = ({ navigation, route }) => {
                 }}>
                     <McText bold color={Colors.grey5} size={14}>Phát ngẫu nhiên</McText>
                 </TouchableOpacity>
-                <McImage source={Images.share} style={{
-                    marginRight: 10
-                }}/>
+                <ContactSection style={{marginRight: 10}}>
+                    <McImage source={Images.share}/>
+                    <McText medium color={Colors.grey3} size={10}>{selected?.shareNumber}</McText>
+                </ContactSection>
+                
             </SelectOptionSection>
             
             <McText semi align='center' size={12} style={{
@@ -140,20 +156,25 @@ const Thealbums = ({ navigation, route }) => {
                         alignItems: 'center',
                         marginHorizontal: 16,
                         marginVertical: 12
-                    }}>
-                        <View style={{
-                            flexDirection: 'row',
-                            alignItems: 'center'
-                        }}>
-                            <McImage source={require('Assets/images/thumb_3.png')} style={{
-                                width: 38,
-                                height: 38
-                            }}/>
-                            <View style={{marginLeft:12}}>
-                                <McText bold size={16} color={Colors.grey5}>Chưa hề yêu em</McText>
-                                <McText medium size={12} color={Colors.grey3} style={{marginTop: 4}}>Văn Tuyển</McText>
+                    }}> 
+                        <TouchableOpacity onPress={() => navigation.navigate('Player', {selected: currentSong})}>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center'
+                            }}>
+                                <McImage source={require('Assets/images/thumb_3.png')} style={{
+                                    width: 38,
+                                    height: 38
+                                }}/>
+                                <View style={{marginLeft:12, width:199 - 12}}>
+                                    <McText bold size={12} color={Colors.grey5}>
+                                        {currentSong?.title}
+                                    </McText>
+                                    <McText medium size={10} color={Colors.grey3} style={{marginTop: 4}}>{currentSong?.artist}</McText>
+                                </View>
                             </View>
-                        </View>
+                        </TouchableOpacity>
+                        
                         <PlayButton size={46} circle={41.28} icon={Images.stop}></PlayButton>
                     </View>
                 </BottomBar>
@@ -194,10 +215,15 @@ const SelectOptionSection = styled.View`
     alignSelf: center;
 `;
 
+const ContactSection = styled.View`
+    margin: 0px 24px;
+    justify-content: center;
+    align-items: center;
+`;
+
 const FavoriteItemView = styled.View`
     marginBottom: 12px;
     flex-direction: row;
-    
     align-items: flex-start;
 `;
 

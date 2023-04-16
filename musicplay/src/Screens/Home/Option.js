@@ -35,7 +35,7 @@ const Option = ({ navigation }) => {
 
             <View style={{marginTop: 72}}>
                 <TouchableOpacity onPress={()=>{
-                        navigation.navigate("Library");
+                    navigation.navigate('Library');
                 }}>
                     <SelectSection>
                         <McText medium size={20} color={Colors.grey4}>Thư viện của tôi</McText>

@@ -3,6 +3,7 @@ import { StatusBar, Text, TouchableOpacity, View, Animated, Easing, ScrollView }
 import styled from "styled-components";
 import Slider from "@react-native-community/slider";
 import { Audio } from 'expo-av';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { Colors, Images, Metrics } from "/Constants";
 import { McText, McImage, PlayButton } from "Components";
@@ -30,9 +31,26 @@ const Player = ({ navigation, route }) => {
             setLikeSong(true);
         }
     }
+
+    const storeDataMusic = async (value) => {
+        try {
+            const jsonValue = JSON.stringify(value);
+            await AsyncStorage.setItem('@selectedMusic', jsonValue);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    const getDataMusic = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@selectedMusic')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch(e) {
+            console.log(e);
+        }
+    }
     
     // Load nhạc
-    
     async function loadSound(selected) {
         try {
             setLikeSong(selected.like);
@@ -51,6 +69,7 @@ const Player = ({ navigation, route }) => {
         let { selected } = route.params;
         setSelected(selected);
         loadSound(selected);
+        storeDataMusic(selected); 
         setIsReadyToSpin(true);
     }, []);
 

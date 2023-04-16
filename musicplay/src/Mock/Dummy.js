@@ -4,17 +4,17 @@
 
 export const Playlists = [{
   id: '001',
-  name: 'Anh 1',
+  name: 'Playlist 1',
   songs: 20,
   thumbnail: require('Assets/images/thumb_1.png')
 },{
   id: '002',
-  name: 'Anh 2',
+  name: 'Playlist 2',
   songs: 5,
   thumbnail: require('Assets/images/thumb_2.png')
 },{
   id: '003',
-  name: 'Anh 3',
+  name: 'Playlist 3',
   songs: 5,
   thumbnail: require('Assets/images/thumb_2.png')
 }]
@@ -41,6 +41,8 @@ export const Albums = [{
   songs: 16,
   description: 'Ú òa! Mono chỉ là người đến sau',
   thumbnail: require('Assets/images/album22_mono.png'),
+  likeNumber: 100123,
+  shareNumber: 2606
 },{
   id: '002',
   name: '"99%"',
@@ -48,7 +50,9 @@ export const Albums = [{
   like: true,
   songs: 16,
   description: 'Va vào giai điệu cùng MCK',
-  thumbnail: require('Assets/images/album99%_mck.png')
+  thumbnail: require('Assets/images/album99%_mck.png'),
+  likeNumber: 100123,
+  shareNumber: 100123
 },{
   id: '003',
   name: '"22"',
@@ -56,7 +60,9 @@ export const Albums = [{
   like: true,
   songs: 16,
   description: 'Ú òa! Mono chỉ là người đến sau',
-  thumbnail: require('Assets/images/album22_mono.png')
+  thumbnail: require('Assets/images/album22_mono.png'),
+  likeNumber: 100123,
+  shareNumber: 2975
 }]
 
 export const Favorite = [{
@@ -99,7 +105,7 @@ export const Favorite = [{
   env: 'vn',
   url: '',
   title: 'Thôi em đừng đi!',
-  like: true,
+  like: false,
   album: '"99%"',
   artist: 'RPT MCK',
   thumbnail: require('Assets/audio/13.png'),
@@ -133,7 +139,7 @@ export const Favorite = [{
   id: '003',
   env: 'vn',
   url: '',
-  title: 'Ai Mới Là Kẻ Xấu Xa',
+  title: 'Chìm sâu',
   album: '"99%"',
   artist: 'RPT MCK',
   like: true,
@@ -171,7 +177,7 @@ export const Favorite = [{
   title: 'Badtrip',
   album: '"99%"',
   artist: 'RPT MCK',
-  like: true,
+  like: false,
   thumbnail: require('Assets/audio/13.png'),
   audio_filepath:require('Assets/audio/13.mp3'),
   lyric: `Your butt is mine... gonna tell you right
@@ -205,8 +211,8 @@ export const Favorite = [{
   url: '',
   title: 'Stay',
   album: '',
-  artist: 'Justin Belie',
-  like: true,
+  artist: 'Justin Belier',
+  like: false,
   thumbnail: require('Assets/audio/13.png'),
   audio_filepath:require('Assets/audio/13.mp3'),
   lyric: `Your butt is mine... gonna tell you right
@@ -238,10 +244,220 @@ export const Favorite = [{
   id: '007',
   env: 'uk',
   url: '',
-  title: "THAT'S NOT HOW THIS WORKS (FEAT. DAN + SHAY)",
+  title: "THAT'S NOT HOW THIS WORKS",
+  album: '',
+  artist: 'Charlie Puth (FEAT. DAN + SHAY)',
+  like: true,
+  thumbnail: require('Assets/audio/13.png'),
+  audio_filepath:require('Assets/audio/13.mp3'),
+  lyric: `Your butt is mine... gonna tell you right
+  Just show your face... throughout daylight
+  I'm telling you... on how I feel
+  Gonna hurt your mind... gonna shoot to kill
+  Come on, come on, lay it on me
+  All right
+  I'm giving you... on the count of three
+  To show your stuff... or let it be
+  I'm telling you... just watch your mouth
+  I know your game... what you're about
+  Well they say the sky's the limit
+  And to me that's really true
+  But my friend you have seen nothing
+  Just wait 'till I get through
+  Because I'm bad (bad-bad), I'm bad, come on (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, you know it (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, come on (really, really bad) you know
+  And the whole world has to answer right now
+  Just to tell you once again
+  Who's bad
+  The word is out... you're doing wrong
+  Gonna lock you up... before too long
+  Your lying eyes... don't tell you right
+  So listen up... don't make a fight
+  Your talk is cheap...`
+},{
+  id: '004',
+  env: 'vn',
+  url: '',
+  title: 'Sui & Tie',
+  album: '"99%"',
+  artist: 'RPT MCK (feat. Hoàng Tôn)',
+  like: false,
+  thumbnail: require('Assets/audio/13.png'),
+  audio_filepath:require('Assets/audio/13.mp3'),
+  lyric: `Your butt is mine... gonna tell you right
+  Just show your face... throughout daylight
+  I'm telling you... on how I feel
+  Gonna hurt your mind... gonna shoot to kill
+  Come on, come on, lay it on me
+  All right
+  I'm giving you... on the count of three
+  To show your stuff... or let it be
+  I'm telling you... just watch your mouth
+  I know your game... what you're about
+  Well they say the sky's the limit
+  And to me that's really true
+  But my friend you have seen nothing
+  Just wait 'till I get through
+  Because I'm bad (bad-bad), I'm bad, come on (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, you know it (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, come on (really, really bad) you know
+  And the whole world has to answer right now
+  Just to tell you once again
+  Who's bad
+  The word is out... you're doing wrong
+  Gonna lock you up... before too long
+  Your lying eyes... don't tell you right
+  So listen up... don't make a fight
+  Your talk is cheap...`
+},{
+  id: '008',
+  env: 'vn',
+  url: '',
+  title: 'Anh đã ổn hơn',
+  album: '"99%"',
+  artist: 'RPT MCK',
+  like: true,
+  thumbnail: require('Assets/audio/13.png'),
+  audio_filepath:require('Assets/audio/13.mp3'),
+  lyric: `Your butt is mine... gonna tell you right
+  Just show your face... throughout daylight
+  I'm telling you... on how I feel
+  Gonna hurt your mind... gonna shoot to kill
+  Come on, come on, lay it on me
+  All right
+  I'm giving you... on the count of three
+  To show your stuff... or let it be
+  I'm telling you... just watch your mouth
+  I know your game... what you're about
+  Well they say the sky's the limit
+  And to me that's really true
+  But my friend you have seen nothing
+  Just wait 'till I get through
+  Because I'm bad (bad-bad), I'm bad, come on (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, you know it (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, come on (really, really bad) you know
+  And the whole world has to answer right now
+  Just to tell you once again
+  Who's bad
+  The word is out... you're doing wrong
+  Gonna lock you up... before too long
+  Your lying eyes... don't tell you right
+  So listen up... don't make a fight
+  Your talk is cheap...`
+},{
+  id: '009',
+  env: 'uk',
+  url: '',
+  title: 'Loser',
   album: '',
   artist: 'Charlie Puth',
   like: true,
+  thumbnail: require('Assets/audio/13.png'),
+  audio_filepath:require('Assets/audio/13.mp3'),
+  lyric: `Your butt is mine... gonna tell you right
+  Just show your face... throughout daylight
+  I'm telling you... on how I feel
+  Gonna hurt your mind... gonna shoot to kill
+  Come on, come on, lay it on me
+  All right
+  I'm giving you... on the count of three
+  To show your stuff... or let it be
+  I'm telling you... just watch your mouth
+  I know your game... what you're about
+  Well they say the sky's the limit
+  And to me that's really true
+  But my friend you have seen nothing
+  Just wait 'till I get through
+  Because I'm bad (bad-bad), I'm bad, come on (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, you know it (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, come on (really, really bad) you know
+  And the whole world has to answer right now
+  Just to tell you once again
+  Who's bad
+  The word is out... you're doing wrong
+  Gonna lock you up... before too long
+  Your lying eyes... don't tell you right
+  So listen up... don't make a fight
+  Your talk is cheap...`
+},{
+  id: '010',
+  env: 'uk',
+  url: '',
+  title: 'Light Switch',
+  album: '',
+  artist: 'Charlie Puth',
+  like: false,
+  thumbnail: require('Assets/audio/13.png'),
+  audio_filepath:require('Assets/audio/13.mp3'),
+  lyric: `Your butt is mine... gonna tell you right
+  Just show your face... throughout daylight
+  I'm telling you... on how I feel
+  Gonna hurt your mind... gonna shoot to kill
+  Come on, come on, lay it on me
+  All right
+  I'm giving you... on the count of three
+  To show your stuff... or let it be
+  I'm telling you... just watch your mouth
+  I know your game... what you're about
+  Well they say the sky's the limit
+  And to me that's really true
+  But my friend you have seen nothing
+  Just wait 'till I get through
+  Because I'm bad (bad-bad), I'm bad, come on (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, you know it (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, come on (really, really bad) you know
+  And the whole world has to answer right now
+  Just to tell you once again
+  Who's bad
+  The word is out... you're doing wrong
+  Gonna lock you up... before too long
+  Your lying eyes... don't tell you right
+  So listen up... don't make a fight
+  Your talk is cheap...`
+},{
+  id: '011',
+  env: 'uk',
+  url: '',
+  title: 'Blinding Lights',
+  album: '',
+  artist: 'The Weeknd',
+  like: true,
+  thumbnail: require('Assets/audio/13.png'),
+  audio_filepath:require('Assets/audio/13.mp3'),
+  lyric: `Your butt is mine... gonna tell you right
+  Just show your face... throughout daylight
+  I'm telling you... on how I feel
+  Gonna hurt your mind... gonna shoot to kill
+  Come on, come on, lay it on me
+  All right
+  I'm giving you... on the count of three
+  To show your stuff... or let it be
+  I'm telling you... just watch your mouth
+  I know your game... what you're about
+  Well they say the sky's the limit
+  And to me that's really true
+  But my friend you have seen nothing
+  Just wait 'till I get through
+  Because I'm bad (bad-bad), I'm bad, come on (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, you know it (really, really bad)
+  You know I'm bad (bad-bad), I'm bad, come on (really, really bad) you know
+  And the whole world has to answer right now
+  Just to tell you once again
+  Who's bad
+  The word is out... you're doing wrong
+  Gonna lock you up... before too long
+  Your lying eyes... don't tell you right
+  So listen up... don't make a fight
+  Your talk is cheap...`
+},{
+  id: '012',
+  env: 'uk',
+  url: '',
+  title: 'Sugar',
+  album: '',
+  artist: 'Maroon 5',
+  like: false,
   thumbnail: require('Assets/audio/13.png'),
   audio_filepath:require('Assets/audio/13.mp3'),
   lyric: `Your butt is mine... gonna tell you right

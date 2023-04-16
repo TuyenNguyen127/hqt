@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import {Text, ScrollView, View, StatusBar, TextInput, Image, TouchableWithoutFeedback, FlatList, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 import Swiper from 'react-native-swiper';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { Fonts, Images, Metrics, Colors } from 'Constants';
 import { McText, McImage, McAvatar, PlayButton } from 'Components';
@@ -11,6 +12,8 @@ import BottomBar from '../Library/BottomBar';
 
 const Home = ({ navigation }) => {
     const [selectedEnv, setSelectedEnv] = useState('vn');
+    const [currentSong, setCurrentSong] = useState(null);
+
 
     const initialLikeState = dummyData.Favorite.reduce((likeSongState, item) => {
         likeSongState[item.id] = item.like;
@@ -24,6 +27,24 @@ const Home = ({ navigation }) => {
             ...prevState,
             [itemId]: !prevState[itemId]
           }));
+    }
+
+    const getDataMusic = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@selectedMusic')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch(e) {
+            console.log(e);
+        }
+    }
+
+    const getStatusPlay = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@isPlaying')
+            return jsonValue;
+        } catch(e) {
+            console.log(e);
+        }
     }
 
     const _renderAlbums = ({ item, index}) => {
@@ -60,6 +81,17 @@ const Home = ({ navigation }) => {
             </View>
         )
     }
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            getDataMusic().then(song => {
+                setCurrentSong(song);
+            });
+            
+        });
+        
+        return unsubscribe;
+    }, [navigation]);
     
     return (
         <Container>
@@ -189,14 +221,14 @@ const Home = ({ navigation }) => {
                             <FlatList
                                 data={dummyData.Favorite}
                                 contentContainerStyle={{alignSelf: 'flex-start'}}
-                                numColumns={Math.ceil(dummyData.Favorite.length / 4)}
+                                numColumns={Math.ceil(dummyData.Favorite.length / 6)}
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
                                 keyExtractor={(item) => item.id}
                                 renderItem={({ item }) => {
                                     if (item.env === selectedEnv) {
                                         return (
-                                            <TouchableWithoutFeedback onPress={() => {
+                                            <TouchableWithoutFeedback onPress={() => { 
                                                 navigation.navigate('Player',{selected: item})
                                             }}>
                                             <FavoriteItemView>
@@ -274,20 +306,26 @@ const Home = ({ navigation }) => {
                         alignItems: 'center',
                         marginHorizontal: 16,
                         marginVertical: 12
-                    }}>
-                        <View style={{
-                            flexDirection: 'row',
-                            alignItems: 'center'
-                        }}>
-                            <McImage source={require('Assets/images/thumb_3.png')} style={{
-                                width: 38,
-                                height: 38
-                            }}/>
-                            <View style={{marginLeft:12}}>
-                                <McText bold size={16} color={Colors.grey5}>Chưa hề yêu em</McText>
-                                <McText medium size={12} color={Colors.grey3} style={{marginTop: 4}}>Văn Tuyển</McText>
+                    }}> 
+                        <TouchableOpacity onPress={() => navigation.navigate('Player', {selected: currentSong})}>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center'
+                            }}>
+                                <McImage source={currentSong?.thumbnail} style={{
+                                    width: 38,
+                                    height: 38,
+                                    borderRadius: 19,
+                                }}/>
+                                <View style={{marginLeft:12, width:199 - 12}}>
+                                    <McText bold size={12} color={Colors.grey5}>
+                                        {currentSong?.title}
+                                    </McText>
+                                    <McText medium size={10} color={Colors.grey3} style={{marginTop: 4}}>{currentSong?.artist}</McText>
+                                </View>
                             </View>
-                        </View>
+                        </TouchableOpacity>
+                        
                         <PlayButton size={46} circle={41.28} icon={Images.stop}></PlayButton>
                     </View>
                 </BottomBar>
