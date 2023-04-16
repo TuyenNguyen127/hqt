@@ -1,6 +1,7 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { TouchableOpacity, View, StatusBar, TextInput, TouchableWithoutFeedback, FlatList, ScrollView} from "react-native";
 import styled from "styled-components";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {Colors, Images, Metrics} from '/Constants';
 import { McText, McImage, PlayButton } from 'Components';
@@ -8,6 +9,16 @@ import { dummyData } from 'Mock';
 import BottomBar from './BottomBar';
 
 const Library = ({navigation}) => {
+    const [currentSong, setCurrentSong] = useState(null);
+
+    const getDataMusic = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@selectedMusic')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch(e) {
+            console.log(e);
+        }
+    }
 
     const initialLikeState = dummyData.Favorite.reduce((likeSongState, item) => {
         likeSongState[item.id] = item.like;
@@ -41,13 +52,24 @@ const Library = ({navigation}) => {
             </View>
         )
     }
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            getDataMusic().then(song => {
+                setCurrentSong(song);
+            });
+            
+        });
+        
+        return unsubscribe;
+    }, [navigation]);
     
     return(
     <Container>
        <StatusBar barStyle='light-content'/>
 
        <HeaderSection>
-            <TouchableOpacity onPress={()=> navigation.navigate('Option')}>
+            <TouchableOpacity onPress={() =>{ navigation.navigate('Option'); navigation.dispach()}}>
                 <McImage source={Images.profile} style={{height: 30, width: 30}}></McImage>
             </TouchableOpacity>
                 
@@ -141,31 +163,36 @@ const Library = ({navigation}) => {
         </View>
 
         <BottomSection>
-            <BottomBar>
-                <View style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    marginHorizontal: 16,
-                    marginVertical: 12
-                }}>
+                <BottomBar>
                     <View style={{
                         flexDirection: 'row',
-                        alignItems: 'center'
-                    }}>
-                        <McImage source={require('Assets/images/thumb_3.png')} style={{
-                            width: 38,
-                            height: 38
-                        }}/>
-                        <View style={{marginLeft:12}}>
-                            <McText bold size={16} color={Colors.grey5}>Chưa hề yêu em</McText>
-                            <McText medium size={12} color={Colors.grey3} style={{marginTop: 4}}>Văn Tuyển</McText>
-                        </View>
+                        justifyContent: 'space-between',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        marginHorizontal: 16,
+                        marginVertical: 12
+                    }}> 
+                        <TouchableOpacity onPress={() => navigation.navigate('Player', {selected: currentSong})}>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center'
+                            }}>
+                                <McImage source={require('Assets/images/thumb_3.png')} style={{
+                                    width: 38,
+                                    height: 38
+                                }}/>
+                                <View style={{marginLeft:12, width:199 - 12}}>
+                                    <McText bold size={12} color={Colors.grey5}>
+                                        {currentSong?.title}
+                                    </McText>
+                                    <McText medium size={10} color={Colors.grey3} style={{marginTop: 4}}>{currentSong?.artist}</McText>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                        
+                        <PlayButton size={46} circle={41.28} icon={Images.stop}></PlayButton>
                     </View>
-                    <PlayButton size={46} circle={41.28} icon={Images.stop}></PlayButton>
-                </View>
-            </BottomBar>
+                </BottomBar>
         </BottomSection>
 
     </Container>
