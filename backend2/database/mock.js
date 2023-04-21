@@ -311,6 +311,6 @@ export const NotificationLink = [{
   thumbnail: require('Assets/images/thumb_3.png')
 }]
 
-const dummyData = { Albums,Artist, Playlists, Favorite, Notification, NotificationLink };
+const dummyData = {Song, Artist, Album, Playlist, Favorite, Notification, NotificationLink };
 
 export default dummyData;

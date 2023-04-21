@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const ArtistSchema = new Schema({
     name: String,
-    description: String,
+    about: String,
     thumbnail: {
         type: String,
         default: '../../assets/img/n.png',
@@ -14,8 +14,8 @@ const ArtistSchema = new Schema({
             ref: 'Song',
         },
     ],
-    num_liked: Number,
-    num_shared: Number,
+    followers: Number,
+    monthly_listener: Number,
 })
 
 module.exports = mongoose.model('Artist', ArtistSchema)

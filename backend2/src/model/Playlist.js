@@ -2,11 +2,11 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const PlaylistSchema = new Schema({
+    user_id: mongoose.Types.ObjectId, // none: => user create
     name: {
         type: String,
         required: true,
     },
-    user_id: mongoose.Types.ObjectId, // none: => user create
     thumbnail: {
         type: String,
         default: '../../assets/img/n.png',
