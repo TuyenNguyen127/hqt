@@ -15,6 +15,7 @@ module.exports = function (api) {
             Components: './src/Components',
             Screens: './src/Screens',
             Mock: './src/Mock',
+            Context: './src/Context'
           },
         },
       ],

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useContext } from 'react';
 import { useState } from 'react';
 import {Text, ScrollView, View, StatusBar, TextInput, Image, TouchableWithoutFeedback, FlatList, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
@@ -9,10 +9,12 @@ import { Fonts, Images, Metrics, Colors } from 'Constants';
 import { McText, McImage, McAvatar, PlayButton } from 'Components';
 import { dummyData } from 'Mock';
 import BottomBar from '../Library/BottomBar';
+import { MusicContext } from '../../Context/MusicProvider';
 
 const Home = ({ navigation }) => {
     const [selectedEnv, setSelectedEnv] = useState('vn');
-    const [currentSong, setCurrentSong] = useState(null);
+    const context = useContext(MusicContext);
+    const {currentSong, setLastPosition} = context;
 
 
     const initialLikeState = dummyData.Favorite.reduce((likeSongState, item) => {
@@ -26,7 +28,7 @@ const Home = ({ navigation }) => {
         setLikeSongState(prevState => ({
             ...prevState,
             [itemId]: !prevState[itemId]
-          }));
+        }));
     }
 
     const getDataMusic = async () => {
@@ -34,6 +36,14 @@ const Home = ({ navigation }) => {
             const jsonValue = await AsyncStorage.getItem('@selectedMusic')
             return jsonValue != null ? JSON.parse(jsonValue) : null;
         } catch(e) {
+            console.log(e);
+        }
+    }
+    const storeDataMusic = async (value) => {
+        try {
+            const jsonValue = JSON.stringify(value);
+            await AsyncStorage.setItem('@selectedMusic', jsonValue);
+        } catch (e) {
             console.log(e);
         }
     }
@@ -46,6 +56,7 @@ const Home = ({ navigation }) => {
             console.log(e);
         }
     }
+    
 
     const _renderAlbums = ({ item, index}) => {
         return(
@@ -81,17 +92,6 @@ const Home = ({ navigation }) => {
             </View>
         )
     }
-
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            getDataMusic().then(song => {
-                setCurrentSong(song);
-            });
-            
-        });
-        
-        return unsubscribe;
-    }, [navigation]);
     
     return (
         <Container>
@@ -99,7 +99,7 @@ const Home = ({ navigation }) => {
 
             {/* Thanh chức năng */}
             <HeaderSection>
-                <TouchableOpacity onPress={()=> navigation.navigate('Option')}>
+                <TouchableOpacity onPress={()=> navigation.push('Option')}>
                     <McImage source={Images.profile} style={{height: 30, width: 30}}></McImage>
                 </TouchableOpacity>
                 
@@ -228,8 +228,10 @@ const Home = ({ navigation }) => {
                                 renderItem={({ item }) => {
                                     if (item.env === selectedEnv) {
                                         return (
-                                            <TouchableWithoutFeedback onPress={() => { 
-                                                navigation.navigate('Player',{selected: item})
+                                            <TouchableWithoutFeedback onPress={() => {
+                                                storeDataMusic(item); 
+                                                navigation.navigate('Player');
+                                                
                                             }}>
                                             <FavoriteItemView>
                                                 <View style={{ flexDirection: "row" }}>
@@ -307,7 +309,7 @@ const Home = ({ navigation }) => {
                         marginHorizontal: 16,
                         marginVertical: 12
                     }}> 
-                        <TouchableOpacity onPress={() => navigation.navigate('Player', {selected: currentSong})}>
+                        <TouchableOpacity onPress={() => navigation.navigate('Player')}>
                             <View style={{
                                 flexDirection: 'row',
                                 alignItems: 'center'

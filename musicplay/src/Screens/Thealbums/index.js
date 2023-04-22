@@ -41,6 +41,23 @@ const Thealbums = ({ navigation, route }) => {
           }));
     }
 
+    const getDataMusic = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@selectedMusic')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch(e) {
+            console.log(e);
+        }
+    }
+    const storeDataMusic = async (value) => {
+        try {
+            const jsonValue = JSON.stringify(value);
+            await AsyncStorage.setItem('@selectedMusic', jsonValue);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
             getDataMusic().then(song => {
