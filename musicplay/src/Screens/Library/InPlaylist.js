@@ -13,6 +13,7 @@ const InPlaylist = ({navigation, route}) => {
     const context = useContext(MusicContext);
     const [selected, setSelected] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
+    const [modalDelVisible, setModalDelVisible] = useState(false);
     const [selectedSong, setSelectedSong] = useState(null);
     const {currentSong, setLastPosition, play, lastPosition, resume, sound } = context;
 
@@ -25,6 +26,11 @@ const InPlaylist = ({navigation, route}) => {
             console.log(e);
         }
     }
+
+    const handleYes = () => {
+        alert('Đã xóa bài hát khỏi danh sách kết hợp thành công');
+        setModalDelVisible(false);
+    };
 
     useEffect(() => {
         let { selected } = route.params;
@@ -89,7 +95,36 @@ const InPlaylist = ({navigation, route}) => {
                                 </TouchableOpacity>
                             </View>
                             <View style={{marginTop: 10,alignItems: 'center', paddingHorizontal: 20, paddingVertical: 10}}>
-                                <TouchableOpacity onPress={() => {}}><McText aligin >Loại bài hát khỏi {selected?.name}</McText></TouchableOpacity>
+                                <TouchableOpacity onPress={() => {setModalVisible(false);setModalDelVisible(true)}}>
+                                    <McText aligin >Loại bài hát khỏi {selected?.name}</McText>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
+                    <Modal animationType="slide" transparent={true} visible={modalDelVisible}>
+                        <View style={{
+                            marginLeft: 30,
+                            marginRight: 30,
+                            marginVertical: 50,
+                            aliginItems: 'center',
+                            backgroundColor: Colors.grey4,
+                            borderRadius: 10
+                        }}>
+                            <View style={{marginTop: 10,alignItems: 'center'}}>
+                                <McText>Bạn có muốn xóa bài hát khỏi {selected?.name}</McText>
+                            </View>
+                            <View style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                marginHorizontal: 50,
+                                marginVertical: 20
+                            }}>
+                                <TouchableOpacity onPress={() => {setModalVisible(true);setModalDelVisible(false)}}>
+                                    <McText>Không</McText>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={handleYes}>
+                                    <McText>Có</McText>
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </Modal>
