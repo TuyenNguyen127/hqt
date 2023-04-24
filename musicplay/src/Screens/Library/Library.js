@@ -165,38 +165,38 @@ const Library = ({navigation}) => {
             </View>
 
             <BottomSection>
-                    <BottomBar>
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignContent: 'center',
-                            alignItems: 'center',
-                            marginHorizontal: 16,
-                            marginVertical: 12
-                        }}> 
-                            <TouchableOpacity onPress={() => {navigation.navigate('Player')}}>
-                                <View style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center'
-                                }}>
-                                    <McImage source={currentSong?.thumbnail} style={{
-                                        width: 38,
-                                        height: 38
-                                    }}/>
-                                    <View style={{marginLeft:12, width:199 - 12}}>
-                                        <McText bold size={12} color={Colors.grey5}>
-                                            {currentSong?.title}
-                                        </McText>
-                                        <McText medium size={10} color={Colors.grey3} style={{marginTop: 4}}>{currentSong?.artist}</McText>
-                                    </View>
+                <BottomBar>
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        marginHorizontal: 16,
+                        marginVertical: 12
+                    }}> 
+                        <TouchableOpacity onPress={() => navigation.navigate('Player')}>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center'
+                            }}>
+                                <McImage source={currentSong?.thumbnail} style={{
+                                    width: 38,
+                                    height: 38,
+                                    borderRadius: 19,
+                                }}/>
+                                <View style={{marginLeft:12, width:199 - 12}}>
+                                    <McText bold size={12} color={Colors.grey5}>
+                                        {currentSong?.title}
+                                    </McText>
+                                    <McText medium size={10} color={Colors.grey3} style={{marginTop: 4}}>{currentSong?.artist}</McText>
                                 </View>
-                            </TouchableOpacity>
-                            
-                            <PlayButton size={46} circle={41.28} icon={Images.stop}></PlayButton>
-                        </View>
-                    </BottomBar>
+                            </View>
+                        </TouchableOpacity>
+                        
+                        <PlayButton size={46} circle={41.28} icon={Images.stop}></PlayButton>
+                    </View>
+                </BottomBar>
             </BottomSection>
-
         </Container>
     )
 }

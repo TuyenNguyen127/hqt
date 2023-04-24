@@ -103,7 +103,8 @@ const Favorite = ({navigation}) => {
                             }}>
                                 <McImage source={currentSong?.thumbnail} style={{
                                     width: 38,
-                                    height: 38
+                                    height: 38,
+                                    borderRadius: 19
                                 }}/>
                                 <View style={{marginLeft:12, width:199 - 12}}>
                                     <McText bold size={12} color={Colors.grey5}>

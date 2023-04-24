@@ -174,14 +174,15 @@ const Thealbums = ({ navigation, route }) => {
                         marginHorizontal: 16,
                         marginVertical: 12
                     }}> 
-                        <TouchableOpacity onPress={() => navigation.navigate('Player', {selected: currentSong})}>
+                        <TouchableOpacity onPress={() => navigation.navigate('Player')}>
                             <View style={{
                                 flexDirection: 'row',
                                 alignItems: 'center'
                             }}>
                                 <McImage source={require('Assets/images/thumb_3.png')} style={{
                                     width: 38,
-                                    height: 38
+                                    height: 38,
+                                    borderRadius: 19
                                 }}/>
                                 <View style={{marginLeft:12, width:199 - 12}}>
                                     <McText bold size={12} color={Colors.grey5}>

@@ -70,9 +70,9 @@ const InPlaylist = ({navigation, route}) => {
                     </View>
                     <Modal animationType="slide" transparent={true} visible={modalVisible}>
                         <View style={{
-                            marginLeft: 12,
+                            marginLeft: 30,
                             marginRight: 30,
-                            marginVertical: 200,
+                            marginVertical: 50,
                             aliginItems: 'center',
                             backgroundColor: Colors.grey4,
                             borderRadius: 10
@@ -80,7 +80,7 @@ const InPlaylist = ({navigation, route}) => {
                             <View style={{
                                 flexDirection: 'row',
                                 justifyContent: 'space-between',
-                                marginHorizontal: 20,
+                                marginHorizontal: 10,
                                 paddingTop: 10,
                             }}>
                                 <McText>{selectedSong?.title}</McText>
