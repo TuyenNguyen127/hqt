@@ -127,7 +127,7 @@ const Container = styled.SafeAreaView`
 `;
 
 const HeaderSection = styled.View`
-    marginTop: 12px;
+    marginHorizontal: 15px;
     width: 327px;
     height: 30px;
     flex-direction: row;

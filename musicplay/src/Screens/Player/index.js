@@ -10,7 +10,7 @@ import { McText, McImage, PlayButton } from "Components";
 import Swiper from "react-native-swiper";
 import { MusicContext } from "../../Context/MusicProvider";
 
-const Player = ({ navigation, route }) => {
+const Player = ({ navigation}) => {
     const [selected, setSelected] = useState(null);
     const [isPlaying, setIsPlaying] = useState(true);
     const [sliderValue, setSliderValue] = useState(0);
@@ -277,7 +277,10 @@ const Player = ({ navigation, route }) => {
                         marginLeft: 24
                     }}/>
                 </TouchableOpacity>
-                <McImage source={Images.inplayList}/>
+                <TouchableOpacity onPress={()=>{navigation.navigate('MyPlaylist', {id_song: currentSong?.id})}}>
+                    <McImage source={Images.inplayList}/>
+                </TouchableOpacity>
+                
                 <McImage source={Images.download}/>
                 <McImage source={Images.share} style={{
                     marginRight: 24

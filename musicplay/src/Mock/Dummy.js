@@ -509,21 +509,24 @@ export const NotificationLink = [{
   id_noti: '01',
   title: 'Bài này vui phết',
   description: 'Bài hát với giai điệu vui vẻ free style thỏa mãn người nghe',
-  navigator_link: 'Player',
+  navigation_link: 'Player',
+  id_object: '001',
   thumbnail: require('Assets/images/thumb_3.png')
 },{
   id: '002',
   id_noti: '01',
   title: 'Ưng quá chừng',
   description: 'Bài hát dễ thương đến từ cô nàng siêu đáng yêu',
-  navigator_link: 'Player',
+  navigation_link: 'Player',
+  id_object: '001',
   thumbnail: require('Assets/images/thumb_3.png')
 },{
   id: '003',
   id_noti: '01',
   title: '"99%" và 1% chưa hoàn thiện (có lẽ vậy) ',
   description: 'Album nhạc chất lượng từ rapper siêu hot MCK',
-  navigator_link: 'Thealbum',
+  navigation_link: 'Thealbum',
+  id_oboject: '001',
   thumbnail: require('Assets/images/thumb_3.png')
 }]
 

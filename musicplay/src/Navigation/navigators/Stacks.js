@@ -2,10 +2,10 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { Profile, Player, Thealbums} from 'Screens';
+import { Profile, Player, Thealbums, Search} from 'Screens';
 import { Login, Register, ForgetPassword, ResetPassword } from '../../Screens/Onboarding';
 import { Home, Option, Notification, NotificationLink } from '../../Screens/Home';
-import { Library, MyPlaylist, Favorites } from '../../Screens/Library';
+import { Library, MyPlaylist, Favorites, InPlaylist } from '../../Screens/Library';
 const Stack = createStackNavigator();
 
 const Stacks = ({ params }) => (
@@ -34,6 +34,13 @@ const Stacks = ({ params }) => (
     <Stack.Screen
       name="Option"
       component={Option}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <Stack.Screen
+      name="Search"
+      component={Search}
       options={{
         headerShown: false,
       }}
@@ -90,6 +97,13 @@ const Stacks = ({ params }) => (
     <Stack.Screen
       name="MyPlaylist"
       component={MyPlaylist}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <Stack.Screen
+      name="InPlaylist"
+      component={InPlaylist}
       options={{
         headerShown: false,
       }}

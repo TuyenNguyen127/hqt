@@ -1,6 +1,7 @@
-import React, {useState, useEffect, useContext} from 'react';
-import { TouchableOpacity, View, StatusBar, TextInput, TouchableWithoutFeedback, FlatList, ScrollView} from "react-native";
+import React, {useState, useEffect,useContext} from "react";
+import { TouchableOpacity, View, StatusBar, TextInput, TouchableWithoutFeedback, FlatList, Modal} from "react-native";
 import styled from "styled-components";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {Colors, Images, Metrics} from '/Constants';
 import { McText, McImage, PlayButton } from 'Components';
@@ -8,9 +9,27 @@ import { dummyData } from 'Mock';
 import BottomBar from './BottomBar';
 import { MusicContext } from "../../Context/MusicProvider";
 
-const MyPlaylist = ({navigation}) => {
+const InPlaylist = ({navigation, route}) => {
     const context = useContext(MusicContext);
-    const {currentSong} = context;
+    const [selected, setSelected] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedSong, setSelectedSong] = useState(null);
+    const {currentSong, setLastPosition, play, lastPosition, resume, sound } = context;
+
+    
+    const storeDataMusic = async (value) => {
+        try {
+            const jsonValue = JSON.stringify(value);
+            await AsyncStorage.setItem('@selectedMusic', jsonValue);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    useEffect(() => {
+        let { selected } = route.params;
+        setSelected(selected);
+    }, []); 
 
     return(
     <Container>
@@ -23,39 +42,63 @@ const MyPlaylist = ({navigation}) => {
             }}>
                 <McImage source={Images.left}/>
             </TouchableOpacity>
-            <McText bold size={14} color={Colors.grey5}>Danh sách kết hợp</McText>
-            <McImage source={Images.menu}/>
+            <McText bold size={14} color={Colors.grey5}>{selected?.name}</McText>
+            <View/>
         </HeaderSection>
-        
-        <FavoriteItemView>
-            <View style={{ flexDirection: "row" }}>                                               
-                <McImage source={require('Assets/images/new_playlist.png')} style={{height: 50, width: 50, borderRadius: 10}}/>                                  
-                <View style={{ marginLeft: 12,width: 259 - 24, justifyContent: 'center' }}>
-                    <McText semi size={14} color={Colors.grey5}>
-                        Thêm danh sách phát mới
-                    </McText>
-                </View>
-            </View>   
-        </FavoriteItemView>
+
         <FlatList
-            data={dummyData.Playlists}
+            data={dummyData.Favorite}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
                 <TouchableWithoutFeedback onPress={() => {
+                    storeDataMusic(item); 
                     navigation.navigate('Player');
                 }}>
                 <FavoriteItemView>
-                    <View style={{ flexDirection: "row" }}>                                               
-                        <McImage source={(item.thumbnail)} style={{height: 50, width: 50, borderRadius: 10}}/>                                  
+                    <View style={{ flexDirection: "row" }}>                        
+                        <MusicCirle>
+                            <McImage source={Images.music} />
+                        </MusicCirle>          
                         <View style={{ marginLeft: 12,width: 259 - 24 }}>
                             <McText semi size={14} color={Colors.grey5}>
-                                {item.name}
+                                {item.title}
                             </McText>
                             <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
-                                {item.songs} songs
+                                {item.artist}
                             </McText>
                         </View>
-                    </View>   
+                    </View>
+                    <Modal animationType="slide" transparent={true} visible={modalVisible}>
+                        <View style={{
+                            marginLeft: 12,
+                            marginRight: 30,
+                            marginVertical: 200,
+                            aliginItems: 'center',
+                            backgroundColor: Colors.grey4,
+                            borderRadius: 10
+                        }}>
+                            <View style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                marginHorizontal: 20,
+                                paddingTop: 10,
+                            }}>
+                                <McText>{selectedSong?.title}</McText>
+                                <TouchableOpacity onPress={() => setModalVisible(false)}>
+                                    <McImage source={Images.close}/>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{marginTop: 10,alignItems: 'center', paddingHorizontal: 20, paddingVertical: 10}}>
+                                <TouchableOpacity onPress={() => {}}><McText aligin >Loại bài hát khỏi {selected?.name}</McText></TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
+                    <TouchableOpacity onPress={() => {
+                        setModalVisible(true);
+                        setSelectedSong(item);
+                    }}>
+                        <McImage source={Images.menu_n} />
+                    </TouchableOpacity>
                 </FavoriteItemView>
                 </TouchableWithoutFeedback>
             )}
@@ -65,6 +108,7 @@ const MyPlaylist = ({navigation}) => {
                         marginTop: 30
                     }}
         ></View>
+
         
         <BottomSection>
                 <BottomBar>
@@ -98,6 +142,7 @@ const MyPlaylist = ({navigation}) => {
                     </View>
                 </BottomBar>
         </BottomSection>
+        
     </Container>
 )}
 
@@ -107,7 +152,7 @@ const Container = styled.SafeAreaView`
 `;
 
 const HeaderSection = styled.View`
-    marginTop: 12px;
+    marginVertical: 15px;
     width: 327px;
     height: 30px;
     flex-direction: row;
@@ -123,6 +168,15 @@ const FavoriteItemView = styled.View`
     align-items: flex-start;
 `;
 
+const MusicCirle = styled.View`
+    width: 42px;
+    height: 42px;
+    border-radius: 42px;
+    background_color: ${Colors.secondary};
+    justify-content: center;
+    align-items: center;
+`;
+
 const BottomSection = styled.View`
     margin: 0px 24px;
     flex-direction: row;
@@ -134,4 +188,4 @@ const BottomSection = styled.View`
     z-index: 1;
 `;
 
-export default MyPlaylist;
+export default InPlaylist;

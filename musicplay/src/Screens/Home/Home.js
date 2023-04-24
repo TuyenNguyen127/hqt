@@ -103,20 +103,15 @@ const Home = ({ navigation }) => {
                     <McImage source={Images.profile} style={{height: 30, width: 30}}></McImage>
                 </TouchableOpacity>
                 
-                <SearchSetion>
-                    <McImage 
-                        source={Images.find}
-                        style={{marginLeft: 12, marginRight:10, width: 20, height: 20}}
-                    ></McImage>
-                    <TextInput 
-                        placeholder="Nhập tên bài hát hoặc nghệ sĩ"
-                        placeholderTextColor={Colors.grey3}
-                        style={{
-                            color: Colors.grey4,
-                            fontSize: 12
-                        }}
-                    ></TextInput>
-                </SearchSetion>
+                <TouchableOpacity onPress={()=> {navigation.navigate('Search')}}>
+                    <SearchSetion>
+                        <McImage 
+                            source={Images.find}
+                            style={{marginLeft: 16, marginRight:12}}
+                        ></McImage>
+                        <McText color={Colors.grey3} size={14}>Tìm kiếm bài hát, nghệ sĩ</McText>
+                    </SearchSetion>
+                </TouchableOpacity>
                 <TouchableOpacity onPress={()=> navigation.navigate('Notification')}>
                     <McImage source={Images.bell}/>
                 </TouchableOpacity>
@@ -228,8 +223,8 @@ const Home = ({ navigation }) => {
                                 renderItem={({ item }) => {
                                     if (item.env === selectedEnv) {
                                         return (
-                                            <TouchableWithoutFeedback onPress={() => {
-                                                storeDataMusic(item); 
+                                            <TouchableWithoutFeedback onPress={async () => {
+                                                await storeDataMusic(item); 
                                                 navigation.navigate('Player');
                                                 
                                             }}>

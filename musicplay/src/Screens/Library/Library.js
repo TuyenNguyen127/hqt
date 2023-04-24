@@ -46,159 +46,160 @@ const Library = ({navigation}) => {
     
     const _renderItem = ({ item, index}) => {
         return(
-            <View>
-                <View style={{
-                    marginTop:16,
-                    marginLeft: index === 0? 24:0,
-                    marginRight:index === dummyData.Playlists.length - 1?0:24
-                }}>
-                <McImage key={index} source={item.thumbnail} style={{marginBottom:12, height: 80, width: 80}}/>
-                <McText semi size={16} color={Colors.grey5}>{item.name}</McText>
-                <McText medium size={12} color={Colors.grey3} style={{
-                    marginTop: 4
-                }}>
-                    {item.songs} songs</McText>
+            <TouchableWithoutFeedback onPress={() => {
+                 navigation.navigate('InPlaylist', {selected: item});
+            }}>
+                <View>
+                    <View style={{
+                        marginTop:16,
+                        marginLeft: index === 0? 24:0,
+                        marginRight:index === dummyData.Playlists.length - 1?0:24
+                    }}>
+                    <McImage key={index} source={item.thumbnail} style={{marginBottom:12, height: 80, width: 80}}/>
+                    <McText semi size={16} color={Colors.grey5}>{item.name}</McText>
+                    <McText medium size={12} color={Colors.grey3} style={{
+                        marginTop: 4
+                    }}>
+                        {item.songs} songs</McText>
+                    </View>
                 </View>
-            </View>
+            </TouchableWithoutFeedback>
         )
     }
     
     return(
-    <Container>
-       <StatusBar barStyle='light-content'/>
+        <Container>
+            <StatusBar barStyle='light-content'/>
 
-       <HeaderSection>
-            <TouchableOpacity onPress={() =>{ navigation.push('Option')}}>
-                <McImage source={Images.profile} style={{height: 30, width: 30}}></McImage>
-            </TouchableOpacity>
-                
-            <McText 
-            bold 
-            align='center'
-            size={28} 
-            color={Colors.primary}
-            >My Library</McText>
-
-            <TouchableOpacity onPress={()=> navigation.navigate('Home')}>
-                <McImage source={Images.home}/>
-            </TouchableOpacity>
-                
-        </HeaderSection>
-        
-
-        <SearchSetion>
-            <McImage 
-                source={Images.find}
-                style={{marginLeft: 16, marginRight:12}}
-            ></McImage>
-            <TextInput 
-                placeholder="Nhập tên bài hát, nghệ sĩ"
-                placeholderTextColor={Colors.grey3}
-                style={{
-                    color: Colors.grey4
-                }}
-            ></TextInput>
-        </SearchSetion>
-
-        <TitleSection>
-            <McText medium size={20} color={Colors.grey4}>Danh sách kết hợp</McText>
-            <TouchableWithoutFeedback onPress={()=>{
-                console.log('Go to Playlist page');
-                navigation.navigate('MyPlaylist')
-            }}>
-                <McImage source={Images.right}/>
-            </TouchableWithoutFeedback>
-        </TitleSection>
-
-        <View>
-            <FlatList
-                keyExtractor={(item) => 'playlist_' + item.id}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{}}
-                data={dummyData.Playlists}
-                renderItem={_renderItem}
-            />
-        </View>
-
-        <TitleSection>
-            <McText medium size={20} color={Colors.grey4}>Bài hát yêu thích</McText>
-            <TouchableWithoutFeedback onPress={()=>{
-                console.log('Go to Favorite page');
-                navigation.navigate('Favorites');
-            }}>
-                <McImage source={Images.right}/>
-            </TouchableWithoutFeedback>
-        </TitleSection>
-
-        <View style={{marginTop: 10, height: 250}}>
-        <FlatList
-            data={dummyData.Favorite}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-                <TouchableWithoutFeedback onPress={() => {
-                    storeDataMusic(item); 
-                    navigation.navigate('Player')
-                }}>
-                <FavoriteItemView>
-                    <View style={{ flexDirection: "row" }}>
-                        <MusicCirle>
-                            <McImage source={Images.music} />
-                        </MusicCirle>
-                        <View style={{ marginLeft: 12,width: 259 - 24 }}>
-                            <McText semi size={14} color={Colors.grey5}>
-                            {item.title}
-                            </McText>
-                            <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
-                            {item.artist}
-                            </McText>
-                        </View>
-                    </View>
-                    <TouchableOpacity onPress={() => touchContactSongs(item.id)}>
-                        <McImage source={likeSongState[item.id] ? Images.fullLike: Images.like} />
-                    </TouchableOpacity>
+            <HeaderSection>
+                <TouchableOpacity onPress={() =>{ navigation.push('Option')}}>
+                    <McImage source={Images.profile} style={{height: 30, width: 30}}></McImage>
+                </TouchableOpacity>
                     
-                </FavoriteItemView>
-                </TouchableWithoutFeedback>
-            )}
-        />
-        </View>
+                <McText 
+                bold 
+                align='center'
+                size={28} 
+                color={Colors.primary}
+                >My Library</McText>
 
-        <BottomSection>
-                <BottomBar>
-                    <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignContent: 'center',
-                        alignItems: 'center',
-                        marginHorizontal: 16,
-                        marginVertical: 12
-                    }}> 
-                        <TouchableOpacity onPress={() => {navigation.navigate('Player')}}>
-                            <View style={{
-                                flexDirection: 'row',
-                                alignItems: 'center'
-                            }}>
-                                <McImage source={currentSong?.thumbnail} style={{
-                                    width: 38,
-                                    height: 38
-                                }}/>
-                                <View style={{marginLeft:12, width:199 - 12}}>
-                                    <McText bold size={12} color={Colors.grey5}>
-                                        {currentSong?.title}
-                                    </McText>
-                                    <McText medium size={10} color={Colors.grey3} style={{marginTop: 4}}>{currentSong?.artist}</McText>
-                                </View>
+                <TouchableOpacity onPress={()=> navigation.navigate('Home')}>
+                    <McImage source={Images.home}/>
+                </TouchableOpacity>
+                    
+            </HeaderSection>
+            
+            <TouchableOpacity onPress={()=> {navigation.navigate('Search')}}>
+                <SearchSetion>
+                    <McImage 
+                        source={Images.find}
+                        style={{marginLeft: 16, marginRight:12}}
+                    ></McImage>
+                    <McText color={Colors.grey3} size={14}>Tìm kiếm bài hát, nghệ sĩ</McText>
+                </SearchSetion>
+            </TouchableOpacity>
+            
+
+            <TouchableWithoutFeedback onPress={()=>{
+                    console.log('Go to Playlist page');
+                    navigation.navigate('MyPlaylist', {id_song: null})
+                }}>
+                <TitleSection>
+                    <McText medium size={20} color={Colors.grey4}>Danh sách kết hợp</McText>           
+                    <McImage source={Images.right}/>
+                </TitleSection>
+            </TouchableWithoutFeedback>
+
+            <View>
+                <FlatList
+                    keyExtractor={(item) => 'playlist_' + item.id}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{}}
+                    data={dummyData.Playlists}
+                    renderItem={_renderItem}
+                />
+
+            </View>
+            <TouchableWithoutFeedback onPress={()=>{
+                    console.log('Go to Favorite page');
+                    navigation.navigate('Favorites');
+                }}>
+                <TitleSection>
+                    <McText medium size={20} color={Colors.grey4}>Bài hát yêu thích</McText>
+                    <McImage source={Images.right}/>
+                </TitleSection>
+            </TouchableWithoutFeedback>
+
+            <View style={{marginTop: 10, height: 250}}>
+            <FlatList
+                data={dummyData.Favorite}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                    <TouchableWithoutFeedback onPress={() => {
+                        storeDataMusic(item); 
+                        navigation.navigate('Player')
+                    }}>
+                    <FavoriteItemView>
+                        <View style={{ flexDirection: "row" }}>
+                            <MusicCirle>
+                                <McImage source={Images.music} />
+                            </MusicCirle>
+                            <View style={{ marginLeft: 12,width: 259 - 24 }}>
+                                <McText semi size={14} color={Colors.grey5}>
+                                {item.title}
+                                </McText>
+                                <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
+                                {item.artist}
+                                </McText>
                             </View>
+                        </View>
+                        <TouchableOpacity onPress={() => touchContactSongs(item.id)}>
+                            <McImage source={likeSongState[item.id] ? Images.fullLike: Images.like} />
                         </TouchableOpacity>
                         
-                        <PlayButton size={46} circle={41.28} icon={Images.stop}></PlayButton>
-                    </View>
-                </BottomBar>
-        </BottomSection>
+                    </FavoriteItemView>
+                    </TouchableWithoutFeedback>
+                )}
+            />
+            </View>
 
-    </Container>
-)}
+            <BottomSection>
+                    <BottomBar>
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignContent: 'center',
+                            alignItems: 'center',
+                            marginHorizontal: 16,
+                            marginVertical: 12
+                        }}> 
+                            <TouchableOpacity onPress={() => {navigation.navigate('Player')}}>
+                                <View style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center'
+                                }}>
+                                    <McImage source={currentSong?.thumbnail} style={{
+                                        width: 38,
+                                        height: 38
+                                    }}/>
+                                    <View style={{marginLeft:12, width:199 - 12}}>
+                                        <McText bold size={12} color={Colors.grey5}>
+                                            {currentSong?.title}
+                                        </McText>
+                                        <McText medium size={10} color={Colors.grey3} style={{marginTop: 4}}>{currentSong?.artist}</McText>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                            
+                            <PlayButton size={46} circle={41.28} icon={Images.stop}></PlayButton>
+                        </View>
+                    </BottomBar>
+            </BottomSection>
+
+        </Container>
+    )
+}
 
 
 const Container = styled.SafeAreaView`
