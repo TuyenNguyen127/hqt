@@ -50,7 +50,7 @@ export const Albums = [{
   like: true,
   songs: 16,
   description: 'Va vào giai điệu cùng MCK',
-  thumbnail: require('Assets/images/album99%_mck.png'),
+  thumbnail: require('Assets/images/album99_mck.png'),
   likeNumber: 100123,
   shareNumber: 100123
 },{
