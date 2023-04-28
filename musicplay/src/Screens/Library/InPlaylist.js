@@ -15,7 +15,19 @@ const InPlaylist = ({navigation, route}) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [modalDelVisible, setModalDelVisible] = useState(false);
     const [selectedSong, setSelectedSong] = useState(null);
-    const {currentSong, setLastPosition, play, lastPosition, resume, sound } = context;
+    const {currentSong, isPlaying, resume, pause } = context;
+
+    const handlePlayPress = async () => {
+        try {
+            if (isPlaying) {
+                await pause();
+            } else {
+                await resume();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     
     const storeDataMusic = async (value) => {
@@ -173,7 +185,7 @@ const InPlaylist = ({navigation, route}) => {
                             </View>
                         </TouchableOpacity>
                         
-                        <PlayButton size={46} circle={41.28} icon={Images.stop}></PlayButton>
+                        <PlayButton size={46} circle={41.28} icon={isPlaying ? Images.stop : Images.play} onPress={handlePlayPress}></PlayButton>
                     </View>
                 </BottomBar>
         </BottomSection>

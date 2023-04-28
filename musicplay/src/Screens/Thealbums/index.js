@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import styled from 'styled-components/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { View, TouchableOpacity, StatusBar, FlatList, TouchableWithoutFeedback } from 'react-native';
@@ -7,11 +7,25 @@ import {Colors, Images, Metrics} from '/Constants';
 import { McText, McImage, PlayButton } from 'Components';
 import { dummyData } from 'Mock';
 import BottomBar from '../Library/BottomBar';
+import { MusicContext } from "../../Context/MusicProvider";
 
 const Thealbums = ({ navigation, route }) => {
     const [selected, setSelected] = useState(null);
     const [likeAlbum, setlikeAlbum] = useState(false);
-    const [currentSong, setCurrentSong] = useState(null);
+    const context = useContext(MusicContext)
+    const {currentSong, isPlaying, resume, pause } = context;
+
+    const handlePlayPress = async () => {
+        try {
+            if (isPlaying) {
+                await pause();
+            } else {
+                await resume();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const initialLikeState = dummyData.Favorite.reduce((likeSongState, item) => {
         likeSongState[item.id] = item.like;
@@ -57,17 +71,6 @@ const Thealbums = ({ navigation, route }) => {
             console.log(e);
         }
     }
-
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            getDataMusic().then(song => {
-                setCurrentSong(song);
-            });
-            
-        });
-        
-        return unsubscribe;
-    }, [navigation]);
 
     return (
         <Container>
@@ -179,7 +182,7 @@ const Thealbums = ({ navigation, route }) => {
                                 flexDirection: 'row',
                                 alignItems: 'center'
                             }}>
-                                <McImage source={require('Assets/images/thumb_3.png')} style={{
+                                <McImage source={currentSong?.thumbnail} style={{
                                     width: 38,
                                     height: 38,
                                     borderRadius: 19
@@ -193,7 +196,7 @@ const Thealbums = ({ navigation, route }) => {
                             </View>
                         </TouchableOpacity>
                         
-                        <PlayButton size={46} circle={41.28} icon={Images.stop}></PlayButton>
+                        <PlayButton size={46} circle={41.28} icon={isPlaying ? Images.stop : Images.play} onPress={handlePlayPress}></PlayButton>
                     </View>
                 </BottomBar>
             </BottomSection>

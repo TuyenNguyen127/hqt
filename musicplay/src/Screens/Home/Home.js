@@ -14,8 +14,27 @@ import { MusicContext } from '../../Context/MusicProvider';
 const Home = ({ navigation }) => {
     const [selectedEnv, setSelectedEnv] = useState('vn');
     const context = useContext(MusicContext);
-    const {currentSong, setLastPosition} = context;
+    const {currentSong, isPlaying, sound, pause, resume, load} = context;
 
+    async function loadSound() {
+        try {
+            await load();
+        } catch(error) {
+            console.log(error);
+        }
+    }
+
+    const handlePlayPress = async () => {
+        try {
+            if (isPlaying) {
+                await pause();
+            } else {
+                await resume();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const initialLikeState = dummyData.Favorite.reduce((likeSongState, item) => {
         likeSongState[item.id] = item.like;
@@ -31,28 +50,11 @@ const Home = ({ navigation }) => {
         }));
     }
 
-    const getDataMusic = async () => {
-        try {
-            const jsonValue = await AsyncStorage.getItem('@selectedMusic')
-            return jsonValue != null ? JSON.parse(jsonValue) : null;
-        } catch(e) {
-            console.log(e);
-        }
-    }
     const storeDataMusic = async (value) => {
         try {
             const jsonValue = JSON.stringify(value);
             await AsyncStorage.setItem('@selectedMusic', jsonValue);
         } catch (e) {
-            console.log(e);
-        }
-    }
-
-    const getStatusPlay = async () => {
-        try {
-            const jsonValue = await AsyncStorage.getItem('@isPlaying')
-            return jsonValue;
-        } catch(e) {
             console.log(e);
         }
     }
@@ -92,6 +94,11 @@ const Home = ({ navigation }) => {
             </View>
         )
     }
+
+    useEffect(() => {
+        loadSound();
+        console.log('success');
+    }, []);
     
     return (
         <Container>
@@ -225,6 +232,7 @@ const Home = ({ navigation }) => {
                                         return (
                                             <TouchableWithoutFeedback onPress={async () => {
                                                 await storeDataMusic(item); 
+                                                await load();
                                                 navigation.navigate('Player');
                                                 
                                             }}>
@@ -323,7 +331,7 @@ const Home = ({ navigation }) => {
                             </View>
                         </TouchableOpacity>
                         
-                        <PlayButton size={46} circle={41.28} icon={Images.stop}></PlayButton>
+                        <PlayButton size={46} circle={41.28} icon={isPlaying ? Images.stop : Images.play} onPress={handlePlayPress}></PlayButton>
                     </View>
                 </BottomBar>
             </BottomSection>

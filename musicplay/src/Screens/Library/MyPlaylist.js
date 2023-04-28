@@ -11,12 +11,24 @@ import { MusicContext } from "../../Context/MusicProvider";
 
 const MyPlaylist = ({navigation, route}) => {
     const context = useContext(MusicContext);
-    const {currentSong} = context;
     const [songItem, setSongItem] = useState(null);
     const [currentPlaylist, setCurrentPlaylist] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [modalAddVisible, setModalAddVisible] = useState(false);
     const [playlistName, setPlaylistName] = useState('');
+    const {currentSong, isPlaying, resume, pause } = context;
+
+    const handlePlayPress = async () => {
+        try {
+            if (isPlaying) {
+                await pause();
+            } else {
+                await resume();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const handleCancel = () => {
         setModalAddVisible(false);
@@ -135,7 +147,7 @@ const MyPlaylist = ({navigation, route}) => {
                             </View>
                         </TouchableOpacity>
                         
-                        <PlayButton size={46} circle={41.28} icon={Images.stop}></PlayButton>
+                        <PlayButton size={46} circle={41.28} icon={isPlaying ? Images.stop : Images.play} onPress={handlePlayPress}></PlayButton>
                     </View>
                 </BottomBar>
         </BottomSection>

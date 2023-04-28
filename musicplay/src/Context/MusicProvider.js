@@ -7,7 +7,7 @@ export const MusicProvider = ({ children }) => {
     const [currentSong, setCurrentSong] = useState(null);
     const [lastPosition, setLastPosition] = useState(0);
     const [sound, setSound] = useState(new Audio.Sound());
-    
+    const [isPlaying, setIsPlaying] = useState(false);
     
     const getDataMusic = async () => {
         try {
@@ -18,40 +18,29 @@ export const MusicProvider = ({ children }) => {
         }
     }
     
-    const storeDataMusic = async (value) => {
-        try {
-            const jsonValue = JSON.stringify(value);
-            await AsyncStorage.setItem('@selectedMusic', jsonValue);
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
-    const getPositonMillis = async () => {
-        const status = await sound.getStatusAsync();
-        return status.positionMillis;
-    }
-
-    const getDurationMillis = async () => {
-        const status = await sound.getStatusAsync();
-        return status.positionMillis;
-    }
-    
-    const play = async () => {
+    const load = async () => {
         try {
             const status = await sound.getStatusAsync();
-            console.log(status.durationMillis);
-            console.log(currentSong);
-            if (!status.isLoaded) {
-                await sound.loadAsync(currentSong.audio_filepath);
-            } 
-            else {
-                await sound.stopAsync();
-                await sound.unloadAsync();
-                await sound.loadAsync(currentSong.audio_filepath);
-                
-            }
-            await resume();
+
+            getDataMusic().then(async song => {
+                setCurrentSong(song);
+                if (!status.isLoaded) {
+                    await sound.loadAsync(song.audio_filepath);
+                } 
+                else {
+                    await sound.stopAsync();
+                    await sound.unloadAsync();
+                    await sound.loadAsync(currentSong.audio_filepath);
+                }
+            });
+
+            await Audio.setAudioModeAsync({
+                interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+                shouldDuckAndroid: true,
+                staysActiveInBackground: true,
+            });
+            await Audio.setIsEnabledAsync(true);
+            setIsPlaying(false);
         } catch (e) {
             console.log('error', error.message);
         }
@@ -60,6 +49,7 @@ export const MusicProvider = ({ children }) => {
     // pause audio
     const pause = async () => {
         try {
+            setIsPlaying(false);
             return await sound.setStatusAsync({
                 shouldPlay: false,
             });
@@ -71,6 +61,7 @@ export const MusicProvider = ({ children }) => {
     // resume audio
     const resume = async () => {
         try {
+            setIsPlaying(true);
             return await sound.playAsync();
         } catch (error) {
             console.log('error inside resume helper method', error.message);
@@ -95,23 +86,17 @@ export const MusicProvider = ({ children }) => {
         return currentSong;
     }
 
-    const getCurrentPosition = () =>{
-        getPositonMillis().then(value => {
-            setLastPosition(value);
-        })
-
-        return lastPosition
-    }
     return (
         <MusicContext.Provider 
             value={{ 
                 currentSong: getCurrentSong(), 
                 lastPosition: lastPosition,
                 setLastPosition,
-                pause,
-                play,
-                resume,
+                pause: pause,
+                load: load,
+                resume: resume,
                 sound,
+                isPlaying: isPlaying
                 
             }}>
             {children}

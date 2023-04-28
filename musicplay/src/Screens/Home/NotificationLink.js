@@ -12,7 +12,19 @@ import { MusicContext } from '../../Context/MusicProvider';
 const NotificationLink = ({ navigation, route }) => {
     const [id_noti, setId_noti] = useState(null);
     const context = useContext(MusicContext);
-    const {currentSong, setLastPosition, play, lastPosition, resume, sound } = context;
+    const {currentSong, isPlaying, resume, pause } = context;
+
+    const handlePlayPress = async () => {
+        try {
+            if (isPlaying) {
+                await pause();
+            } else {
+                await resume();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
     useEffect(() => {
         let { id_noti } = route.params;
         setId_noti(id_noti);
@@ -94,7 +106,7 @@ const NotificationLink = ({ navigation, route }) => {
                             </View>
                         </TouchableOpacity>
                         
-                        <PlayButton size={46} circle={41.28} icon={Images.stop}></PlayButton>
+                        <PlayButton size={46} circle={41.28} icon={isPlaying ? Images.stop : Images.play} onPress={handlePlayPress}></PlayButton>
                     </View>
                 </BottomBar>
             </BottomSection>

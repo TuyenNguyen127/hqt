@@ -12,7 +12,6 @@ import { MusicContext } from "../../Context/MusicProvider";
 
 const Player = ({ navigation}) => {
     const [selected, setSelected] = useState(null);
-    const [isPlaying, setIsPlaying] = useState(true);
     const [sliderValue, setSliderValue] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
@@ -24,7 +23,7 @@ const Player = ({ navigation}) => {
     
     const [likeSong, setLikeSong] = useState(false);
     const context = useContext(MusicContext);
-    const {currentSong, setLastPosition, play, lastPosition, resume, sound } = context;
+    const {currentSong, isPlaying, load, pause, resume, sound } = context;
 
     const clickLike = () => {
         if (likeSong) {
@@ -37,7 +36,7 @@ const Player = ({ navigation}) => {
     // Load nhạc
     async function loadSound() {
         try {
-            await play();
+            await resume();
             setLikeSong(currentSong.like);
             const lyrics = currentSong.lyric;
             const sentences = lyrics.split(/\n/);
@@ -89,12 +88,9 @@ const Player = ({ navigation}) => {
     const handlePlayPress = async () => {
         try {
             if (isPlaying) {
-                setIsPlaying(false);
-                await sound.pauseAsync();
-                
+                await pause();
             } else {
-                setIsPlaying(true);
-                await sound.playAsync()
+                await resume();
             }
         } catch (error) {
             console.error(error);

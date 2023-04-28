@@ -1,20 +1,29 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { StatusBar, Text, TouchableOpacity, View, TextInput, Easing, ScrollView } from "react-native";
 import styled from "styled-components";
-import Slider from "@react-native-community/slider";
-import { Audio } from 'expo-av';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { Colors, Images, Metrics } from "/Constants";
 import { McText, McImage, PlayButton } from "Components";
-import Swiper from "react-native-swiper";
 import { MusicContext } from "../../Context/MusicProvider";
 import BottomBar from "../Library/BottomBar";
 
 
 const Search = ({ navigation }) => {
     const context = useContext(MusicContext);
-    const {currentSong } = context;
+    const {currentSong, isPlaying, resume, pause } = context;
+
+    const handlePlayPress = async () => {
+        try {
+            if (isPlaying) {
+                await pause();
+            } else {
+                await resume();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
         <Container>
@@ -73,7 +82,7 @@ const Search = ({ navigation }) => {
                             </View>
                         </TouchableOpacity>
                         
-                        <PlayButton size={46} circle={41.28} icon={Images.stop}></PlayButton>
+                        <PlayButton size={46} circle={41.28} icon={isPlaying ? Images.stop : Images.play} onPress={handlePlayPress}></PlayButton>
                     </View>
                 </BottomBar>
             </BottomSection>
