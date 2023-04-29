@@ -15,7 +15,7 @@ const InPlaylist = ({navigation, route}) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [modalDelVisible, setModalDelVisible] = useState(false);
     const [selectedSong, setSelectedSong] = useState(null);
-    const {currentSong, isPlaying, resume, pause } = context;
+    const {currentSong, isPlaying, resume, pause, load } = context;
 
     const handlePlayPress = async () => {
         try {
@@ -68,8 +68,9 @@ const InPlaylist = ({navigation, route}) => {
             data={dummyData.Favorite}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-                <TouchableWithoutFeedback onPress={() => {
+                <TouchableWithoutFeedback onPress={async () => {
                     storeDataMusic(item); 
+                    await load();
                     navigation.navigate('Player');
                 }}>
                 <FavoriteItemView>

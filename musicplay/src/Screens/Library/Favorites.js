@@ -11,7 +11,7 @@ import { MusicContext } from "../../Context/MusicProvider";
 
 const Favorite = ({navigation}) => {
     const context = useContext(MusicContext);
-    const {currentSong, isPlaying, resume, pause } = context;
+    const {currentSong, isPlaying, resume, pause , load} = context;
 
     const handlePlayPress = async () => {
         try {
@@ -67,8 +67,9 @@ const Favorite = ({navigation}) => {
             data={dummyData.Favorite}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-                <TouchableWithoutFeedback onPress={() => {
+                <TouchableWithoutFeedback onPress={async () => {
                     storeDataMusic(item); 
+                    await load();
                     navigation.navigate('Player');
                 }}>
                 <FavoriteItemView>

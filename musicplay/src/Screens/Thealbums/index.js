@@ -13,7 +13,7 @@ const Thealbums = ({ navigation, route }) => {
     const [selected, setSelected] = useState(null);
     const [likeAlbum, setlikeAlbum] = useState(false);
     const context = useContext(MusicContext)
-    const {currentSong, isPlaying, resume, pause } = context;
+    const {currentSong, isPlaying, resume, pause, load } = context;
 
     const handlePlayPress = async () => {
         try {
@@ -55,14 +55,6 @@ const Thealbums = ({ navigation, route }) => {
           }));
     }
 
-    const getDataMusic = async () => {
-        try {
-            const jsonValue = await AsyncStorage.getItem('@selectedMusic')
-            return jsonValue != null ? JSON.parse(jsonValue) : null;
-        } catch(e) {
-            console.log(e);
-        }
-    }
     const storeDataMusic = async (value) => {
         try {
             const jsonValue = JSON.stringify(value);
@@ -141,8 +133,10 @@ const Thealbums = ({ navigation, route }) => {
                     renderItem={({ item }) => {
                         if (item.album === selected?.name) {
                             return (
-                                <TouchableWithoutFeedback onPress={() => {
-                                    navigation.navigate('Player',{selected: item})
+                                <TouchableWithoutFeedback onPress={async () => {
+                                    storeDataMusic(item);
+                                    await load();
+                                    navigation.navigate('Player')
                                 }}>
                                 <FavoriteItemView>
                                     <View style={{ flexDirection: "row" }}>
