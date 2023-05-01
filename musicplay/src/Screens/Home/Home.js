@@ -10,15 +10,18 @@ import { McText, McImage, McAvatar, PlayButton } from 'Components';
 import { dummyData } from 'Mock';
 import BottomBar from '../Library/BottomBar';
 import { MusicContext } from '../../Context/MusicProvider';
+import TrackPlayer, {AppKilledPlaybackBehavior,Capability, State } from 'react-native-track-player';
 
 const Home = ({ navigation }) => {
     const [selectedEnv, setSelectedEnv] = useState('vn');
     const context = useContext(MusicContext);
-    const {currentSong, isPlaying, sound, pause, resume, load} = context;
+    const [isPlaying_, setIsPlaying] = useState(false);
+    const {currentSong, pause, resume, load} = context;
 
     async function loadSound() {
         try {
             await load();
+            
         } catch(error) {
             console.log(error);
         }
@@ -26,10 +29,12 @@ const Home = ({ navigation }) => {
 
     const handlePlayPress = async () => {
         try {
-            if (isPlaying) {
+            if (isPlaying_) {
                 await pause();
+                setIsPlaying(false);
             } else {
                 await resume();
+                setIsPlaying(true);
             }
         } catch (error) {
             console.error(error);
@@ -97,6 +102,26 @@ const Home = ({ navigation }) => {
 
     useEffect(() => {
         loadSound();
+        TrackPlayer.updateOptions({
+            capabilities: [
+                Capability.Play,
+                Capability.Pause,
+                Capability.SkipToNext,
+                Capability.SkipToPrevious,
+            ],
+
+            compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext, Capability.SkipToPrevious],
+
+            playIcon: Images.play,
+            pauseIcon: Images.stop,
+            previousIcon: Images.back,
+            nextIcon: Images.next,
+            icon: Images.bell,
+            android: {
+                // This is the default behavior
+                appKilledPlaybackBehavior: AppKilledPlaybackBehavior.ContinuePlayback
+            }
+        });
         console.log('success');
     }, []);
     
@@ -227,14 +252,13 @@ const Home = ({ navigation }) => {
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
                                 keyExtractor={(item) => item.id}
-                                renderItem={({ item }) => {
+                                renderItem={({ item, index }) => {
                                     if (item.env === selectedEnv) {
                                         return (
                                             <TouchableWithoutFeedback onPress={async () => {
                                                 await storeDataMusic(item); 
-                                                await load();
+                                                await TrackPlayer.skip(index);
                                                 navigation.navigate('Player');
-                                                
                                             }}>
                                             <FavoriteItemView>
                                                 <View style={{ flexDirection: "row" }}>
@@ -331,7 +355,7 @@ const Home = ({ navigation }) => {
                             </View>
                         </TouchableOpacity>
                         
-                        <PlayButton size={46} circle={41.28} icon={isPlaying ? Images.stop : Images.play} onPress={handlePlayPress}></PlayButton>
+                        <PlayButton size={46} circle={41.28} icon={isPlaying_ ? Images.stop : Images.play} onPress={handlePlayPress}></PlayButton>
                     </View>
                 </BottomBar>
             </BottomSection>

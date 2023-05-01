@@ -2,12 +2,27 @@ import React, { createContext, useRef, useState } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 export const MusicContext = createContext();
 import { Audio } from 'expo-av';
+import TrackPlayer, {State} from 'react-native-track-player';
+import { dummyData } from 'Mock';
 
 export const MusicProvider = ({ children }) => {
     const [currentSong, setCurrentSong] = useState(null);
     const [lastPosition, setLastPosition] = useState(0);
-    const [sound, setSound] = useState(new Audio.Sound());
+    //const [sound, setSound] = useState(new Audio.Sound());
     const [isPlaying, setIsPlaying] = useState(false);
+
+    async function getStatusPlay() {
+        try {
+            const state = await TrackPlayer.getState();
+            if (state === State.Playing) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.log('fail get status play music');
+        }
+    }
     
     const getDataMusic = async () => {
         try {
@@ -20,26 +35,7 @@ export const MusicProvider = ({ children }) => {
     
     const load = async () => {
         try {
-            const status = await sound.getStatusAsync();
-
-            getDataMusic().then(async song => {
-                setCurrentSong(song);
-                if (!status.isLoaded) {
-                    await sound.loadAsync(song.audio_filepath);
-                } 
-                else {
-                    await sound.stopAsync();
-                    await sound.unloadAsync();
-                    await sound.loadAsync(currentSong.audio_filepath);
-                }
-            });
-
-            await Audio.setAudioModeAsync({
-                interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
-                shouldDuckAndroid: true,
-                staysActiveInBackground: true,
-            });
-            await Audio.setIsEnabledAsync(true);
+            await TrackPlayer.add(dummyData.Favorite);
             setIsPlaying(false);
         } catch (e) {
             console.log('error', error.message);
@@ -49,10 +45,8 @@ export const MusicProvider = ({ children }) => {
     // pause audio
     const pause = async () => {
         try {
+            await TrackPlayer.pause();
             setIsPlaying(false);
-            return await sound.setStatusAsync({
-                shouldPlay: false,
-            });
         } catch (error) {
             console.log('error inside pause helper method', error.message);
         }
@@ -61,21 +55,10 @@ export const MusicProvider = ({ children }) => {
     // resume audio
     const resume = async () => {
         try {
+            await TrackPlayer.play();
             setIsPlaying(true);
-            return await sound.playAsync();
         } catch (error) {
             console.log('error inside resume helper method', error.message);
-        }
-    };
-
-    // select another audio
-    const playNext = async () => {
-        try {
-            await sound.stopAsync();
-            await sound.unloadAsync();
-            return await play();
-        } catch (error) {
-            console.log('error inside playNext helper method', error.message);
         }
     };
 
@@ -84,6 +67,13 @@ export const MusicProvider = ({ children }) => {
             setCurrentSong(song);
         });
         return currentSong;
+    }
+
+    const getIsPlaying = () => {
+        getStatusPlay().then(status => {
+            setIsPlaying(status);
+        });
+        return isPlaying;
     }
 
     return (
@@ -95,8 +85,7 @@ export const MusicProvider = ({ children }) => {
                 pause: pause,
                 load: load,
                 resume: resume,
-                sound,
-                isPlaying: isPlaying
+                isPlaying: getIsPlaying()
                 
             }}>
             {children}
