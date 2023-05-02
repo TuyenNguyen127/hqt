@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import styled from 'styled-components/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { View, TouchableOpacity, StatusBar, FlatList, TouchableWithoutFeedback } from 'react-native';
@@ -7,11 +7,25 @@ import {Colors, Images, Metrics} from '/Constants';
 import { McText, McImage, PlayButton } from 'Components';
 import { dummyData } from 'Mock';
 import BottomBar from '../Library/BottomBar';
+import { MusicContext } from "../../Context/MusicProvider";
 
 const Thealbums = ({ navigation, route }) => {
     const [selected, setSelected] = useState(null);
     const [likeAlbum, setlikeAlbum] = useState(false);
-    const [currentSong, setCurrentSong] = useState(null);
+    const context = useContext(MusicContext)
+    const {currentSong, isPlaying, resume, pause, load } = context;
+
+    const handlePlayPress = async () => {
+        try {
+            if (isPlaying) {
+                await pause();
+            } else {
+                await resume();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const initialLikeState = dummyData.Favorite.reduce((likeSongState, item) => {
         likeSongState[item.id] = item.like;
@@ -41,16 +55,14 @@ const Thealbums = ({ navigation, route }) => {
           }));
     }
 
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            getDataMusic().then(song => {
-                setCurrentSong(song);
-            });
-            
-        });
-        
-        return unsubscribe;
-    }, [navigation]);
+    const storeDataMusic = async (value) => {
+        try {
+            const jsonValue = JSON.stringify(value);
+            await AsyncStorage.setItem('@selectedMusic', jsonValue);
+        } catch (e) {
+            console.log(e);
+        }
+    }
 
     return (
         <Container>
@@ -121,8 +133,10 @@ const Thealbums = ({ navigation, route }) => {
                     renderItem={({ item }) => {
                         if (item.album === selected?.name) {
                             return (
-                                <TouchableWithoutFeedback onPress={() => {
-                                    navigation.navigate('Player',{selected: item})
+                                <TouchableWithoutFeedback onPress={async () => {
+                                    storeDataMusic(item);
+                                    await load();
+                                    navigation.navigate('Player')
                                 }}>
                                 <FavoriteItemView>
                                     <View style={{ flexDirection: "row" }}>
@@ -157,14 +171,15 @@ const Thealbums = ({ navigation, route }) => {
                         marginHorizontal: 16,
                         marginVertical: 12
                     }}> 
-                        <TouchableOpacity onPress={() => navigation.navigate('Player', {selected: currentSong})}>
+                        <TouchableOpacity onPress={() => navigation.navigate('Player')}>
                             <View style={{
                                 flexDirection: 'row',
                                 alignItems: 'center'
                             }}>
-                                <McImage source={require('Assets/images/thumb_3.png')} style={{
+                                <McImage source={currentSong?.thumbnail} style={{
                                     width: 38,
-                                    height: 38
+                                    height: 38,
+                                    borderRadius: 19
                                 }}/>
                                 <View style={{marginLeft:12, width:199 - 12}}>
                                     <McText bold size={12} color={Colors.grey5}>
@@ -175,7 +190,7 @@ const Thealbums = ({ navigation, route }) => {
                             </View>
                         </TouchableOpacity>
                         
-                        <PlayButton size={46} circle={41.28} icon={Images.stop}></PlayButton>
+                        <PlayButton size={46} circle={41.28} icon={isPlaying ? Images.stop : Images.play} onPress={handlePlayPress}></PlayButton>
                     </View>
                 </BottomBar>
             </BottomSection>

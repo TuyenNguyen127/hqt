@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useContext } from 'react';
 import { useState } from 'react';
 import {Text, ScrollView, View, StatusBar, TextInput, Image, TouchableWithoutFeedback, FlatList, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
@@ -9,11 +9,37 @@ import { Fonts, Images, Metrics, Colors } from 'Constants';
 import { McText, McImage, McAvatar, PlayButton } from 'Components';
 import { dummyData } from 'Mock';
 import BottomBar from '../Library/BottomBar';
+import { MusicContext } from '../../Context/MusicProvider';
+import TrackPlayer, {AppKilledPlaybackBehavior,Capability, State } from 'react-native-track-player';
 
 const Home = ({ navigation }) => {
     const [selectedEnv, setSelectedEnv] = useState('vn');
-    const [currentSong, setCurrentSong] = useState(null);
+    const context = useContext(MusicContext);
+    const [isPlaying_, setIsPlaying] = useState(false);
+    const {currentSong, pause, resume, load} = context;
 
+    async function loadSound() {
+        try {
+            await load();
+            
+        } catch(error) {
+            console.log(error);
+        }
+    }
+
+    const handlePlayPress = async () => {
+        try {
+            if (isPlaying_) {
+                await pause();
+                setIsPlaying(false);
+            } else {
+                await resume();
+                setIsPlaying(true);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const initialLikeState = dummyData.Favorite.reduce((likeSongState, item) => {
         likeSongState[item.id] = item.like;
@@ -26,26 +52,18 @@ const Home = ({ navigation }) => {
         setLikeSongState(prevState => ({
             ...prevState,
             [itemId]: !prevState[itemId]
-          }));
+        }));
     }
 
-    const getDataMusic = async () => {
+    const storeDataMusic = async (value) => {
         try {
-            const jsonValue = await AsyncStorage.getItem('@selectedMusic')
-            return jsonValue != null ? JSON.parse(jsonValue) : null;
-        } catch(e) {
+            const jsonValue = JSON.stringify(value);
+            await AsyncStorage.setItem('@selectedMusic', jsonValue);
+        } catch (e) {
             console.log(e);
         }
     }
-
-    const getStatusPlay = async () => {
-        try {
-            const jsonValue = await AsyncStorage.getItem('@isPlaying')
-            return jsonValue;
-        } catch(e) {
-            console.log(e);
-        }
-    }
+    
 
     const _renderAlbums = ({ item, index}) => {
         return(
@@ -83,15 +101,29 @@ const Home = ({ navigation }) => {
     }
 
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            getDataMusic().then(song => {
-                setCurrentSong(song);
-            });
-            
+        loadSound();
+        TrackPlayer.updateOptions({
+            capabilities: [
+                Capability.Play,
+                Capability.Pause,
+                Capability.SkipToNext,
+                Capability.SkipToPrevious,
+            ],
+
+            compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext, Capability.SkipToPrevious],
+
+            playIcon: Images.play,
+            pauseIcon: Images.stop,
+            previousIcon: Images.back,
+            nextIcon: Images.next,
+            icon: Images.bell,
+            android: {
+                // This is the default behavior
+                appKilledPlaybackBehavior: AppKilledPlaybackBehavior.ContinuePlayback
+            }
         });
-        
-        return unsubscribe;
-    }, [navigation]);
+        console.log('success');
+    }, []);
     
     return (
         <Container>
@@ -99,24 +131,19 @@ const Home = ({ navigation }) => {
 
             {/* Thanh chức năng */}
             <HeaderSection>
-                <TouchableOpacity onPress={()=> navigation.navigate('Option')}>
+                <TouchableOpacity onPress={()=> navigation.push('Option')}>
                     <McImage source={Images.profile} style={{height: 30, width: 30}}></McImage>
                 </TouchableOpacity>
                 
-                <SearchSetion>
-                    <McImage 
-                        source={Images.find}
-                        style={{marginLeft: 12, marginRight:10, width: 20, height: 20}}
-                    ></McImage>
-                    <TextInput 
-                        placeholder="Nhập tên bài hát hoặc nghệ sĩ"
-                        placeholderTextColor={Colors.grey3}
-                        style={{
-                            color: Colors.grey4,
-                            fontSize: 12
-                        }}
-                    ></TextInput>
-                </SearchSetion>
+                <TouchableOpacity onPress={()=> {navigation.navigate('Search')}}>
+                    <SearchSetion>
+                        <McImage 
+                            source={Images.find}
+                            style={{marginLeft: 16, marginRight:12}}
+                        ></McImage>
+                        <McText color={Colors.grey3} size={14}>Tìm kiếm bài hát, nghệ sĩ</McText>
+                    </SearchSetion>
+                </TouchableOpacity>
                 <TouchableOpacity onPress={()=> navigation.navigate('Notification')}>
                     <McImage source={Images.bell}/>
                 </TouchableOpacity>
@@ -225,11 +252,13 @@ const Home = ({ navigation }) => {
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
                                 keyExtractor={(item) => item.id}
-                                renderItem={({ item }) => {
+                                renderItem={({ item, index }) => {
                                     if (item.env === selectedEnv) {
                                         return (
-                                            <TouchableWithoutFeedback onPress={() => { 
-                                                navigation.navigate('Player',{selected: item})
+                                            <TouchableWithoutFeedback onPress={async () => {
+                                                await storeDataMusic(item); 
+                                                await TrackPlayer.skip(index);
+                                                navigation.navigate('Player');
                                             }}>
                                             <FavoriteItemView>
                                                 <View style={{ flexDirection: "row" }}>
@@ -307,7 +336,7 @@ const Home = ({ navigation }) => {
                         marginHorizontal: 16,
                         marginVertical: 12
                     }}> 
-                        <TouchableOpacity onPress={() => navigation.navigate('Player', {selected: currentSong})}>
+                        <TouchableOpacity onPress={() => navigation.navigate('Player')}>
                             <View style={{
                                 flexDirection: 'row',
                                 alignItems: 'center'
@@ -326,7 +355,7 @@ const Home = ({ navigation }) => {
                             </View>
                         </TouchableOpacity>
                         
-                        <PlayButton size={46} circle={41.28} icon={Images.stop}></PlayButton>
+                        <PlayButton size={46} circle={41.28} icon={isPlaying_ ? Images.stop : Images.play} onPress={handlePlayPress}></PlayButton>
                     </View>
                 </BottomBar>
             </BottomSection>

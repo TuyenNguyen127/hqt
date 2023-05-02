@@ -50,7 +50,7 @@ export const Albums = [{
   like: true,
   songs: 16,
   description: 'Va vào giai điệu cùng MCK',
-  thumbnail: require('Assets/images/album99%_mck.png'),
+  thumbnail: require('Assets/images/album99_mck.png'),
   likeNumber: 100123,
   shareNumber: 100123
 },{
@@ -68,12 +68,14 @@ export const Albums = [{
 export const Favorite = [{
   id: '001',
   env: 'vn',
-  url: '',
+  url: require('Assets/audio/13.mp3'),
   title: 'Ai Mới Là Kẻ Xấu Xa',
   like: true,
   album: '"99%"',
   artist: 'RPT MCK',
   thumbnail: require('Assets/audio/13.png'),
+  artwork: require('Assets/audio/13.png'),
+  artwork: require('Assets/audio/13.png'),
   audio_filepath:require('Assets/audio/13.mp3'),
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
@@ -103,12 +105,13 @@ export const Favorite = [{
 },{
   id: '002',
   env: 'vn',
-  url: '',
+  url: require('Assets/audio/13.mp3'),
   title: 'Thôi em đừng đi!',
   like: false,
   album: '"99%"',
   artist: 'RPT MCK',
   thumbnail: require('Assets/audio/13.png'),
+  artwork: require('Assets/audio/13.png'),
   audio_filepath:require('Assets/audio/13.mp3'),
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
@@ -138,12 +141,13 @@ export const Favorite = [{
 },{
   id: '003',
   env: 'vn',
-  url: '',
+  url: require('Assets/audio/13.mp3'),
   title: 'Chìm sâu',
   album: '"99%"',
   artist: 'RPT MCK',
   like: true,
   thumbnail: require('Assets/audio/13.png'),
+  artwork: require('Assets/audio/13.png'),
   audio_filepath:require('Assets/audio/13.mp3'),
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
@@ -173,12 +177,13 @@ export const Favorite = [{
 },{
   id: '005',
   env: 'vn',
-  url: '',
+  url: require('Assets/audio/13.mp3'),
   title: 'Badtrip',
   album: '"99%"',
   artist: 'RPT MCK',
   like: false,
   thumbnail: require('Assets/audio/13.png'),
+  artwork: require('Assets/audio/13.png'),
   audio_filepath:require('Assets/audio/13.mp3'),
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
@@ -208,12 +213,13 @@ export const Favorite = [{
 },{
   id: '006',
   env: 'uk',
-  url: '',
+  url: require('Assets/audio/13.mp3'),
   title: 'Stay',
   album: '',
   artist: 'Justin Bieber',
   like: false,
   thumbnail: require('Assets/audio/13.png'),
+  artwork: require('Assets/audio/13.png'),
   audio_filepath:require('Assets/audio/13.mp3'),
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
@@ -243,12 +249,13 @@ export const Favorite = [{
 },{
   id: '007',
   env: 'uk',
-  url: '',
+  url: require('Assets/audio/13.mp3'),
   title: "THAT'S NOT HOW THIS WORKS",
   album: '',
   artist: 'Charlie Puth (FEAT. DAN + SHAY)',
   like: true,
   thumbnail: require('Assets/audio/13.png'),
+  artwork: require('Assets/audio/13.png'),
   audio_filepath:require('Assets/audio/13.mp3'),
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
@@ -278,12 +285,13 @@ export const Favorite = [{
 },{
   id: '004',
   env: 'vn',
-  url: '',
+  url: require('Assets/audio/13.mp3'),
   title: 'Sui & Tie',
   album: '"99%"',
   artist: 'RPT MCK (feat. Hoàng Tôn)',
   like: false,
   thumbnail: require('Assets/audio/13.png'),
+  artwork: require('Assets/audio/13.png'),
   audio_filepath:require('Assets/audio/13.mp3'),
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
@@ -313,12 +321,13 @@ export const Favorite = [{
 },{
   id: '008',
   env: 'vn',
-  url: '',
+  url: require('Assets/audio/13.mp3'),
   title: 'Anh đã ổn hơn',
   album: '"99%"',
   artist: 'RPT MCK',
   like: true,
   thumbnail: require('Assets/audio/13.png'),
+  artwork: require('Assets/audio/13.png'),
   audio_filepath:require('Assets/audio/13.mp3'),
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
@@ -348,12 +357,13 @@ export const Favorite = [{
 },{
   id: '009',
   env: 'uk',
-  url: '',
+  url: require('Assets/audio/13.mp3'),
   title: 'Loser',
   album: '',
   artist: 'Charlie Puth',
   like: true,
   thumbnail: require('Assets/audio/13.png'),
+  artwork: require('Assets/audio/13.png'),
   audio_filepath:require('Assets/audio/13.mp3'),
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
@@ -383,12 +393,13 @@ export const Favorite = [{
 },{
   id: '010',
   env: 'uk',
-  url: '',
+  url: require('Assets/audio/13.mp3'),
   title: 'Light Switch',
   album: '',
   artist: 'Charlie Puth',
   like: false,
   thumbnail: require('Assets/audio/13.png'),
+  artwork: require('Assets/audio/13.png'),
   audio_filepath:require('Assets/audio/13.mp3'),
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
@@ -418,12 +429,13 @@ export const Favorite = [{
 },{
   id: '011',
   env: 'uk',
-  url: '',
+  url: require('Assets/audio/13.mp3'),
   title: 'Blinding Lights',
   album: '',
   artist: 'The Weeknd',
   like: true,
   thumbnail: require('Assets/audio/13.png'),
+  artwork: require('Assets/audio/13.png'),
   audio_filepath:require('Assets/audio/13.mp3'),
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
@@ -453,12 +465,13 @@ export const Favorite = [{
 },{
   id: '012',
   env: 'uk',
-  url: '',
+  url: require('Assets/audio/13.mp3'),
   title: 'Sugar',
   album: '',
   artist: 'Maroon 5',
   like: false,
   thumbnail: require('Assets/audio/13.png'),
+  artwork: require('Assets/audio/13.png'),
   audio_filepath:require('Assets/audio/13.mp3'),
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
@@ -509,21 +522,24 @@ export const NotificationLink = [{
   id_noti: '01',
   title: 'Bài này vui phết',
   description: 'Bài hát với giai điệu vui vẻ free style thỏa mãn người nghe',
-  navigator_link: 'Player',
+  navigation_link: 'Player',
+  id_object: '001',
   thumbnail: require('Assets/images/thumb_3.png')
 },{
   id: '002',
   id_noti: '01',
   title: 'Ưng quá chừng',
   description: 'Bài hát dễ thương đến từ cô nàng siêu đáng yêu',
-  navigator_link: 'Player',
+  navigation_link: 'Player',
+  id_object: '001',
   thumbnail: require('Assets/images/thumb_3.png')
 },{
   id: '003',
   id_noti: '01',
   title: '"99%" và 1% chưa hoàn thiện (có lẽ vậy) ',
   description: 'Album nhạc chất lượng từ rapper siêu hot MCK',
-  navigator_link: 'Thealbum',
+  navigation_link: 'Thealbum',
+  id_oboject: '001',
   thumbnail: require('Assets/images/thumb_3.png')
 }]
 

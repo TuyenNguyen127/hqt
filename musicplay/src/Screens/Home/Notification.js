@@ -6,8 +6,24 @@ import { Fonts, Images, Metrics, Colors } from 'Constants';
 import { McText, McImage, McAvatar, PlayButton } from 'Components';
 import BottomBar from '../Library/BottomBar';
 import dummyData from '../../Mock/Dummy';
+import { useContext } from 'react';
+import { MusicContext } from '../../Context/MusicProvider';
 
 const Notification = ({ navigation }) => {
+    const context = useContext(MusicContext);
+    const {currentSong, isPlaying, resume, pause } = context;
+
+    const handlePlayPress = async () => {
+        try {
+            if (isPlaying) {
+                await pause();
+            } else {
+                await resume();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
     return (
         <Container>
             <StatusBar barStyle='light-content'/>
@@ -63,21 +79,27 @@ const Notification = ({ navigation }) => {
                         alignItems: 'center',
                         marginHorizontal: 16,
                         marginVertical: 12
-                    }}>
-                        <View style={{
-                            flexDirection: 'row',
-                            alignItems: 'center'
-                        }}>
-                            <McImage source={require('Assets/images/thumb_3.png')} style={{
-                                width: 38,
-                                height: 38
-                            }}/>
-                            <View style={{marginLeft:12}}>
-                                <McText bold size={16} color={Colors.grey5}>Chưa hề yêu em</McText>
-                                <McText medium size={12} color={Colors.grey3} style={{marginTop: 4}}>Văn Tuyển</McText>
+                    }}> 
+                        <TouchableOpacity onPress={() => navigation.navigate('Player')}>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center'
+                            }}>
+                                <McImage source={currentSong?.thumbnail} style={{
+                                    width: 38,
+                                    height: 38,
+                                    borderRadius: 19,
+                                }}/>
+                                <View style={{marginLeft:12, width:199 - 12}}>
+                                    <McText bold size={12} color={Colors.grey5}>
+                                        {currentSong?.title}
+                                    </McText>
+                                    <McText medium size={10} color={Colors.grey3} style={{marginTop: 4}}>{currentSong?.artist}</McText>
+                                </View>
                             </View>
-                        </View>
-                        <PlayButton size={46} circle={41.28} icon={Images.stop}></PlayButton>
+                        </TouchableOpacity>
+                        
+                        <PlayButton size={46} circle={41.28} icon={isPlaying ? Images.stop : Images.play} onPress={handlePlayPress}></PlayButton>
                     </View>
                 </BottomBar>
             </BottomSection>

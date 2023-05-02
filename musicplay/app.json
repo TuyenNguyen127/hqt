@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "mcrn-expo-easy-starter",
-    "slug": "mcrn-expo-easy-starter",
-    "version": "1.0.0",
+    "name": "Music Play",
+    "slug": "Music Play",
+    "version": "2.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#1A0938"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -23,10 +23,11 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/logo.png",
+        "backgroundColor": "#1A0938"
       },
-      "userInterfaceStyle": "automatic"
+      "userInterfaceStyle": "automatic",
+      "package": "com.music_app.android"
     },
     "web": {
       "favicon": "./assets/favicon.png"
