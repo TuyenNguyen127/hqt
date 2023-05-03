@@ -7,6 +7,8 @@ import { McText, McImage, McAvatar, PlayButton } from 'Components';
 import BottomBar from '../Library/BottomBar';
 import dummyData from '../../Mock/Dummy';
 import { MusicContext } from '../../Context/MusicProvider';
+import TrackPlayer from 'react-native-track-player';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const NotificationLink = ({ navigation, route }) => {
@@ -25,6 +27,15 @@ const NotificationLink = ({ navigation, route }) => {
             console.error(error);
         }
     };
+
+    const storeDataMusic = async (value) => {
+        try {
+            const jsonValue = JSON.stringify(value);
+            await AsyncStorage.setItem('@selectedMusic', jsonValue);
+        } catch (e) {
+            console.log(e);
+        }
+    }
     useEffect(() => {
         let { id_noti } = route.params;
         setId_noti(id_noti);
@@ -51,8 +62,17 @@ const NotificationLink = ({ navigation, route }) => {
                     renderItem={({ item }) => {
                         if (item.id_noti === id_noti) {
                         return (
-                            <TouchableOpacity onPress={() => {
-                                navigation.navigate(item.navigator_link, {selected: item})
+                            <TouchableOpacity onPress={async () => {
+                                if (item.navigation_link == 'Player') {
+                                    await storeDataMusic(item.item);
+                                    await TrackPlayer.removeUpcomingTracks();
+                                    await TrackPlayer.add(item.item);
+                                    await TrackPlayer.skipToNext();
+                                    navigation.navigate('Player');
+                                }
+                                if (item.navigation_link == 'Thealbums') {
+                                    navigation.navigate('Thealbums', {selected: item.item});
+                                }
                             }}>
                                 <FavoriteItemView>
                                     <View style={{ flexDirection: "row" }}>                                        

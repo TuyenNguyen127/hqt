@@ -16,15 +16,20 @@ const Home = ({ navigation }) => {
     const [selectedEnv, setSelectedEnv] = useState('vn');
     const context = useContext(MusicContext);
     const [isPlaying_, setIsPlaying] = useState(false);
-    const {currentSong, pause, resume, load} = context;
+    const {currentSong, pause, resume} = context;
 
-    async function loadSound() {
+    async function load() {
         try {
-            await load();
-            
+            await TrackPlayer.add(dummyData.Favorite)
         } catch(error) {
             console.log(error);
         }
+    }
+
+    const checkPlay = async () => {
+        const state = await TrackPlayer.getState();
+        if (state === State.Playing) setIsPlaying(true);
+        else setIsPlaying(false);
     }
 
     const handlePlayPress = async () => {
@@ -64,6 +69,13 @@ const Home = ({ navigation }) => {
         }
     }
     
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            checkPlay();
+        });
+
+        return unsubscribe;
+    }, [navigation]);
 
     const _renderAlbums = ({ item, index}) => {
         return(
@@ -87,21 +99,26 @@ const Home = ({ navigation }) => {
 
     const _renderArtist = ({ item, index}) => {
         return(
-            <View>
-                <View style={{
-                    marginTop:16,
-                    marginLeft: index === 0? 24:0,
-                    marginRight:index === dummyData.Artist.length - 1?0:24
-                }}>
-                    <McImage key={index} source={item.thumbnail} style={{marginBottom:12, borderRadius:20}}/>
-                    <McText medium size={12} color={Colors.grey3} style={{marginTop: 4, width: 153}}>{item.title}</McText>
+            <TouchableOpacity onPress={() => {
+                navigation.navigate('Theartist',{selected: item})
+            }}>
+                <View>
+                    <View style={{
+                        marginTop:16,
+                        marginLeft: index === 0? 24:0,
+                        marginRight:index === dummyData.Artist.length - 1?0:24
+                    }}>
+                        <McImage key={index} source={item.thumbnail} style={{marginBottom:12, borderRadius:20}}/>
+                        <McText medium size={12} color={Colors.grey3} style={{marginTop: 4, width: 153}}>{item.title}</McText>
+                    </View>
                 </View>
-            </View>
+            </TouchableOpacity>
+            
         )
     }
 
     useEffect(() => {
-        loadSound();
+        load();
         TrackPlayer.updateOptions({
             capabilities: [
                 Capability.Play,
@@ -179,16 +196,16 @@ const Home = ({ navigation }) => {
                                     marginTop: 3, 
                                     marginBottom: 3,}} />}>
                             <View>
-                                <Image style={{width: 327,height: 114,borderRadius: 10}} source={require('Assets/images/amee_artist_album.png') } />
+                                <Image style={{width: 327,height: 114,borderRadius: 10}} source={require('Assets/images/banner1.png') } />
                             </View>
                             <View>
-                                <Image style={{width: 327,height: 114,borderRadius: 10}} source={require('Assets/images/mono-artist.png')} />
+                                <Image style={{width: 327,height: 114,borderRadius: 10}} source={require('Assets/images/banner2.png')} />
                             </View>
                             <View>
-                                <Image style={{width: 327,height: 114,borderRadius: 10}} source={require('Assets/images/mck-artist.png') } />
+                                <Image style={{width: 327,height: 114,borderRadius: 10}} source={require('Assets/images/banner3.png') } />
                             </View>
                             <View>
-                                <Image style={{width: 327,height: 114,borderRadius: 10}} source={require('Assets/images/mono-artist.png')} />
+                                <Image style={{width: 327,height: 114,borderRadius: 10}} source={require('Assets/images/banner4.png')} />
                             </View>
                         </Swiper>
                     </SwiperBanner>
@@ -234,7 +251,7 @@ const Home = ({ navigation }) => {
                                 color:  'white',                        
                                 fontSize: 12,
                             
-                            }}>Âu mỹ</McText>
+                            }}>Quốc tế</McText>
                         </TouchableOpacity>
                     </ViewEnv>
                 
@@ -255,10 +272,12 @@ const Home = ({ navigation }) => {
                                 renderItem={({ item, index }) => {
                                     if (item.env === selectedEnv) {
                                         return (
-                                            <TouchableWithoutFeedback onPress={async () => {
-                                                await storeDataMusic(item); 
-                                                await TrackPlayer.skip(index);
-                                                navigation.navigate('Player');
+                                            <TouchableWithoutFeedback onPress={() => {
+                                                storeDataMusic(item).then(async ()=>{
+                                                    await TrackPlayer.skip(index);
+                                                    navigation.navigate('Player');
+                                                }); 
+                                                
                                             }}>
                                             <FavoriteItemView>
                                                 <View style={{ flexDirection: "row" }}>

@@ -19,7 +19,17 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "userInterfaceStyle": "automatic"
+      "jsEngine": "hermes",
+      "infoPlist": {
+          "NSAppTransportSecurity": {
+              "NSAllowsArbitraryLoads": true
+          },
+          "NSExceptionDomains": {
+              "localhost": {
+                  "NSTemporaryExceptionAllowsInsecureHTTPLoads": true
+              }
+          }
+      }
     },
     "android": {
       "adaptiveIcon": {

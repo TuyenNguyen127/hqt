@@ -59,7 +59,7 @@ const Option = ({ navigation }) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={()=>{
-                        navigation.navigate('Download');
+                        navigation.navigate('Downloader');
                 }}>
                     <SelectSection>
                         <McText medium size={20} color={Colors.grey4}>Đã tải xuống</McText>

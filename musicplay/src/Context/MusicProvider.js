@@ -12,33 +12,25 @@ export const MusicProvider = ({ children }) => {
     const [isPlaying, setIsPlaying] = useState(false);
 
     async function getStatusPlay() {
-        try {
             const state = await TrackPlayer.getState();
             if (state === State.Playing) {
                 return true;
             } else {
                 return false;
             }
-        } catch (error) {
-            console.log('fail get status play music');
-        }
     }
     
     const getDataMusic = async () => {
         try {
-            const jsonValue = await AsyncStorage.getItem('@selectedMusic')
-            return jsonValue != null ? JSON.parse(jsonValue) : null;
+            if (currentSong === null) {
+                const jsonValue = await AsyncStorage.getItem('@selectedMusic')
+                return jsonValue != null ? JSON.parse(jsonValue) : null;
+            } 
+            let trackIndex = await TrackPlayer.getCurrentTrack();
+            let trackObject = await TrackPlayer.getTrack(trackIndex);
+            return trackObject;
         } catch(e) {
             console.log(e);
-        }
-    }
-    
-    const load = async () => {
-        try {
-            await TrackPlayer.add(dummyData.Favorite);
-            setIsPlaying(false);
-        } catch (e) {
-            console.log('error', error.message);
         }
     }
     
@@ -46,7 +38,6 @@ export const MusicProvider = ({ children }) => {
     const pause = async () => {
         try {
             await TrackPlayer.pause();
-            setIsPlaying(false);
         } catch (error) {
             console.log('error inside pause helper method', error.message);
         }
@@ -83,7 +74,6 @@ export const MusicProvider = ({ children }) => {
                 lastPosition: lastPosition,
                 setLastPosition,
                 pause: pause,
-                load: load,
                 resume: resume,
                 isPlaying: getIsPlaying()
                 

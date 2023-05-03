@@ -9,21 +9,16 @@ import { Colors, Images, Metrics } from "/Constants";
 import { McText, McImage, PlayButton } from "Components";
 import Swiper from "react-native-swiper";
 import { MusicContext } from "../../Context/MusicProvider";
+import TrackPlayer, { useProgress } from 'react-native-track-player';
 
 const Player = ({ navigation}) => {
-    const [selected, setSelected] = useState(null);
-    const [sliderValue, setSliderValue] = useState(0);
-    const [currentTime, setCurrentTime] = useState(0);
-    const [duration, setDuration] = useState(0);
-    const [isReadyToSpin, setIsReadyToSpin] = useState(false);
-    const [isSliding, setIsSliding] = useState(false);
+    const { position, duration } = useProgress()
     const [lyrics, setLyrics] = useState(null);
-
     const spinValue = useRef(new Animated.Value(0)).current;
-    
     const [likeSong, setLikeSong] = useState(false);
     const context = useContext(MusicContext);
-    const {currentSong, isPlaying, load, pause, resume, sound } = context;
+    const [isPlaying_ , setIsPlaying] = useState(false);
+    const {currentSong, pause, resume } = context;
 
     const clickLike = () => {
         if (likeSong) {
@@ -32,13 +27,25 @@ const Player = ({ navigation}) => {
             setLikeSong(true);
         }
     }
+
+    const storeDataMusic = async (value) => {
+        try {
+            const jsonValue = JSON.stringify(value);
+            await AsyncStorage.setItem('@selectedMusic', jsonValue);
+        } catch (e) {
+            console.log(e);
+        }
+    }
     
     // Load nhạc
     async function loadSound() {
         try {
-            await resume();
-            setLikeSong(currentSong.like);
-            const lyrics = currentSong.lyric;
+            await TrackPlayer.play();
+            let trackIndex = await TrackPlayer.getCurrentTrack();
+            let trackObject = await TrackPlayer.getTrack(trackIndex);
+            setIsPlaying(true);
+            setLikeSong(trackObject.like);
+            const lyrics = trackObject.lyric;
             const sentences = lyrics.split(/\n/);
             setLyrics(sentences);
         } catch (error) {
@@ -49,57 +56,55 @@ const Player = ({ navigation}) => {
     // Khởi động component
     useEffect(() => {
         loadSound(); 
-        setIsReadyToSpin(true);
+        spinAnimation();
+        console.log(lyrics);
     }, []);
-
-    // Cập nhật vị trí chấm trên thanh slider
-    useEffect(() => {
-        let interval;
-        if (sound && !isSliding) {
-            interval = setInterval(async () => {
-                const status = await sound.getStatusAsync();
-                
-                setSliderValue(status.positionMillis / status.durationMillis);
-                setCurrentTime(status.positionMillis);
-                setDuration(status.durationMillis);
-            }, 500);
-        }
-        return () => clearInterval(interval);
-    }, [isSliding]);
-
-    // Khởi động vòng đĩa quay
-    useEffect(() => {
-        if (isReadyToSpin) {
-            spinAnimation();
-        } else {
-            spinValue.stopAnimation();
-        }
-    }, [isReadyToSpin]);
 
     // Phát nhạc đoạn ấn vào trên thanh slider
     const handleSlidingComplete = async (value) => {
-        setIsSliding(false)
-        const status = await sound.getStatusAsync();
-        const newPosition = value * status.durationMillis;
-        await sound.setPositionAsync(newPosition);
+        const newPosition = value * duration;
+        await TrackPlayer.seekTo(newPosition);
     };
 
     // Chơi hoặc tạm dừng
     const handlePlayPress = async () => {
         try {
-            if (isPlaying) {
-                await pause();
+            if (isPlaying_) {
+                await TrackPlayer.pause();
+                setIsPlaying(false);
             } else {
-                await resume();
+                await TrackPlayer.play();
+                setIsPlaying(true);
             }
         } catch (error) {
             console.error(error);
         }
     };
 
+    const handleNext = async () => {
+        try {
+            await TrackPlayer.skipToNext();
+            let trackIndex = await TrackPlayer.getCurrentTrack();
+            let trackObject = await TrackPlayer.getTrack(trackIndex);
+            await storeDataMusic(trackObject);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handlePrevious = async () => {
+        try {
+            await TrackPlayer.skipToPrevious();
+            let trackIndex = await TrackPlayer.getCurrentTrack();
+            let trackObject = await TrackPlayer.getTrack(trackIndex);
+            await storeDataMusic(trackObject);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     // Tạo format cho thời gian của bài hát
-    const formatTime = (millis) => {
-        const totalSeconds = millis / 1000;
+    const formatTime = (totalSeconds) => {
         const minutes = Math.floor(totalSeconds / 60);
         const seconds = Math.floor(totalSeconds % 60);
         return `${minutes}:${seconds.toString().padStart(2, '0')}`;
@@ -115,7 +120,7 @@ const Player = ({ navigation}) => {
     const spinAnimation = () => {
         Animated.timing(spinValue, {
             toValue: 1,
-            duration: 50000,
+            duration: 100000,
             easing: Easing.linear,
             useNativeDriver: true,
         }).start(() => {
@@ -132,9 +137,6 @@ const Player = ({ navigation}) => {
             <HeaderSection>
                 <TouchableOpacity onPress={()=>{
                     navigation.goBack();
-                    
-                    
-                    
                 }}>
                     <McImage source={Images.left}/>
                 </TouchableOpacity>
@@ -143,7 +145,8 @@ const Player = ({ navigation}) => {
             
             {/* Thông tin bài hát */}
             <SwiperBanner>
-                <Swiper style={{borderRadius: 10}}
+                <Swiper loop={false}    horizontal
+                            showsButtons={true}
                             paginationStyle={{ top: -450}}
                             dot={<View style={{
                                     backgroundColor:'#464646', 
@@ -164,7 +167,9 @@ const Player = ({ navigation}) => {
                                     marginLeft: 3, 
                                     marginRight: 3, 
                                     marginTop: 3, 
-                                    marginBottom: 3,}} />}>
+                                    marginBottom: 3,}} />
+                    }>
+
                     <MusicDetailSection>
                         <Animated.Image source={currentSong?.thumbnail} style={{
                             marginHorizontal: 81,
@@ -183,6 +188,7 @@ const Player = ({ navigation}) => {
                             <McText medium size={14} color={Colors.grey3} style={{marginTop: 8}} align='center'>{currentSong?.artist}</McText>
                         </View>
                     </MusicDetailSection>
+
                     <View style={{marginLeft: 10}}>
                         <DetailLyricSection>
                             <McImage source={currentSong?.thumbnail} style={{
@@ -219,16 +225,16 @@ const Player = ({ navigation}) => {
                 <Slider
                     minimumValue={0}
                     maximumValue={1}
-                    value={sliderValue ? sliderValue : 0}
-                    onSlidingStart={() => setIsSliding(true)}//
-                    onValueChange={(value) =>setSliderValue(value)}//
+                    value={position / duration ? position / duration : 0}
+                    onSlidingStart={''}//
+                    onValueChange={''}//
                     onSlidingComplete={handleSlidingComplete}//
                     minimumTrackTintColor={Colors.primary}
                     maximumTrackTintColor={Colors.grey3}
                     thumbImage={Images.thumb}
                 />
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                    <McText size={12} color={Colors.grey4}>{formatTime(currentTime)}</McText>
+                    <McText size={12} color={Colors.grey4}>{formatTime(position)}</McText>
                     <McText size={12} color={Colors.grey4}>{formatTime(duration)}</McText>
                 </View>
             </SliderSection>
@@ -251,7 +257,10 @@ const Player = ({ navigation}) => {
                         justifyContent: 'space-between',
                         alignItems: 'center'
                     }}>
-                        <McImage source={Images.back} style={{marginLeft: 24}}/>
+                        <TouchableOpacity onPress={handlePrevious}>
+                            <McImage source={Images.back} style={{marginLeft: 24}}/>
+                        </TouchableOpacity>
+                        
                         <View style={{
                             width: 88,
                             height: 88,
@@ -260,9 +269,13 @@ const Player = ({ navigation}) => {
                             justifyContent: 'center',
                             alignItems: 'center'
                         }}>
-                            <PlayButton size={70} circle={62.82} icon={isPlaying ? Images.stop : Images.play} onPress={handlePlayPress}></PlayButton>
+                            <PlayButton size={70} circle={62.82} icon={isPlaying_ ? Images.stop : Images.play} onPress={handlePlayPress}></PlayButton>
                         </View>
-                        <McImage source={Images.next} style={{marginRight: 24}}/>
+                        
+                        <TouchableOpacity onPress={handleNext}>
+                            <McImage source={Images.next} style={{marginRight: 24}}/>   
+                        </TouchableOpacity>
+                        
                     </View>
                 </View>
                 <McImage source={Images.speedUp}/>

@@ -21,8 +21,14 @@ export const Playlists = [{
 
 export const Artist = [{
   id: '001',
+  artist: 'RPT MCK',
   title: 'Va vào giai điệu cùng MCK',
-  thumbnail: require('Assets/images/mck_artist_album.png')
+  like: true,
+  songs: 16,
+  description: 'Tuyển chọn những ca khúc hay nhất của MCK',
+  thumbnail: require('Assets/images/mck_artist_album.png'),
+  likeNumber: 100123,
+  shareNumber: 100123
 },{
   id: '002',
   title: 'Nhận lấy sự dễ thương từ Ameeeee',
@@ -77,31 +83,7 @@ export const Favorite = [{
   artwork: require('Assets/audio/13.png'),
   artwork: require('Assets/audio/13.png'),
   audio_filepath:require('Assets/audio/13.mp3'),
-  lyric: `Your butt is mine... gonna tell you right
-  Just show your face... throughout daylight
-  I'm telling you... on how I feel
-  Gonna hurt your mind... gonna shoot to kill
-  Come on, come on, lay it on me
-  All right
-  I'm giving you... on the count of three
-  To show your stuff... or let it be
-  I'm telling you... just watch your mouth
-  I know your game... what you're about
-  Well they say the sky's the limit
-  And to me that's really true
-  But my friend you have seen nothing
-  Just wait 'till I get through
-  Because I'm bad (bad-bad), I'm bad, come on (really, really bad)
-  You know I'm bad (bad-bad), I'm bad, you know it (really, really bad)
-  You know I'm bad (bad-bad), I'm bad, come on (really, really bad) you know
-  And the whole world has to answer right now
-  Just to tell you once again
-  Who's bad
-  The word is out... you're doing wrong
-  Gonna lock you up... before too long
-  Your lying eyes... don't tell you right
-  So listen up... don't make a fight
-  Your talk is cheap...`
+  lyric: ``
 },{
   id: '002',
   env: 'vn',
@@ -524,6 +506,43 @@ export const NotificationLink = [{
   description: 'Bài hát với giai điệu vui vẻ free style thỏa mãn người nghe',
   navigation_link: 'Player',
   id_object: '001',
+  item: {
+    id: '010',
+    env: 'uk',
+    url: require('Assets/audio/13.mp3'),
+    title: 'Light Switch',
+    album: '',
+    artist: 'Charlie Puth',
+    like: false,
+    thumbnail: require('Assets/audio/13.png'),
+    artwork: require('Assets/audio/13.png'),
+    audio_filepath:require('Assets/audio/13.mp3'),
+    lyric: `Your butt is mine... gonna tell you right
+    Just show your face... throughout daylight
+    I'm telling you... on how I feel
+    Gonna hurt your mind... gonna shoot to kill
+    Come on, come on, lay it on me
+    All right
+    I'm giving you... on the count of three
+    To show your stuff... or let it be
+    I'm telling you... just watch your mouth
+    I know your game... what you're about
+    Well they say the sky's the limit
+    And to me that's really true
+    But my friend you have seen nothing
+    Just wait 'till I get through
+    Because I'm bad (bad-bad), I'm bad, come on (really, really bad)
+    You know I'm bad (bad-bad), I'm bad, you know it (really, really bad)
+    You know I'm bad (bad-bad), I'm bad, come on (really, really bad) you know
+    And the whole world has to answer right now
+    Just to tell you once again
+    Who's bad
+    The word is out... you're doing wrong
+    Gonna lock you up... before too long
+    Your lying eyes... don't tell you right
+    So listen up... don't make a fight
+    Your talk is cheap...`
+  },
   thumbnail: require('Assets/images/thumb_3.png')
 },{
   id: '002',
@@ -538,11 +557,218 @@ export const NotificationLink = [{
   id_noti: '01',
   title: '"99%" và 1% chưa hoàn thiện (có lẽ vậy) ',
   description: 'Album nhạc chất lượng từ rapper siêu hot MCK',
-  navigation_link: 'Thealbum',
+  navigation_link: 'Thealbums',
   id_oboject: '001',
+  item: {
+    id: '002',
+    name: '"99%"',
+    artist: 'RPT MCK',
+    like: true,
+    songs: 16,
+    description: 'Va vào giai điệu cùng MCK',
+    thumbnail: require('Assets/images/album99_mck.png'),
+    likeNumber: 100123,
+    shareNumber: 100123
+  },
   thumbnail: require('Assets/images/thumb_3.png')
 }]
 
-const dummyData = { Albums,Artist, Playlists, Favorite, Notification, NotificationLink };
+export const ArtistMCK = [{
+    id: '001',
+    env: 'vn',
+    url: require('Assets/audio/13.mp3'),
+    title: 'Ai Mới Là Kẻ Xấu Xa',
+    like: true,
+    album: '"99%"',
+    artist: 'RPT MCK',
+    thumbnail: require('Assets/audio/13.png'),
+    artwork: require('Assets/audio/13.png'),
+    artwork: require('Assets/audio/13.png'),
+    audio_filepath:require('Assets/audio/13.mp3'),
+    lyric: ``
+  },{
+    id: '002',
+    env: 'vn',
+    url: require('Assets/audio/13.mp3'),
+    title: 'Thôi em đừng đi!',
+    like: false,
+    album: '"99%"',
+    artist: 'RPT MCK',
+    thumbnail: require('Assets/audio/13.png'),
+    artwork: require('Assets/audio/13.png'),
+    audio_filepath:require('Assets/audio/13.mp3'),
+    lyric: `Your butt is mine... gonna tell you right
+    Just show your face... throughout daylight
+    I'm telling you... on how I feel
+    Gonna hurt your mind... gonna shoot to kill
+    Come on, come on, lay it on me
+    All right
+    I'm giving you... on the count of three
+    To show your stuff... or let it be
+    I'm telling you... just watch your mouth
+    I know your game... what you're about
+    Well they say the sky's the limit
+    And to me that's really true
+    But my friend you have seen nothing
+    Just wait 'till I get through
+    Because I'm bad (bad-bad), I'm bad, come on (really, really bad)
+    You know I'm bad (bad-bad), I'm bad, you know it (really, really bad)
+    You know I'm bad (bad-bad), I'm bad, come on (really, really bad) you know
+    And the whole world has to answer right now
+    Just to tell you once again
+    Who's bad
+    The word is out... you're doing wrong
+    Gonna lock you up... before too long
+    Your lying eyes... don't tell you right
+    So listen up... don't make a fight
+    Your talk is cheap...`
+  },{
+    id: '003',
+    env: 'vn',
+    url: require('Assets/audio/13.mp3'),
+    title: 'Chìm sâu',
+    album: '"99%"',
+    artist: 'RPT MCK',
+    like: true,
+    thumbnail: require('Assets/audio/13.png'),
+    artwork: require('Assets/audio/13.png'),
+    audio_filepath:require('Assets/audio/13.mp3'),
+    lyric: `Your butt is mine... gonna tell you right
+    Just show your face... throughout daylight
+    I'm telling you... on how I feel
+    Gonna hurt your mind... gonna shoot to kill
+    Come on, come on, lay it on me
+    All right
+    I'm giving you... on the count of three
+    To show your stuff... or let it be
+    I'm telling you... just watch your mouth
+    I know your game... what you're about
+    Well they say the sky's the limit
+    And to me that's really true
+    But my friend you have seen nothing
+    Just wait 'till I get through
+    Because I'm bad (bad-bad), I'm bad, come on (really, really bad)
+    You know I'm bad (bad-bad), I'm bad, you know it (really, really bad)
+    You know I'm bad (bad-bad), I'm bad, come on (really, really bad) you know
+    And the whole world has to answer right now
+    Just to tell you once again
+    Who's bad
+    The word is out... you're doing wrong
+    Gonna lock you up... before too long
+    Your lying eyes... don't tell you right
+    So listen up... don't make a fight
+    Your talk is cheap...`
+  },{
+    id: '004',
+    env: 'vn',
+    url: require('Assets/audio/13.mp3'),
+    title: 'Sui & Tie',
+    album: '"99%"',
+    artist: 'RPT MCK (feat. Hoàng Tôn)',
+    like: false,
+    thumbnail: require('Assets/audio/13.png'),
+    artwork: require('Assets/audio/13.png'),
+    audio_filepath:require('Assets/audio/13.mp3'),
+    lyric: `Your butt is mine... gonna tell you right
+    Just show your face... throughout daylight
+    I'm telling you... on how I feel
+    Gonna hurt your mind... gonna shoot to kill
+    Come on, come on, lay it on me
+    All right
+    I'm giving you... on the count of three
+    To show your stuff... or let it be
+    I'm telling you... just watch your mouth
+    I know your game... what you're about
+    Well they say the sky's the limit
+    And to me that's really true
+    But my friend you have seen nothing
+    Just wait 'till I get through
+    Because I'm bad (bad-bad), I'm bad, come on (really, really bad)
+    You know I'm bad (bad-bad), I'm bad, you know it (really, really bad)
+    You know I'm bad (bad-bad), I'm bad, come on (really, really bad) you know
+    And the whole world has to answer right now
+    Just to tell you once again
+    Who's bad
+    The word is out... you're doing wrong
+    Gonna lock you up... before too long
+    Your lying eyes... don't tell you right
+    So listen up... don't make a fight
+    Your talk is cheap...`
+  },{
+    id: '005',
+    env: 'vn',
+    url: require('Assets/audio/13.mp3'),
+    title: 'Badtrip',
+    album: '"99%"',
+    artist: 'RPT MCK',
+    like: false,
+    thumbnail: require('Assets/audio/13.png'),
+    artwork: require('Assets/audio/13.png'),
+    audio_filepath:require('Assets/audio/13.mp3'),
+    lyric: `Your butt is mine... gonna tell you right
+    Just show your face... throughout daylight
+    I'm telling you... on how I feel
+    Gonna hurt your mind... gonna shoot to kill
+    Come on, come on, lay it on me
+    All right
+    I'm giving you... on the count of three
+    To show your stuff... or let it be
+    I'm telling you... just watch your mouth
+    I know your game... what you're about
+    Well they say the sky's the limit
+    And to me that's really true
+    But my friend you have seen nothing
+    Just wait 'till I get through
+    Because I'm bad (bad-bad), I'm bad, come on (really, really bad)
+    You know I'm bad (bad-bad), I'm bad, you know it (really, really bad)
+    You know I'm bad (bad-bad), I'm bad, come on (really, really bad) you know
+    And the whole world has to answer right now
+    Just to tell you once again
+    Who's bad
+    The word is out... you're doing wrong
+    Gonna lock you up... before too long
+    Your lying eyes... don't tell you right
+    So listen up... don't make a fight
+    Your talk is cheap...`
+  },{
+    id: '008',
+    env: 'vn',
+    url: require('Assets/audio/13.mp3'),
+    title: 'Anh đã ổn hơn',
+    album: '"99%"',
+    artist: 'RPT MCK',
+    like: true,
+    thumbnail: require('Assets/audio/13.png'),
+    artwork: require('Assets/audio/13.png'),
+    audio_filepath:require('Assets/audio/13.mp3'),
+    lyric: `Your butt is mine... gonna tell you right
+    Just show your face... throughout daylight
+    I'm telling you... on how I feel
+    Gonna hurt your mind... gonna shoot to kill
+    Come on, come on, lay it on me
+    All right
+    I'm giving you... on the count of three
+    To show your stuff... or let it be
+    I'm telling you... just watch your mouth
+    I know your game... what you're about
+    Well they say the sky's the limit
+    And to me that's really true
+    But my friend you have seen nothing
+    Just wait 'till I get through
+    Because I'm bad (bad-bad), I'm bad, come on (really, really bad)
+    You know I'm bad (bad-bad), I'm bad, you know it (really, really bad)
+    You know I'm bad (bad-bad), I'm bad, come on (really, really bad) you know
+    And the whole world has to answer right now
+    Just to tell you once again
+    Who's bad
+    The word is out... you're doing wrong
+    Gonna lock you up... before too long
+    Your lying eyes... don't tell you right
+    So listen up... don't make a fight
+    Your talk is cheap...`
+  }
+]
+
+const dummyData = { Albums,Artist, Playlists, Favorite, Notification, NotificationLink, ArtistMCK };
 
 export default dummyData;

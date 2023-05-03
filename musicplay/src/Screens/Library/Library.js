@@ -11,7 +11,7 @@ import { MusicContext } from "../../Context/MusicProvider";
 
 const Library = ({navigation}) => {
     const context = useContext(MusicContext);
-    const {currentSong, isPlaying, resume, pause, load } = context;
+    const {currentSong, isPlaying, resume, pause } = context;
 
     const handlePlayPress = async () => {
         try {
@@ -150,7 +150,7 @@ const Library = ({navigation}) => {
                 renderItem={({ item }) => (
                     <TouchableWithoutFeedback onPress={async () => {
                         storeDataMusic(item); 
-                        await load();
+                        
                         navigation.navigate('Player')
                     }}>
                     <FavoriteItemView>

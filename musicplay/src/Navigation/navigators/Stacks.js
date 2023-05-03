@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { Profile, Player, Thealbums, Search} from 'Screens';
+import { Theartist, Player, Thealbums, Search, Downloader} from 'Screens';
 import { Login, Register, ForgetPassword, ResetPassword } from '../../Screens/Onboarding';
 import { Home, Option, Notification, NotificationLink } from '../../Screens/Home';
 import { Library, MyPlaylist, Favorites, InPlaylist } from '../../Screens/Library';
@@ -46,15 +46,22 @@ const Stacks = ({ params }) => (
       }}
     />
     <Stack.Screen
-      name="Profile"
-      component={Profile}
+      name="Downloader"
+      component={Downloader}
       options={{
-        headerShown: true,
+        headerShown: false,
       }}
     />
     <Stack.Screen
       name="Thealbums"
       component={Thealbums}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <Stack.Screen
+      name="Theartist"
+      component={Theartist}
       options={{
         headerShown: false,
       }}

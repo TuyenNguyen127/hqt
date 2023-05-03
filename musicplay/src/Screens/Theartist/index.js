@@ -10,12 +10,12 @@ import BottomBar from '../Library/BottomBar';
 import { MusicContext } from "../../Context/MusicProvider";
 import TrackPlayer from "react-native-track-player";
 
-const Thealbums = ({ navigation, route }) => {
+const Theartist = ({ navigation, route }) => {
     const [selected, setSelected] = useState(null);
-    const [likeAlbum, setlikeAlbum] = useState(false);
+    const [likeArtist, setlikeArtist] = useState(false);
     const context = useContext(MusicContext)
     const {currentSong, isPlaying, resume, pause, load } = context;
-
+    
     const handlePlayPress = async () => {
         try {
             if (isPlaying) {
@@ -35,17 +35,23 @@ const Thealbums = ({ navigation, route }) => {
     
     const [likeSongState, setLikeSongState] = useState(initialLikeState);
 
+    const trackReset = async () => {
+        await TrackPlayer.reset();
+        await TrackPlayer.add(dummyData.ArtistMCK);
+    }
+
     useEffect(() => {
         let { selected } = route.params;
         setSelected(selected);
-        setlikeAlbum(selected.like);
+        setlikeArtist(selected.like);
+        trackReset();
     }, []);
 
-    const clickLikeAlbum = async () => {
-        if (likeAlbum) {
-            setlikeAlbum(false);
+    const clickLikeArtist = async () => {
+        if (likeArtist) {
+            setlikeArtist(false);
         } else {
-            setlikeAlbum(true);
+            setlikeArtist(true);
         }
     }
 
@@ -91,15 +97,15 @@ const Thealbums = ({ navigation, route }) => {
                     justifyContent: 'center',
                     alignItems: 'center'
                 }}>
-                    <McText semi size={24} color={Colors.grey5} align='center'>{selected?.name} the album</McText>
-                    <McText medium size={14} color={Colors.grey3} style={{marginTop: 8}} align='center'>{selected?.artist} - {selected?.songs} bài hát</McText>
+                    <McText semi size={24} color={Colors.grey5} align='center'>{selected?.artist} the artist</McText>
+                    <McText medium size={14} color={Colors.grey3} style={{marginTop: 8}} align='center'>{selected?.songs} bài hát</McText>
                 </View>
             </DetailSection> 
             
             <SelectOptionSection>   
                 <ContactSection style={{marginLeft: 10}}>
-                    <TouchableWithoutFeedback onPress={clickLikeAlbum}>
-                        <McImage source={likeAlbum ? Images.fullLike : Images.like}/>
+                    <TouchableWithoutFeedback onPress={clickLikeArtist}>
+                        <McImage source={likeArtist ? Images.fullLike : Images.like}/>
                     </TouchableWithoutFeedback>
                     <McText medium color={Colors.grey3} size={10}>{selected?.likeNumber}</McText>
                 </ContactSection>
@@ -265,4 +271,4 @@ const BottomSection = styled.View`
     left: 0px;
     z-index: 1;
 `;
-export default Thealbums;
+export default Theartist;

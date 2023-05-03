@@ -181,7 +181,7 @@ const MyPlaylist = ({navigation, route}) => {
                         <McText>Hủy</McText>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={handleOk}>
-                        <McText>Có</McText>
+                        <McText>Xong</McText>
                     </TouchableOpacity>
                 </View>
             </View>
