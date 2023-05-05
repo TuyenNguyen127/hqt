@@ -1,22 +1,26 @@
 const mongoose = require('mongoose')
+const { getRandomNumber } = require('../helper/random')
 const Schema = mongoose.Schema
 
 const ArtistSchema = new Schema({
     name: {
         type: String,
     },
-    description: String,
+    about: String,
     thumbnail: {
         type: String,
-        default: '../../assets/img/n.png',
+        default: function () {
+            const random = getRandomNumber(1, 4)
+            return `../../assets/img/nord${random}.png`
+        },
     },
-    song: [
+    list_of_songs: [
         {
             type: mongoose.Types.ObjectId,
             ref: 'Song',
         },
     ],
-    num_liked: Number,
+    followers: Number,
     num_shared: Number,
 })
 

@@ -2,16 +2,14 @@ const mongoose = require('mongoose')
 const Album = require('../model/Album')
 const Artist = require('../model/Artist')
 const Song = require('../model/Song')
-const User = require('../model/User')
 const PlayList = require('../model/Playlist')
 const View = require('../model/View')
 const Notify = require('../model/Notify')
-const Playlist = require('../model/Playlist')
 
 exports.getAllSong = async (req, res) => {
     const songs = await Song.find({}).lean()
 
-    return res.status(200).json({ success: 1, data: songs })
+    return res.status(200).json({ success: true, data: songs })
 }
 
 exports.getSong = async (req, res) => {
@@ -23,7 +21,7 @@ exports.getSong = async (req, res) => {
         if (!song) {
             return res.status(401).json({
                 success: false,
-                message: 'Song not found',
+                message: 'Không tìm thấy bài hát ',
             })
         }
 
@@ -31,7 +29,7 @@ exports.getSong = async (req, res) => {
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message: 'Internal Error',
+            message: 'Lỗi bên trong ',
             error,
         })
     }
@@ -43,21 +41,19 @@ exports.getAlbum = async (req, res) => {
     try {
         const album = await Album.findOne({ _id: album_id })
             .populate({
-                path: 'artist',
+                path: 'artist_id',
                 select: '_id name thumbnail',
-                options: { strictPopulate: false },
             })
             .populate({
-                path: 'song',
+                path: 'list_of_songs',
                 select: '_id name audio_filepath thumbnail',
-                options: { strictPopulate: false },
             })
             .lean()
 
         if (!album) {
             return res.status(401).json({
                 success: false,
-                message: 'Album not found',
+                message: 'Không tìm thấy Album',
             })
         }
 
@@ -65,7 +61,7 @@ exports.getAlbum = async (req, res) => {
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message: 'Internal Error',
+            message: 'Lỗi bên trong ',
             error,
         })
     }
@@ -77,7 +73,7 @@ exports.getArtist = async (req, res) => {
     try {
         const artist = await Artist.findOne({ _id: artist_id })
             .populate({
-                path: 'song',
+                path: 'list_of_songs',
                 select: '_id name thumbnail audio_filepath',
             })
             .lean()
@@ -85,7 +81,7 @@ exports.getArtist = async (req, res) => {
         if (!artist) {
             return res.status(401).json({
                 success: false,
-                message: 'Album not found',
+                message: 'Không tìm thấy Album',
             })
         }
 
@@ -93,31 +89,32 @@ exports.getArtist = async (req, res) => {
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message: 'Internal Error',
+            message: 'Lỗi bên trong ',
             error,
         })
     }
 }
 
-// transaction => them sau
 exports.increaseView = async (req, res) => {
     const session = await mongoose.startSession()
     session.startTransaction()
     try {
-        const opts = { session, returnOriginal: false }
         const { id: song_id = '' } = req.params
 
         await Song.findOneAndUpdate(
             { _id: song_id },
-            { $inc: { view: 1 } },
-            opts
+            { $inc: { views: 1 } },
+            { session }
         )
 
-        await View.create({
-            song_id: id,
-        }, opts)
+        const view = new View({
+            song_id: song_id,
+        })
+
+        await view.save({ session })
 
         await session.commitTransaction()
+
         return res.status(200).json({
             success: true,
         })
@@ -125,7 +122,7 @@ exports.increaseView = async (req, res) => {
         await session.abortTransaction()
         return res.status(500).json({
             success: false,
-            message: 'Internal Error',
+            message: 'Lỗi bên trong ',
             error,
         })
     } finally {
@@ -145,18 +142,18 @@ exports.updateSharedArtist = async (req, res) => {
         if (!artist) {
             return res.status(401).json({
                 success: false,
-                message: 'Artist not found',
+                message: 'Không tìm thấy nghệ sĩ',
             })
         }
 
         return res.status(200).json({
             success: true,
-            message: 'update liked artist success',
+            message: 'Cập nhập thích nghệ sĩ thành công ',
         })
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message: 'Internal Error',
+            message: 'Lỗi bên trong ',
             error,
         })
     }
@@ -207,13 +204,13 @@ exports.getTopSongFavorite = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            message: 'get top song success',
+            message: 'Lấy top các bài hát thành công',
             data: top_song,
         })
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message: 'Internal Error',
+            message: 'Lỗi bên trong ',
             error,
         })
     }
@@ -222,6 +219,7 @@ exports.getTopSongFavorite = async (req, res) => {
 exports.getAllNotify = async (req, res) => {
     try {
         const notify = await Notify.find({}).lean()
+
         return res.status(200).json({
             success: true,
             data: notify,
@@ -229,14 +227,14 @@ exports.getAllNotify = async (req, res) => {
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message: 'Internal Error',
+            message: 'Lỗi bên trong ',
             error,
         })
     }
 }
 
 exports.getNotifyDetail = async (req, res) => {
-    const { type = 'Player', id } = req.params
+    const { type = 'Player', id = '' } = req.params
 
     try {
         let data = null
@@ -247,7 +245,7 @@ exports.getNotifyDetail = async (req, res) => {
         } else if (type == 'TheAlbum') {
             data = await Album.findOne({ _id: id })
                 .populate({
-                    path: 'songs',
+                    path: 'list_of_songs',
                     select: '_id name thumbnail audio_filepath',
                 })
                 .lean()
@@ -259,7 +257,7 @@ exports.getNotifyDetail = async (req, res) => {
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message: 'Internal Error',
+            message: 'Lỗi bên trong ',
             error,
         })
     }
@@ -272,7 +270,7 @@ exports.search = async (req, res) => {
         const songs = Song.find({ $text: { $search: q } }).select('name')
         const artists = Artist.find({ $text: { $search: q } })
             .populate({
-                path: 'song',
+                path: 'list_of_songs',
                 select: 'name',
             })
             .select('name')
@@ -283,7 +281,7 @@ exports.search = async (req, res) => {
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message: 'Internal Error',
+            message: 'Lỗi bên trong ',
             error,
         })
     }
@@ -301,7 +299,7 @@ exports.getTopAlbum = async (req, res) => {
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message: 'Internal Error',
+            message: 'Lỗi bên trong ',
             error,
         })
     }
@@ -319,7 +317,7 @@ exports.getTopArtist = async (req, res) => {
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message: 'Internal Error',
+            message: 'Lỗi bên trong ',
             error,
         })
     }
@@ -330,21 +328,21 @@ exports.getSongFromPlaylist = async (req, res) => {
     try {
         const songs = await PlayList.findOne({ _id: id })
             .populate({
-                path: 'songs',
+                path: 'list_of_songs',
                 select: 'name audio_filepath',
             })
-            .select('songs')
+            .select('list_of_songs')
             .lean()
 
         return res.status(200).json({
             success: true,
-            message: 'get song from playlist success',
+            message: 'Lấy danh sách các bài hát từ Playlist thành công ',
             data: songs,
         })
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message: 'Internal Error',
+            message: 'Lỗi bên trong ',
             error,
         })
     }

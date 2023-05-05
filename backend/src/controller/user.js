@@ -3,9 +3,8 @@ const Artist = require('../model/Artist')
 const Song = require('../model/Song')
 const User = require('../model/User')
 const PlayList = require('../model/Playlist')
-const View = require('../model/View')
-const Notify = require('../model/Notify')
 const Playlist = require('../model/Playlist')
+const { default: mongoose } = require('mongoose')
 
 exports.getUserFavorite = async (req, res) => {
     const { favorite_song = [] } = req.body
@@ -19,7 +18,7 @@ exports.getUserFavorite = async (req, res) => {
 
         return res.json({ success: true, data: songs })
     } catch (error) {
-        return res.json({ success: false, message: 'Server error' })
+        return res.json({ success: false, message: 'Lỗi bên trong ' })
     }
 }
 
@@ -35,7 +34,7 @@ exports.getUserPlaylist = async (req, res) => {
 
         return res.json({ success: true, data: songs })
     } catch (error) {
-        return res.json({ success: false, message: 'Server error' })
+        return res.json({ success: false, message: 'Lỗi bên trong ' })
     }
 }
 
@@ -44,10 +43,14 @@ exports.addSongToPlaylist = async (req, res) => {
 
     try {
         const playlist = await PlayList.findOneAndUpdate(
-            { _id: playlist_id, user_id: user_id },
+            {
+                _id: playlist_id,
+                user_id: user_id,
+                list_of_songs: { $nin: [song_id] },
+            },
             {
                 $push: {
-                    song: song_id,
+                    list_of_songs: song_id,
                 },
             }
         )
@@ -55,29 +58,30 @@ exports.addSongToPlaylist = async (req, res) => {
         if (!playlist) {
             return res.status(401).json({
                 success: false,
-                message: 'Playlist not found',
+                message: 'Bài hát đã có trong playlist',
             })
         }
 
         return res.status(200).json({
             success: true,
-            message: 'update playlist success',
+            message: 'Cập nhập playlist thành công',
         })
     } catch (error) {
-        return res.status(500).json({ success: false, message: 'Server error' })
+        return res
+            .status(500)
+            .json({ success: false, message: 'Lỗi bên trong ' })
     }
 }
 
 exports.createPlaylistUser = async (req, res) => {
     const { user_id = '', playlist_name = '' } = req.body
-
     try {
-        const user = await User.find({ id: user_id }).lean()
+        const user = await User.findOne({ _id: user_id }).lean()
 
         if (!user) {
             return res.status(401).json({
                 success: false,
-                message: 'User not found',
+                message: 'Không tìm thấy User',
             })
         }
 
@@ -90,12 +94,12 @@ exports.createPlaylistUser = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            message: 'create playlist user success',
+            message: 'Tạo playlist thành công',
         })
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message: 'Internal Error',
+            message: 'Lỗi bên trong ',
             error,
         })
     }
@@ -105,7 +109,7 @@ exports.addPlaylistFavorite = async (req, res) => {
     const { user_id = '', playlist_id = '' } = req.body
 
     const playlist = await User.findOneAndUpdate(
-        { _id: user_id },
+        { _id: user_id, playlist: { $nin: [playlist_id] } },
         {
             $push: {
                 playlist: playlist_id,
@@ -116,57 +120,83 @@ exports.addPlaylistFavorite = async (req, res) => {
     if (!playlist) {
         return res.status(401).json({
             success: false,
-            message: 'Playlist not found',
+            message: 'Playlist đã có trong danh sách yêu thích',
         })
     }
 
     return res.status(200).json({
         success: true,
-        message: 'update playlist success',
+        message: 'Cập nhập playlist thành công',
     })
 }
 
 exports.updateLikedArtist = async (req, res) => {
     const { user_id = '', artist_id = '' } = req.body
 
-    const artist = await Artist.findOne({ _id: artist_id }).lean().select('_id')
+    const session = await mongoose.startSession()
+    session.startTransaction()
+    try {
+        const artist = await Artist.findOne({ _id: artist_id })
+            .lean()
+            .select('_id')
+        if (!artist) {
+            return res.status(401).json({
+                success: false,
+                message: 'Không tìm thấy nghệ sĩ',
+            })
+        }
 
-    if (!artist) {
-        return res.status(401).json({
-            success: false,
-            message: 'Artist not found',
+        const user = await User.findOne({
+            _id: user_id,
+            favorite_artist: artist_id,
         })
-    }
 
-    const user = await User.findOne({
-        _id: user_id,
-        favorite_artist: artist_id,
-    })
+        if (user) {
+            await User.updateOne(
+                { _id: user_id },
+                { $pull: { favorite_artist: artist_id } },
+                { session }
+            )
 
-    if (user) {
-        await User.updateOne(
-            { _id: user_id },
-            { $pull: { favorite_artist: artist_id } }
-        )
-
-        await Artist.updateOne({ _id: artist_id }, { $inc: { num_liked: -1 } })
-    } else {
-        await User.updateOne(
-            { _id: user_id },
-            {
-                $push: {
-                    favorite_artist: artist_id,
+            await Artist.updateOne(
+                { _id: artist_id },
+                { $inc: { followers: -1 } },
+                { session }
+            )
+        } else {
+            await User.updateOne(
+                { _id: user_id },
+                {
+                    $push: {
+                        favorite_artist: artist_id,
+                    },
                 },
-            }
-        )
+                { session }
+            )
 
-        await Artist.updateOne({ _id: artist_id }, { $inc: { num_liked: 1 } })
+            await Artist.updateOne(
+                { _id: artist_id },
+                { $inc: { followers: 1 } },
+                { session }
+            )
+        }
+
+        await session.commitTransaction()
+
+        return res.status(200).json({
+            success: true,
+            message: 'Cập nhập thích artist thành công ',
+        })
+    } catch (error) {
+        await session.abortTransaction()
+        return res.status(500).json({
+            success: false,
+            message: 'Lỗi bên trong ',
+            error,
+        })
+    } finally {
+        session.endSession()
     }
-
-    return res.status(200).json({
-        success: true,
-        message: 'update liked artist success',
-    })
 }
 
 exports.deleteSongPlaylist = async (req, res) => {
@@ -177,7 +207,7 @@ exports.deleteSongPlaylist = async (req, res) => {
             { _id: playlist_id, user_id: user_id },
             {
                 $pull: {
-                    songs: song_id,
+                    list_of_songs: song_id,
                 },
             }
         )
@@ -185,18 +215,18 @@ exports.deleteSongPlaylist = async (req, res) => {
         if (!playlist) {
             return res.status(400).json({
                 success: false,
-                message: 'Playlist not found',
+                message: 'Không tìm thấy Playlist',
             })
         }
 
         return res.status(200).json({
             success: true,
-            message: 'remove success',
+            message: 'Xóa bài hát trong playlist thành công',
         })
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message: 'Internal Error',
+            message: 'Lỗi bên trong ',
             error,
         })
     }
