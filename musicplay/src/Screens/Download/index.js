@@ -12,63 +12,37 @@ import RNFetchBlob from 'rn-fetch-blob';
 import TrackPlayer from "react-native-track-player";
 
 const Downloader = ({navigation}) => {
-    // const [pastedURL, setPastedURL] = useState('');
-  
-    // const requestStoragePermission = async () => {
-    //     try {
-    //         const granted = await PermissionsAndroid.request(
-    //             PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-    //             {
-    //                 title: 'Downloader App Storage Permission',
-    //                 message:
-    //                 'Downloader App needs access to your storage ' +
-    //                 'so you can download files',
-    //                 buttonNeutral: 'Ask Me Later',
-    //                 buttonNegative: 'Cancel',
-    //                 buttonPositive: 'OK',
-    //             },
-    //         );
-    //         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-    //             downloadFile();
-    //         } else {
-    //             console.log('storage permission denied');
-    //         }
-    //     } catch (err) {
-    //         console.warn(err);
-    //     }
-    // };
-  
-    // const downloadFile = () => {
-    //     const {config, fs} = RNFetchBlob;
-    //     const date = new Date();
-    //     const fileDir = fs.dirs.DownloadDir;
-    //     config({
-    //         // add this option that makes response data to be stored as a file,
-    //         // this is much more performant.
-    //         fileCache: true,
-    //         addAndroidDownloads: {
-    //         useDownloadManager: true,
-    //         notification: true,
-    //         path:
-    //             fileDir +
-    //             '/download_' +
-    //             Math.floor(date.getDate() + date.getSeconds() / 2) +
-    //             '.mp4',
-    //         description: 'file download',
-    //         },
-    //     })
-    //     .fetch('GET', pastedURL, {
-    //       //some headers ..
-    //     })
-    //     .then(res => {
-    //       // the temp file path
-    //       console.log('The file saved to ', res.path());
-    //       alert('file downloaded successfully ');
-    //     });
-    // };
-
     const context = useContext(MusicContext);
     const {currentSong, isPlaying, resume, pause } = context;
+    const [obj, setObj] = useState(null);
+
+    const getDownload = async () => {
+        const downloadDir = RNFetchBlob.fs.dirs.DownloadDir;
+
+        RNFetchBlob.fs.ls(downloadDir)
+        .then(async (files) => {
+            const mp3Files = files.filter((file) => file.toLowerCase().endsWith('.mp3'));
+            // xử lý danh sách các tệp MP3 ở đây
+            const songs = mp3Files.map((file, index) => {
+                const name = file.replace('.mp3', ''); // loại bỏ đuôi .mp3
+                const parts = name.split('-'); // tách chuỗi thành các phần bằng dấu '-'
+                const title = parts[0].trim(); // lấy phần tử đầu tiên là tiêu đề
+                const artist = parts[1].trim(); // lấy phần tử thứ hai là nghệ sĩ
+                const id = String(index);
+                return {
+                    id,
+                    title,
+                    artist,
+                    url: 'file://' + downloadDir +'/'+ file, // đường dẫn đến tệp nhạc
+                };
+            })
+            setObj(songs);
+            
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
 
     const storeDataMusic = async (value) => {
         try {
@@ -89,6 +63,10 @@ const Downloader = ({navigation}) => {
             console.error(error);
         }
     };
+
+    useEffect(()=> {
+        getDownload();
+    }, [])
   
     return (
         <Container>
@@ -103,15 +81,20 @@ const Downloader = ({navigation}) => {
                 <View/>
             </HeaderSection>
             <FlatList
-                data={dummyData.Favorite}
+                data={obj}
                 keyExtractor={(item) => item.id}
-                renderItem={({ item, index }) => (
+                renderItem={({ item }) => (
                     <TouchableWithoutFeedback onPress={async () => {
                         await storeDataMusic(item);
-                        await TrackPlayer.reset();
-                        await TrackPlayer.add(dummyData.Favorite);
-                        await TrackPlayer.skip(index);
-                        navigation.navigate('Player');
+                        try {
+                            await TrackPlayer.reset();
+                            await TrackPlayer.add(item);
+                            await TrackPlayer.play();
+                        
+                        } catch (e) {
+                            console.log('er', e);
+                        }
+                        
                     }}>
                         <FavoriteItemView>
                             <View style={{ flexDirection: "row" }}>
@@ -147,12 +130,12 @@ const Downloader = ({navigation}) => {
                         marginHorizontal: 16,
                         marginVertical: 12
                     }}> 
-                        <TouchableOpacity onPress={() => {navigation.navigate('Player')}}>
+                        <TouchableOpacity>
                             <View style={{
                                 flexDirection: 'row',
                                 alignItems: 'center'
                             }}>
-                                <McImage source={currentSong?.thumbnail} style={{
+                                <McImage source={require('Assets/images/download_image.png')} style={{
                                     width: 38,
                                     height: 38,
                                     borderRadius: 19

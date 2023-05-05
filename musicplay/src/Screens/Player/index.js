@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { StatusBar, Text, TouchableOpacity, View, Animated, Easing, ScrollView } from "react-native";
+import { StatusBar, Text, TouchableOpacity, View, Animated, Easing, ScrollView, PermissionsAndroid } from "react-native";
 import styled from "styled-components";
 import Slider from "@react-native-community/slider";
 import { Audio } from 'expo-av';
@@ -10,6 +10,7 @@ import { McText, McImage, PlayButton } from "Components";
 import Swiper from "react-native-swiper";
 import { MusicContext } from "../../Context/MusicProvider";
 import TrackPlayer, { useProgress } from 'react-native-track-player';
+import RNFetchBlob from "rn-fetch-blob";
 
 const Player = ({ navigation}) => {
     const { position, duration } = useProgress()
@@ -19,6 +20,7 @@ const Player = ({ navigation}) => {
     const context = useContext(MusicContext);
     const [isPlaying_ , setIsPlaying] = useState(false);
     const {currentSong, pause, resume } = context;
+    const [pathURL, setPath] = useState('https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/01%2000%20Intro%20%20RPT%20MCK%20%2099%20the%20album.mp3?alt=media&token=6145a003-43f6-42bd-96b5-45cd95eb6452');
 
     const clickLike = () => {
         if (likeSong) {
@@ -57,7 +59,6 @@ const Player = ({ navigation}) => {
     useEffect(() => {
         loadSound(); 
         spinAnimation();
-        console.log(lyrics);
     }, []);
 
     // Phát nhạc đoạn ấn vào trên thanh slider
@@ -87,6 +88,7 @@ const Player = ({ navigation}) => {
             let trackIndex = await TrackPlayer.getCurrentTrack();
             let trackObject = await TrackPlayer.getTrack(trackIndex);
             await storeDataMusic(trackObject);
+            loadSound();
         } catch (error) {
             console.error(error);
         }
@@ -98,6 +100,7 @@ const Player = ({ navigation}) => {
             let trackIndex = await TrackPlayer.getCurrentTrack();
             let trackObject = await TrackPlayer.getTrack(trackIndex);
             await storeDataMusic(trackObject);
+            loadSound();
         } catch (error) {
             console.error(error);
         }
@@ -127,6 +130,49 @@ const Player = ({ navigation}) => {
             spinValue.setValue(0);
             spinAnimation();
         });
+    };
+
+    const requestStoragePermission = async () => {
+        try {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                {
+                    title: 'Downloader App Storage Permission',
+                    message:
+                        'Downloader App needs access to your storage ' +
+                        'so you can download files',
+                        buttonNeutral: 'Ask Me Later',
+                        buttonNegative: 'Cancel',
+                        buttonPositive: 'OK'
+                },
+            );
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                downloadFile();
+            } else {
+                console.log('storage permission denied');
+            }
+        } catch (err) {
+            console.warn(err);
+        }
+    };
+
+    const downloadFile = () => {
+        console.log('Download');
+        const {config, fs} = RNFetchBlob;
+        const fileDir = fs.dirs.DownloadDir;
+        config({
+            // add this option that makes response data to be stored as a file,
+            // this is much more performant.
+            fileCache: true,
+            addAndroidDownloads: {
+            useDownloadManager: true,
+            notification: true,
+            path: fileDir +'/'+ currentSong.title + '-' + currentSong.artist + '.mp3'
+            },
+        })
+        .fetch('GET', pathURL, {
+          //some headers ..
+        })
     };
 
     return(
@@ -171,7 +217,7 @@ const Player = ({ navigation}) => {
                     }>
 
                     <MusicDetailSection>
-                        <Animated.Image source={currentSong?.thumbnail} style={{
+                        <Animated.Image source={{uri: currentSong?.artwork}} style={{
                             marginHorizontal: 81,
                             marginVertical: 20,
                             width: 250,
@@ -191,7 +237,7 @@ const Player = ({ navigation}) => {
 
                     <View style={{marginLeft: 10}}>
                         <DetailLyricSection>
-                            <McImage source={currentSong?.thumbnail} style={{
+                            <McImage source={{uri: currentSong?.artwork}} style={{
                                 width: 50,
                                 height:50,
                                 borderRadius: 10
@@ -290,7 +336,10 @@ const Player = ({ navigation}) => {
                     <McImage source={Images.inplayList}/>
                 </TouchableOpacity>
                 
-                <McImage source={Images.download}/>
+                <TouchableOpacity onPress={requestStoragePermission}>
+                    <McImage source={Images.download}/>
+                </TouchableOpacity>
+                
                 <McImage source={Images.share} style={{
                     marginRight: 24
                 }}/>

@@ -101,7 +101,7 @@ const Option = ({ navigation }) => {
                                 flexDirection: 'row',
                                 alignItems: 'center'
                             }}>
-                                <McImage source={currentSong?.thumbnail} style={{
+                                <McImage source={{uri: currentSong?.artwork}} style={{
                                     width: 38,
                                     height: 38,
                                     borderRadius: 19,

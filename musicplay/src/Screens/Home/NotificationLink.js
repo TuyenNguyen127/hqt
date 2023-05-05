@@ -11,10 +11,38 @@ import TrackPlayer from 'react-native-track-player';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const NotificationLink = ({ navigation, route }) => {
-    const [id_noti, setId_noti] = useState(null);
+const NotificationLink = ({ navigation }) => {
     const context = useContext(MusicContext);
     const {currentSong, isPlaying, resume, pause } = context;
+    const [dataNotifycation, setDataNotifycation] = useState(null);
+
+    // const getDataNotifycation = async () => {
+    //     fetch("https://0d11-2402-800-62d0-bf1c-5110-34ca-48cc-47eb.ap.ngrok.io/notify", {
+    //         method: 'GET',
+    //         headers: {
+    //             Accept: 'application/json, text/plain, */*',
+    //             'Content-Type': 'application/json',
+    //         }
+    //     }
+    //     )
+    //     .then(response => {
+    //         return response.text();
+    //     })
+    //     .then(data_ => {
+    //         //console.log(data_);
+    //         let data1 = JSON.parse(data_);
+    //         //console.log(data1.data);
+    //         if (data1.success) {
+    //             setDataNotifycation(data1.data);
+    //         } else {
+    //             alert("Có lỗi đã xảy ra! \n\n"+ data1.message);
+    //         }
+    //     })
+    //     .catch(error => {
+    //         console.log("Error: ", error )
+    //         getDataNotifycation();
+    //     })
+    // }
 
     const handlePlayPress = async () => {
         try {
@@ -36,10 +64,6 @@ const NotificationLink = ({ navigation, route }) => {
             console.log(e);
         }
     }
-    useEffect(() => {
-        let { id_noti } = route.params;
-        setId_noti(id_noti);
-    }, []);
 
     return (
         <Container>
@@ -112,7 +136,7 @@ const NotificationLink = ({ navigation, route }) => {
                                 flexDirection: 'row',
                                 alignItems: 'center'
                             }}>
-                                <McImage source={currentSong?.thumbnail} style={{
+                                <McImage source={{uri: currentSong?.artwork}} style={{
                                     width: 38,
                                     height: 38,
                                     borderRadius: 19,

@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import { Theartist, Player, Thealbums, Search, Downloader} from 'Screens';
 import { Login, Register, ForgetPassword, ResetPassword } from '../../Screens/Onboarding';
-import { Home, Option, Notification, NotificationLink } from '../../Screens/Home';
+import { Home, Option, NotificationLink } from '../../Screens/Home';
 import { Library, MyPlaylist, Favorites, InPlaylist } from '../../Screens/Library';
 const Stack = createStackNavigator();
 
@@ -13,13 +13,6 @@ const Stacks = ({ params }) => (
     <Stack.Screen
       name="Home"
       component={Home}
-      options={{
-        headerShown: false,
-      }}
-    />
-    <Stack.Screen
-      name="Notification"
-      component={Notification}
       options={{
         headerShown: false,
       }}

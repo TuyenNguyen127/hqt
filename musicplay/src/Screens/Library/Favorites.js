@@ -11,7 +11,7 @@ import { MusicContext } from "../../Context/MusicProvider";
 
 const Favorite = ({navigation}) => {
     const context = useContext(MusicContext);
-    const {currentSong, isPlaying, resume, pause , load} = context;
+    const {currentSong, isPlaying, resume, pause } = context;
 
     const handlePlayPress = async () => {
         try {
@@ -69,7 +69,6 @@ const Favorite = ({navigation}) => {
             renderItem={({ item }) => (
                 <TouchableWithoutFeedback onPress={async () => {
                     storeDataMusic(item); 
-                    await load();
                     navigation.navigate('Player');
                 }}>
                 <FavoriteItemView>
@@ -114,7 +113,7 @@ const Favorite = ({navigation}) => {
                                 flexDirection: 'row',
                                 alignItems: 'center'
                             }}>
-                                <McImage source={currentSong?.thumbnail} style={{
+                                <McImage source={{uri: currentSong?.artwork}} style={{
                                     width: 38,
                                     height: 38,
                                     borderRadius: 19

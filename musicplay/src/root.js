@@ -21,7 +21,6 @@ const App = ({ params }) => {
         if (!musicLoaded) { 
             await TrackPlayer.setupPlayer();
             setMusicLoaded(true);
-            console.log('load roi nay');
         }
     };
   

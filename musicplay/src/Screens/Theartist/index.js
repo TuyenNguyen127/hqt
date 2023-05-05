@@ -97,7 +97,7 @@ const Theartist = ({ navigation, route }) => {
                     justifyContent: 'center',
                     alignItems: 'center'
                 }}>
-                    <McText semi size={24} color={Colors.grey5} align='center'>{selected?.artist} the artist</McText>
+                    <McText semi size={24} color={Colors.grey5} align='center'>{selected?.artist}</McText>
                     <McText medium size={14} color={Colors.grey3} style={{marginTop: 8}} align='center'>{selected?.songs} bài hát</McText>
                 </View>
             </DetailSection> 
@@ -185,7 +185,7 @@ const Theartist = ({ navigation, route }) => {
                                 flexDirection: 'row',
                                 alignItems: 'center'
                             }}>
-                                <McImage source={currentSong?.thumbnail} style={{
+                                <McImage source={{uri: currentSong?.artwork}} style={{
                                     width: 38,
                                     height: 38,
                                     borderRadius: 19

@@ -4,58 +4,39 @@ import styled from "styled-components";
 
 import {Colors, Images, Metrics, Fonts} from 'Constants';
 import { McText, McImage, PlayButton } from 'Components';
-import axios, { Axios } from "axios";
 
 
 const Login = ({navigation}) => {
-
-    const [loginForm, setLoginForm] = useState({
-        email: '',
-        password: '',
-    });
-
-    const { email, password } = loginForm;
-
-    const fetchUserData = () => {
-        fetch("http://127.0.0.1:8082/song/6442a558e017a59ec36fdb50")
-          .then(response => {
-            console.log(response);
-            return response.json()
-          })
-          .then(data => {
-            // localhost:8082/song/6442a558e017a59ec36fdb50
-            console.log(data)
-          })
-      }
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     
-    //   useEffect(() => {
-    //     fetchUserData()
-    //   }, [])
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        fetch("http://127.0.0.1:8082/login", {
+        fetch("https://d388-2402-800-62d0-bf1c-9d5a-3ab-cb2e-b9b6.ap.ngrok.io/login", {
             method: 'POST',
             headers: {
+                Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({email: "offthewallbn@gmail.com", password: "1234567"}),
+            body: JSON.stringify({email: email, password: password}),
         }
         )
         .then(response => {
-          console.log(response);
-          return response.json()
+            return response.text()
         })
         .then(data => {
-            navigation.navigate('Home')
-            console.log(data)
-        })}
-
-
-    const onChangeLoginForm = (event) => {
-        setLoginForm({ ...loginForm, [event.target.name]: event.target.value });
-        // setTimeout(() => setAlert(null), 5000);
-    };
+            let data_ = JSON.parse(data);
+            if (data_.success) {
+                alert('Đăng nhập thành công');
+                setTimeout(()=> navigation.navigate('Home'), 2000 )
+            } else {
+                alert("Đăng nhập thất bại! \n\n"+ data_.message);
+            }
+        })
+        .catch(error => {
+            console.log("Have error: ", error )
+        })
+    }
 
     return (
         <Container>
@@ -87,13 +68,12 @@ const Login = ({navigation}) => {
                     <TextInput 
                         placeholder="Email đăng nhập"
                         placeholderTextColor={Colors.grey3}
-                        name="email"
-                        
                         style={{
                             color: Colors.grey4,
                             
                         }}
-                        onChange={onChangeLoginForm}
+                        value={email}
+                        onChangeText={txt => setEmail(txt)}
                     ></TextInput>
                 </InputSection>
                 <InputSection>
@@ -104,13 +84,11 @@ const Login = ({navigation}) => {
                     <TextInput 
                         placeholder="Mật khẩu"
                         placeholderTextColor={Colors.grey3}
-                        name="password"
                         style={{
                             color: Colors.grey4,
-                        
                         }}
-                        // value={password}
-                        onChange={onChangeLoginForm}
+                        value={password}
+                        onChangeText={txt => setPassword(txt)}
                     ></TextInput>
                 </InputSection>
                 <TouchableOpacity style={{marginTop: 28}} onPress={() => {navigation.navigate('ForgetPassword')}}>
@@ -143,8 +121,7 @@ const Login = ({navigation}) => {
                     circle={70} 
                     icon={Images.right_arrow}
                     onPress={ async (event)=>{
-                        //await handleSubmit(event)
-                        navigation.navigate('Home')
+                        await handleSubmit(event)
                     }}
                 />
             </View>

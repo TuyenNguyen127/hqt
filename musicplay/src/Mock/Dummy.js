@@ -74,27 +74,27 @@ export const Albums = [{
 export const Favorite = [{
   id: '001',
   env: 'vn',
-  url: require('Assets/audio/13.mp3'),
+  thumbnail: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/Images%2FThumbnails%2FArtists%2FRPT%20MCK.jpg?alt=media&token=058196d2-5f08-4218-a16d-7821601d47a1',
+  artwork: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/Images%2FThumbnails%2FArtists%2FRPT%20MCK.jpg?alt=media&token=058196d2-5f08-4218-a16d-7821601d47a1',
+  url: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/01%2000%20Intro%20%20RPT%20MCK%20%2099%20the%20album.mp3?alt=media&token=6145a003-43f6-42bd-96b5-45cd95eb6452',
   title: 'Ai Mới Là Kẻ Xấu Xa',
   like: true,
   album: '"99%"',
   artist: 'RPT MCK',
-  thumbnail: require('Assets/audio/13.png'),
-  artwork: require('Assets/audio/13.png'),
-  artwork: require('Assets/audio/13.png'),
-  audio_filepath:require('Assets/audio/13.mp3'),
+  
+  
+  
   lyric: ``
 },{
   id: '002',
   env: 'vn',
-  url: require('Assets/audio/13.mp3'),
+  url: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/07%20Th%C3%B4i%20Em%20%C4%90%E1%BB%ABng%20%C4%90i%20%20RPT%20MCK%20%20ft%20Trung%20Tr%E1%BA%A7n%20%20%20%2099%20%20the%20album.mp3?alt=media&token=96d85387-ae37-49dc-8b64-559420b43b34',
   title: 'Thôi em đừng đi!',
   like: false,
   album: '"99%"',
   artist: 'RPT MCK',
-  thumbnail: require('Assets/audio/13.png'),
-  artwork: require('Assets/audio/13.png'),
-  audio_filepath:require('Assets/audio/13.mp3'),
+  artwork: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/Images%2FThumbnails%2FArtists%2FRPT%20MCK.jpg?alt=media&token=058196d2-5f08-4218-a16d-7821601d47a1',
+  
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
   I'm telling you... on how I feel
@@ -123,14 +123,14 @@ export const Favorite = [{
 },{
   id: '003',
   env: 'vn',
-  url: require('Assets/audio/13.mp3'),
+  url: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/07%20Th%C3%B4i%20Em%20%C4%90%E1%BB%ABng%20%C4%90i%20%20RPT%20MCK%20%20ft%20Trung%20Tr%E1%BA%A7n%20%20%20%2099%20%20the%20album.mp3?alt=media&token=96d85387-ae37-49dc-8b64-559420b43b34',
   title: 'Chìm sâu',
   album: '"99%"',
   artist: 'RPT MCK',
   like: true,
-  thumbnail: require('Assets/audio/13.png'),
-  artwork: require('Assets/audio/13.png'),
-  audio_filepath:require('Assets/audio/13.mp3'),
+  
+  artwork: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/Images%2FThumbnails%2FArtists%2FRPT%20MCK.jpg?alt=media&token=058196d2-5f08-4218-a16d-7821601d47a1',
+  
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
   I'm telling you... on how I feel
@@ -159,14 +159,14 @@ export const Favorite = [{
 },{
   id: '005',
   env: 'vn',
-  url: require('Assets/audio/13.mp3'),
+  url: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/07%20Th%C3%B4i%20Em%20%C4%90%E1%BB%ABng%20%C4%90i%20%20RPT%20MCK%20%20ft%20Trung%20Tr%E1%BA%A7n%20%20%20%2099%20%20the%20album.mp3?alt=media&token=96d85387-ae37-49dc-8b64-559420b43b34',
   title: 'Badtrip',
   album: '"99%"',
   artist: 'RPT MCK',
   like: false,
-  thumbnail: require('Assets/audio/13.png'),
-  artwork: require('Assets/audio/13.png'),
-  audio_filepath:require('Assets/audio/13.mp3'),
+  
+  artwork: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/Images%2FThumbnails%2FArtists%2FRPT%20MCK.jpg?alt=media&token=058196d2-5f08-4218-a16d-7821601d47a1',
+  
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
   I'm telling you... on how I feel
@@ -194,15 +194,15 @@ export const Favorite = [{
   Your talk is cheap...`
 },{
   id: '006',
-  env: 'uk',
-  url: require('Assets/audio/13.mp3'),
+  env: 'gb',
+  url: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/07%20Th%C3%B4i%20Em%20%C4%90%E1%BB%ABng%20%C4%90i%20%20RPT%20MCK%20%20ft%20Trung%20Tr%E1%BA%A7n%20%20%20%2099%20%20the%20album.mp3?alt=media&token=96d85387-ae37-49dc-8b64-559420b43b34',
   title: 'Stay',
   album: '',
   artist: 'Justin Bieber',
   like: false,
-  thumbnail: require('Assets/audio/13.png'),
-  artwork: require('Assets/audio/13.png'),
-  audio_filepath:require('Assets/audio/13.mp3'),
+  
+  artwork: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/Images%2FThumbnails%2FArtists%2FRPT%20MCK.jpg?alt=media&token=058196d2-5f08-4218-a16d-7821601d47a1',
+  
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
   I'm telling you... on how I feel
@@ -230,15 +230,15 @@ export const Favorite = [{
   Your talk is cheap...`
 },{
   id: '007',
-  env: 'uk',
-  url: require('Assets/audio/13.mp3'),
+  env: 'gb',
+  url: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/07%20Th%C3%B4i%20Em%20%C4%90%E1%BB%ABng%20%C4%90i%20%20RPT%20MCK%20%20ft%20Trung%20Tr%E1%BA%A7n%20%20%20%2099%20%20the%20album.mp3?alt=media&token=96d85387-ae37-49dc-8b64-559420b43b34',
   title: "THAT'S NOT HOW THIS WORKS",
   album: '',
   artist: 'Charlie Puth (FEAT. DAN + SHAY)',
   like: true,
-  thumbnail: require('Assets/audio/13.png'),
-  artwork: require('Assets/audio/13.png'),
-  audio_filepath:require('Assets/audio/13.mp3'),
+  
+  artwork: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/Images%2FThumbnails%2FArtists%2FRPT%20MCK.jpg?alt=media&token=058196d2-5f08-4218-a16d-7821601d47a1',
+  
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
   I'm telling you... on how I feel
@@ -267,14 +267,14 @@ export const Favorite = [{
 },{
   id: '004',
   env: 'vn',
-  url: require('Assets/audio/13.mp3'),
+  url: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/07%20Th%C3%B4i%20Em%20%C4%90%E1%BB%ABng%20%C4%90i%20%20RPT%20MCK%20%20ft%20Trung%20Tr%E1%BA%A7n%20%20%20%2099%20%20the%20album.mp3?alt=media&token=96d85387-ae37-49dc-8b64-559420b43b34',
   title: 'Sui & Tie',
   album: '"99%"',
   artist: 'RPT MCK (feat. Hoàng Tôn)',
   like: false,
-  thumbnail: require('Assets/audio/13.png'),
-  artwork: require('Assets/audio/13.png'),
-  audio_filepath:require('Assets/audio/13.mp3'),
+  
+  artwork: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/Images%2FThumbnails%2FArtists%2FRPT%20MCK.jpg?alt=media&token=058196d2-5f08-4218-a16d-7821601d47a1',
+  
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
   I'm telling you... on how I feel
@@ -303,14 +303,14 @@ export const Favorite = [{
 },{
   id: '008',
   env: 'vn',
-  url: require('Assets/audio/13.mp3'),
+  url: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/07%20Th%C3%B4i%20Em%20%C4%90%E1%BB%ABng%20%C4%90i%20%20RPT%20MCK%20%20ft%20Trung%20Tr%E1%BA%A7n%20%20%20%2099%20%20the%20album.mp3?alt=media&token=96d85387-ae37-49dc-8b64-559420b43b34',
   title: 'Anh đã ổn hơn',
   album: '"99%"',
   artist: 'RPT MCK',
   like: true,
-  thumbnail: require('Assets/audio/13.png'),
-  artwork: require('Assets/audio/13.png'),
-  audio_filepath:require('Assets/audio/13.mp3'),
+  
+  artwork: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/Images%2FThumbnails%2FArtists%2FRPT%20MCK.jpg?alt=media&token=058196d2-5f08-4218-a16d-7821601d47a1',
+  
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
   I'm telling you... on how I feel
@@ -338,15 +338,15 @@ export const Favorite = [{
   Your talk is cheap...`
 },{
   id: '009',
-  env: 'uk',
-  url: require('Assets/audio/13.mp3'),
+  env: 'gb',
+  url: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/07%20Th%C3%B4i%20Em%20%C4%90%E1%BB%ABng%20%C4%90i%20%20RPT%20MCK%20%20ft%20Trung%20Tr%E1%BA%A7n%20%20%20%2099%20%20the%20album.mp3?alt=media&token=96d85387-ae37-49dc-8b64-559420b43b34',
   title: 'Loser',
   album: '',
   artist: 'Charlie Puth',
   like: true,
-  thumbnail: require('Assets/audio/13.png'),
-  artwork: require('Assets/audio/13.png'),
-  audio_filepath:require('Assets/audio/13.mp3'),
+  
+  artwork: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/Images%2FThumbnails%2FArtists%2FRPT%20MCK.jpg?alt=media&token=058196d2-5f08-4218-a16d-7821601d47a1',
+  
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
   I'm telling you... on how I feel
@@ -374,15 +374,15 @@ export const Favorite = [{
   Your talk is cheap...`
 },{
   id: '010',
-  env: 'uk',
-  url: require('Assets/audio/13.mp3'),
+  env: 'gb',
+  url: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/07%20Th%C3%B4i%20Em%20%C4%90%E1%BB%ABng%20%C4%90i%20%20RPT%20MCK%20%20ft%20Trung%20Tr%E1%BA%A7n%20%20%20%2099%20%20the%20album.mp3?alt=media&token=96d85387-ae37-49dc-8b64-559420b43b34',
   title: 'Light Switch',
   album: '',
   artist: 'Charlie Puth',
   like: false,
-  thumbnail: require('Assets/audio/13.png'),
-  artwork: require('Assets/audio/13.png'),
-  audio_filepath:require('Assets/audio/13.mp3'),
+  
+  artwork: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/Images%2FThumbnails%2FArtists%2FRPT%20MCK.jpg?alt=media&token=058196d2-5f08-4218-a16d-7821601d47a1',
+  
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
   I'm telling you... on how I feel
@@ -410,15 +410,15 @@ export const Favorite = [{
   Your talk is cheap...`
 },{
   id: '011',
-  env: 'uk',
-  url: require('Assets/audio/13.mp3'),
+  env: 'gb',
+  url: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/07%20Th%C3%B4i%20Em%20%C4%90%E1%BB%ABng%20%C4%90i%20%20RPT%20MCK%20%20ft%20Trung%20Tr%E1%BA%A7n%20%20%20%2099%20%20the%20album.mp3?alt=media&token=96d85387-ae37-49dc-8b64-559420b43b34',
   title: 'Blinding Lights',
   album: '',
   artist: 'The Weeknd',
   like: true,
-  thumbnail: require('Assets/audio/13.png'),
-  artwork: require('Assets/audio/13.png'),
-  audio_filepath:require('Assets/audio/13.mp3'),
+  
+  artwork: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/Images%2FThumbnails%2FArtists%2FRPT%20MCK.jpg?alt=media&token=058196d2-5f08-4218-a16d-7821601d47a1',
+  
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
   I'm telling you... on how I feel
@@ -446,15 +446,15 @@ export const Favorite = [{
   Your talk is cheap...`
 },{
   id: '012',
-  env: 'uk',
-  url: require('Assets/audio/13.mp3'),
+  env: 'gb',
+  url: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/07%20Th%C3%B4i%20Em%20%C4%90%E1%BB%ABng%20%C4%90i%20%20RPT%20MCK%20%20ft%20Trung%20Tr%E1%BA%A7n%20%20%20%2099%20%20the%20album.mp3?alt=media&token=96d85387-ae37-49dc-8b64-559420b43b34',
   title: 'Sugar',
   album: '',
   artist: 'Maroon 5',
   like: false,
-  thumbnail: require('Assets/audio/13.png'),
-  artwork: require('Assets/audio/13.png'),
-  audio_filepath:require('Assets/audio/13.mp3'),
+  
+  artwork: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/Images%2FThumbnails%2FArtists%2FRPT%20MCK.jpg?alt=media&token=058196d2-5f08-4218-a16d-7821601d47a1',
+  
   lyric: `Your butt is mine... gonna tell you right
   Just show your face... throughout daylight
   I'm telling you... on how I feel
@@ -508,15 +508,15 @@ export const NotificationLink = [{
   id_object: '001',
   item: {
     id: '010',
-    env: 'uk',
-    url: require('Assets/audio/13.mp3'),
+    env: 'gb',
+    url: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/07%20Th%C3%B4i%20Em%20%C4%90%E1%BB%ABng%20%C4%90i%20%20RPT%20MCK%20%20ft%20Trung%20Tr%E1%BA%A7n%20%20%20%2099%20%20the%20album.mp3?alt=media&token=96d85387-ae37-49dc-8b64-559420b43b34',
     title: 'Light Switch',
     album: '',
     artist: 'Charlie Puth',
     like: false,
-    thumbnail: require('Assets/audio/13.png'),
-    artwork: require('Assets/audio/13.png'),
-    audio_filepath:require('Assets/audio/13.mp3'),
+    
+    artwork: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/Images%2FThumbnails%2FArtists%2FRPT%20MCK.jpg?alt=media&token=058196d2-5f08-4218-a16d-7821601d47a1',
+    
     lyric: `Your butt is mine... gonna tell you right
     Just show your face... throughout daylight
     I'm telling you... on how I feel
@@ -576,27 +576,26 @@ export const NotificationLink = [{
 export const ArtistMCK = [{
     id: '001',
     env: 'vn',
-    url: require('Assets/audio/13.mp3'),
+    url: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/07%20Th%C3%B4i%20Em%20%C4%90%E1%BB%ABng%20%C4%90i%20%20RPT%20MCK%20%20ft%20Trung%20Tr%E1%BA%A7n%20%20%20%2099%20%20the%20album.mp3?alt=media&token=96d85387-ae37-49dc-8b64-559420b43b34',
     title: 'Ai Mới Là Kẻ Xấu Xa',
     like: true,
     album: '"99%"',
     artist: 'RPT MCK',
-    thumbnail: require('Assets/audio/13.png'),
-    artwork: require('Assets/audio/13.png'),
-    artwork: require('Assets/audio/13.png'),
-    audio_filepath:require('Assets/audio/13.mp3'),
+    
+    artwork: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/Images%2FThumbnails%2FArtists%2FRPT%20MCK.jpg?alt=media&token=058196d2-5f08-4218-a16d-7821601d47a1',
+    
     lyric: ``
   },{
     id: '002',
     env: 'vn',
-    url: require('Assets/audio/13.mp3'),
+    url: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/07%20Th%C3%B4i%20Em%20%C4%90%E1%BB%ABng%20%C4%90i%20%20RPT%20MCK%20%20ft%20Trung%20Tr%E1%BA%A7n%20%20%20%2099%20%20the%20album.mp3?alt=media&token=96d85387-ae37-49dc-8b64-559420b43b34',
     title: 'Thôi em đừng đi!',
     like: false,
     album: '"99%"',
     artist: 'RPT MCK',
-    thumbnail: require('Assets/audio/13.png'),
-    artwork: require('Assets/audio/13.png'),
-    audio_filepath:require('Assets/audio/13.mp3'),
+    
+    artwork: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/Images%2FThumbnails%2FArtists%2FRPT%20MCK.jpg?alt=media&token=058196d2-5f08-4218-a16d-7821601d47a1',
+    
     lyric: `Your butt is mine... gonna tell you right
     Just show your face... throughout daylight
     I'm telling you... on how I feel
@@ -625,14 +624,14 @@ export const ArtistMCK = [{
   },{
     id: '003',
     env: 'vn',
-    url: require('Assets/audio/13.mp3'),
+    url: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/07%20Th%C3%B4i%20Em%20%C4%90%E1%BB%ABng%20%C4%90i%20%20RPT%20MCK%20%20ft%20Trung%20Tr%E1%BA%A7n%20%20%20%2099%20%20the%20album.mp3?alt=media&token=96d85387-ae37-49dc-8b64-559420b43b34',
     title: 'Chìm sâu',
     album: '"99%"',
     artist: 'RPT MCK',
     like: true,
-    thumbnail: require('Assets/audio/13.png'),
-    artwork: require('Assets/audio/13.png'),
-    audio_filepath:require('Assets/audio/13.mp3'),
+    
+    artwork: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/Images%2FThumbnails%2FArtists%2FRPT%20MCK.jpg?alt=media&token=058196d2-5f08-4218-a16d-7821601d47a1',
+    
     lyric: `Your butt is mine... gonna tell you right
     Just show your face... throughout daylight
     I'm telling you... on how I feel
@@ -661,14 +660,14 @@ export const ArtistMCK = [{
   },{
     id: '004',
     env: 'vn',
-    url: require('Assets/audio/13.mp3'),
+    url: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/07%20Th%C3%B4i%20Em%20%C4%90%E1%BB%ABng%20%C4%90i%20%20RPT%20MCK%20%20ft%20Trung%20Tr%E1%BA%A7n%20%20%20%2099%20%20the%20album.mp3?alt=media&token=96d85387-ae37-49dc-8b64-559420b43b34',
     title: 'Sui & Tie',
     album: '"99%"',
     artist: 'RPT MCK (feat. Hoàng Tôn)',
     like: false,
-    thumbnail: require('Assets/audio/13.png'),
-    artwork: require('Assets/audio/13.png'),
-    audio_filepath:require('Assets/audio/13.mp3'),
+    
+    artwork: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/Images%2FThumbnails%2FArtists%2FRPT%20MCK.jpg?alt=media&token=058196d2-5f08-4218-a16d-7821601d47a1',
+    
     lyric: `Your butt is mine... gonna tell you right
     Just show your face... throughout daylight
     I'm telling you... on how I feel
@@ -697,14 +696,14 @@ export const ArtistMCK = [{
   },{
     id: '005',
     env: 'vn',
-    url: require('Assets/audio/13.mp3'),
+    url: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/07%20Th%C3%B4i%20Em%20%C4%90%E1%BB%ABng%20%C4%90i%20%20RPT%20MCK%20%20ft%20Trung%20Tr%E1%BA%A7n%20%20%20%2099%20%20the%20album.mp3?alt=media&token=96d85387-ae37-49dc-8b64-559420b43b34',
     title: 'Badtrip',
     album: '"99%"',
     artist: 'RPT MCK',
     like: false,
-    thumbnail: require('Assets/audio/13.png'),
-    artwork: require('Assets/audio/13.png'),
-    audio_filepath:require('Assets/audio/13.mp3'),
+    
+    artwork: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/Images%2FThumbnails%2FArtists%2FRPT%20MCK.jpg?alt=media&token=058196d2-5f08-4218-a16d-7821601d47a1',
+    
     lyric: `Your butt is mine... gonna tell you right
     Just show your face... throughout daylight
     I'm telling you... on how I feel
@@ -733,14 +732,14 @@ export const ArtistMCK = [{
   },{
     id: '008',
     env: 'vn',
-    url: require('Assets/audio/13.mp3'),
+    url: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/07%20Th%C3%B4i%20Em%20%C4%90%E1%BB%ABng%20%C4%90i%20%20RPT%20MCK%20%20ft%20Trung%20Tr%E1%BA%A7n%20%20%20%2099%20%20the%20album.mp3?alt=media&token=96d85387-ae37-49dc-8b64-559420b43b34',
     title: 'Anh đã ổn hơn',
     album: '"99%"',
     artist: 'RPT MCK',
     like: true,
-    thumbnail: require('Assets/audio/13.png'),
-    artwork: require('Assets/audio/13.png'),
-    audio_filepath:require('Assets/audio/13.mp3'),
+    
+    artwork: 'https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/Images%2FThumbnails%2FArtists%2FRPT%20MCK.jpg?alt=media&token=058196d2-5f08-4218-a16d-7821601d47a1',
+    
     lyric: `Your butt is mine... gonna tell you right
     Just show your face... throughout daylight
     I'm telling you... on how I feel

@@ -5,8 +5,8 @@ import styled from 'styled-components/native';
 import Swiper from 'react-native-swiper';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { Fonts, Images, Metrics, Colors } from 'Constants';
-import { McText, McImage, McAvatar, PlayButton } from 'Components';
+import { Images, Colors } from 'Constants';
+import { McText, McImage, PlayButton } from 'Components';
 import { dummyData } from 'Mock';
 import BottomBar from '../Library/BottomBar';
 import { MusicContext } from '../../Context/MusicProvider';
@@ -18,8 +18,37 @@ const Home = ({ navigation }) => {
     const [isPlaying_, setIsPlaying] = useState(false);
     const {currentSong, pause, resume} = context;
 
+    const getDataTopMusic = () => {
+        fetch("https://d388-2402-800-62d0-bf1c-9d5a-3ab-cb2e-b9b6.ap.ngrok.io/login", {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }
+        )
+        .then(response => {
+            return response.text()
+        })
+        .then(data => {
+            let data_ = JSON.parse(data);
+            if (data_.success) {
+                
+            } else {
+                alert("Đăng nhập thất bại! \n\n"+ data_.message);
+            }
+        })
+        .catch(error => {
+            console.log("Have error: ", error )
+        })
+    }
+
     async function load() {
         try {
+            await TrackPlayer.reset();
+            await getDataMusic().then(async (value) => {
+                await TrackPlayer.add(value);
+            })
             await TrackPlayer.add(dummyData.Favorite)
         } catch(error) {
             console.log(error);
@@ -68,10 +97,20 @@ const Home = ({ navigation }) => {
             console.log(e);
         }
     }
+
+    const getDataMusic = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@selectedMusic')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch(e) {
+            console.log(e);
+        }
+    }
     
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
             checkPlay();
+            load();
         });
 
         return unsubscribe;
@@ -118,7 +157,6 @@ const Home = ({ navigation }) => {
     }
 
     useEffect(() => {
-        load();
         TrackPlayer.updateOptions({
             capabilities: [
                 Capability.Play,
@@ -161,7 +199,7 @@ const Home = ({ navigation }) => {
                         <McText color={Colors.grey3} size={14}>Tìm kiếm bài hát, nghệ sĩ</McText>
                     </SearchSetion>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={()=> navigation.navigate('Notification')}>
+                <TouchableOpacity onPress={()=> navigation.navigate('NotificationLink')}>
                     <McImage source={Images.bell}/>
                 </TouchableOpacity>
                 
@@ -237,7 +275,7 @@ const Home = ({ navigation }) => {
 
                         <TouchableOpacity
                             style={{
-                                backgroundColor: selectedEnv === 'uk' ? Colors.accent2 : Colors.grey2,
+                                backgroundColor: selectedEnv === 'gb' ? Colors.accent2 : Colors.grey2,
                                 marginRight: 10, 
                                 height: 20,
                                 borderRadius: 40,
@@ -245,7 +283,7 @@ const Home = ({ navigation }) => {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                             }}
-                            onPress={() => setSelectedEnv('uk')}
+                            onPress={() => setSelectedEnv('gb')}
                         >
                             <McText bold style={{ 
                                 color:  'white',                        
@@ -274,7 +312,7 @@ const Home = ({ navigation }) => {
                                         return (
                                             <TouchableWithoutFeedback onPress={() => {
                                                 storeDataMusic(item).then(async ()=>{
-                                                    await TrackPlayer.skip(index);
+                                                    await TrackPlayer.skip(index + 1);
                                                     navigation.navigate('Player');
                                                 }); 
                                                 
@@ -360,7 +398,7 @@ const Home = ({ navigation }) => {
                                 flexDirection: 'row',
                                 alignItems: 'center'
                             }}>
-                                <McImage source={currentSong?.thumbnail} style={{
+                                <McImage source={{uri: currentSong?.artwork}} style={{
                                     width: 38,
                                     height: 38,
                                     borderRadius: 19,
