@@ -16,7 +16,13 @@ exports.getSong = async (req, res) => {
     const { id: song_id = '' } = req.params
 
     try {
-        const song = await Song.findOne({ _id: song_id }).lean()
+        const song = await Song.findOne({ _id: song_id })
+            .select('-single')
+            .populate({
+                path: 'artist',
+                select: 'name',
+            })
+            .lean()
 
         if (!song) {
             return res.status(401).json({
@@ -42,11 +48,11 @@ exports.getAlbum = async (req, res) => {
         const album = await Album.findOne({ _id: album_id })
             .populate({
                 path: 'artist_id',
-                select: '_id name thumbnail',
+                select: '_id name artist',
             })
             .populate({
                 path: 'list_of_songs',
-                select: '_id name url thumbnail',
+                select: '_id title artwork url env',
             })
             .lean()
 
@@ -57,7 +63,7 @@ exports.getAlbum = async (req, res) => {
             })
         }
 
-        return res.status(200).json({ success: true, data: album })
+        return res.status(200).json({ success: true, data: {...album} })
     } catch (error) {
         return res.status(500).json({
             success: false,
@@ -74,7 +80,7 @@ exports.getArtist = async (req, res) => {
         const artist = await Artist.findOne({ _id: artist_id })
             .populate({
                 path: 'list_of_songs',
-                select: '_id name thumbnail url',
+                select: '_id title artwork url env',
             })
             .lean()
 
@@ -209,7 +215,7 @@ exports.getTopSongFavorite = async (req, res) => {
             {
                 $lookup: {
                     from: 'artists',
-                    localField: 'song.artist_id',
+                    localField: 'song.artist',
                     foreignField: '_id',
                     as: 'artist',
                 },
