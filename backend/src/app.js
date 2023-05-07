@@ -38,7 +38,7 @@ async function uploadFile(name, filePath) {
             },
         })
         // report the response from the request
-        console.log('DATA ==========================', response.data)
+        console.log('SEND TO GOOGLE DRIVE SUCCESS ==========================', response.data)
     } catch (error) {
         //report the error message
         console.log(error)
