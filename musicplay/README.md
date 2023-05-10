@@ -10,6 +10,4 @@ yarn install
 
 ## run for android
 yarn android
-## run for ios
-yarn ios
 ```
