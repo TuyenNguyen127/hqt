@@ -5,9 +5,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {Colors, Images, Metrics} from '/Constants';
 import { McText, McImage, PlayButton } from 'Components';
-import { dummyData } from 'Mock';
 import BottomBar from './BottomBar';
 import { MusicContext } from "../../Context/MusicProvider";
+import TrackPlayer from "react-native-track-player";
 
 const InPlaylist = ({navigation, route}) => {
     const context = useContext(MusicContext);
@@ -15,7 +15,58 @@ const InPlaylist = ({navigation, route}) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [modalDelVisible, setModalDelVisible] = useState(false);
     const [selectedSong, setSelectedSong] = useState(null);
-    const {currentSong, isPlaying, resume, pause, load } = context;
+    const {currentSong, isPlaying, resume, pause } = context;
+    const [user, setUser] = useState({});
+
+    const getDataPlaylist = async (id) => {
+        fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/playlist/"+id, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }
+        )
+        .then(response => {
+            return response.text()
+        })
+        .then(data => {
+            let data_ = JSON.parse(data);
+            if (data_.success) {
+                setSelected(data_)
+            } else {
+                alert(data_.message);
+            }
+        })
+        .catch(error => {
+            console.log("Have error: ", error )
+            getFavorite(id);
+        })
+    }
+
+    const deleteSong = async (id) => {
+        fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/user/delete-song-from-playlist", {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({user_id: user._id, song_id: id, playlist_id: selected._id}),
+        }
+        )
+        .then(response => {
+            return response.text()
+        })
+        .then(data => {
+            let data_ = JSON.parse(data);
+            alert(data_.message);
+            getDataPlaylist(selected._id)
+        })
+        .catch(error => {
+            console.log("Have error: ", error )
+            getFavorite(id);
+        })
+    }
 
     const handlePlayPress = async () => {
         try {
@@ -29,6 +80,14 @@ const InPlaylist = ({navigation, route}) => {
         }
     };
 
+    const getDataUser = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@user')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch(e) {
+            console.log(e);
+        }
+    }
     
     const storeDataMusic = async (value) => {
         try {
@@ -39,14 +98,12 @@ const InPlaylist = ({navigation, route}) => {
         }
     }
 
-    const handleYes = () => {
-        alert('Đã xóa bài hát khỏi danh sách kết hợp thành công');
-        setModalDelVisible(false);
-    };
-
     useEffect(() => {
         let { selected } = route.params;
         setSelected(selected);
+        getDataUser().then(value => {
+            setUser(value);
+        })
     }, []); 
 
     return(
@@ -65,25 +122,26 @@ const InPlaylist = ({navigation, route}) => {
         </HeaderSection>
 
         <FlatList
-            data={dummyData.Favorite}
-            keyExtractor={(item) => item.id}
+            data={selected?.list_of_songs}
+            keyExtractor={(item) => item._id}
             renderItem={({ item }) => (
                 <TouchableWithoutFeedback onPress={async () => {
-                    storeDataMusic(item); 
-                    await load();
+                    await TrackPlayer.reset();
+                    const item_ = item;
+                    item_.artist = item.artist[0].name;
+                    item_.lyric = '';
+                    storeDataMusic(item_);
                     navigation.navigate('Player');
                 }}>
                 <FavoriteItemView>
                     <View style={{ flexDirection: "row" }}>                        
-                        <MusicCirle>
-                            <McImage source={Images.music} />
-                        </MusicCirle>          
+                        <McImage source={{uri: item.artwork}} style={{height: 42, width: 42, borderRadius: 21}}/>          
                         <View style={{ marginLeft: 12,width: 259 - 24 }}>
                             <McText semi size={14} color={Colors.grey5}>
                                 {item.title}
                             </McText>
                             <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
-                                {item.artist}
+                                {item.artist[0].name}
                             </McText>
                         </View>
                     </View>
@@ -91,7 +149,7 @@ const InPlaylist = ({navigation, route}) => {
                         <View style={{
                             marginLeft: 30,
                             marginRight: 30,
-                            marginVertical: 50,
+                            marginTop: 530,
                             aliginItems: 'center',
                             backgroundColor: Colors.grey4,
                             borderRadius: 10
@@ -109,7 +167,7 @@ const InPlaylist = ({navigation, route}) => {
                             </View>
                             <View style={{marginTop: 10,alignItems: 'center', paddingHorizontal: 20, paddingVertical: 10}}>
                                 <TouchableOpacity onPress={() => {setModalVisible(false);setModalDelVisible(true)}}>
-                                    <McText aligin >Loại bài hát khỏi {selected?.name}</McText>
+                                    <McText aligin >Loại bài hát khỏi "{selected?.name}"</McText>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -118,13 +176,13 @@ const InPlaylist = ({navigation, route}) => {
                         <View style={{
                             marginLeft: 30,
                             marginRight: 30,
-                            marginVertical: 50,
+                            marginTop: 530,
                             aliginItems: 'center',
                             backgroundColor: Colors.grey4,
                             borderRadius: 10
                         }}>
-                            <View style={{marginTop: 10,alignItems: 'center'}}>
-                                <McText>Bạn có muốn xóa bài hát khỏi {selected?.name}</McText>
+                            <View style={{marginTop: 10, marginHorizontal: 10}}>
+                                <McText aligin='center'>Bạn có muốn xóa bài hát khỏi "{selected?.name}"</McText>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -135,7 +193,9 @@ const InPlaylist = ({navigation, route}) => {
                                 <TouchableOpacity onPress={() => {setModalVisible(true);setModalDelVisible(false)}}>
                                     <McText>Không</McText>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={handleYes}>
+                                <TouchableOpacity onPress={() => {
+                                    deleteSong(item._id);
+                                }}>
                                     <McText>Có</McText>
                                 </TouchableOpacity>
                             </View>

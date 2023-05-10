@@ -28,13 +28,6 @@ const Thealbums = ({ navigation, route }) => {
         }
     };
 
-    const initialLikeState = dummyData.Favorite.reduce((likeSongState, item) => {
-        likeSongState[item.id] = item.like;
-        return likeSongState;
-      }, {});
-    
-    const [likeSongState, setLikeSongState] = useState(initialLikeState);
-
     useEffect(() => {
         let { selected } = route.params;
         setSelected(selected);
@@ -47,13 +40,6 @@ const Thealbums = ({ navigation, route }) => {
         } else {
             setlikeAlbum(true);
         }
-    }
-
-    const clickLikeSong = async (itemId) => {
-        setLikeSongState(prevState => ({
-            ...prevState,
-            [itemId]: !prevState[itemId]
-          }));
     }
 
     const storeDataMusic = async (value) => {
@@ -79,7 +65,7 @@ const Thealbums = ({ navigation, route }) => {
             </HeaderSection>
             
             <DetailSection>
-                <McImage source={selected?.thumbnail} style={{
+                <McImage source={{uri: selected?.thumbnail}} style={{
                     alignItems: 'center',
                     marginVertical: 4,
                     width: 180,
@@ -106,7 +92,7 @@ const Thealbums = ({ navigation, route }) => {
                 
                 
                 <TouchableOpacity onPress={async ()=>{
-                    await TrackPlayer.skip(Math.random() * dummyData.ArtistMCK.length);
+                    await TrackPlayer.skip(Math.random() * selected?.item.length);
                     await TrackPlayer.play();
                 }} 
                 style={{
@@ -133,7 +119,7 @@ const Thealbums = ({ navigation, route }) => {
 
             <View style={{height: 204, width: 327, alignSelf: 'center'}}>
                 <FlatList
-                    data={dummyData.ArtistMCK}
+                    data={selected?.item}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item, index }) => {
                             return (
@@ -144,19 +130,16 @@ const Thealbums = ({ navigation, route }) => {
                                 }}>
                                 <FavoriteItemView>
                                     <View style={{ flexDirection: "row" }}>
-                                    <MusicCirle>
-                                        <McImage source={Images.music} />
-                                    </MusicCirle>
-                                    <View style={{ marginLeft: 12, width: 246 }}>
-                                        <McText semi size={14} color={Colors.grey5}>
-                                        {item.title}
-                                        </McText>
-                                        <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
-                                        {item.artist}
-                                        </McText>
+                                        <McImage source={{uri: item.artwork}} style={{height: 42, width: 42, borderRadius: 21}}/>
+                                        <View style={{ marginLeft: 12, width: 246 }}>
+                                            <McText semi size={14} color={Colors.grey5}>
+                                                {item.title}
+                                            </McText>
+                                            <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
+                                                {item.artist}
+                                            </McText>
+                                        </View>
                                     </View>
-                                    </View>
-                                    <TouchableOpacity onPress={() => clickLikeSong(item.id)}><McImage source={likeSongState[item.id] ? Images.fullLike : Images.like} /></TouchableOpacity>
                                 </FavoriteItemView>
                                 </TouchableWithoutFeedback>
                             )

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
-import { StatusBar, Text, TouchableOpacity, View, TextInput, Easing, ScrollView } from "react-native";
+import React, { useState, useEffect, useContext } from "react";
+import { StatusBar, Text, TouchableOpacity, View, TextInput, FlatList, TouchableWithoutFeedback } from "react-native";
 import styled from "styled-components";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -7,11 +7,39 @@ import { Colors, Images, Metrics } from "/Constants";
 import { McText, McImage, PlayButton } from "Components";
 import { MusicContext } from "../../Context/MusicProvider";
 import BottomBar from "../Library/BottomBar";
+import TrackPlayer from "react-native-track-player";
 
 
 const Search = ({ navigation }) => {
     const context = useContext(MusicContext);
     const {currentSong, isPlaying, resume, pause } = context;
+    const [textSearch, setTextSerach] = useState(null);
+    const [dataSearch, setDataSearch] = useState([], []);
+    const search = async () => {
+        fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/search?q=" + textSearch, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }
+        )
+        .then(response => {
+            return response.text()
+        })
+        .then(data => {
+            let data_ = JSON.parse(data);
+            if (data_.success) {
+                setDataSearch(data_.data)
+            } else {
+                alert(data_.message);
+            }
+        })
+        .catch(error => {
+            console.log("Have error: ", error )
+            search();
+        })
+    }
 
     const handlePlayPress = async () => {
         try {
@@ -24,6 +52,14 @@ const Search = ({ navigation }) => {
             console.error(error);
         }
     };
+    const storeDataMusic = async (value) => {
+        try {
+            const jsonValue = JSON.stringify(value);
+            await AsyncStorage.setItem('@selectedMusic', jsonValue);
+        } catch (e) {
+            console.log(e);
+        }
+    }
 
     return (
         <Container>
@@ -50,8 +86,75 @@ const Search = ({ navigation }) => {
                     style={{
                         color: Colors.grey4
                     }}
+                    value={textSearch}
+                    onChangeText={value => setTextSerach(value)}
+                    onSubmitEditing={search}
                 ></TextInput>
             </SearchSetion>
+            
+            <View style={{height: 235}}>
+                <TitleSection>
+                    <McText medium size={15} color={Colors.grey4}> Bài hát : </McText>
+                </TitleSection>
+                <FlatList
+                    data={dataSearch[0]}
+                    keyExtractor={(item) => item._id}
+                    renderItem={({ item }) => (
+                        <TouchableWithoutFeedback onPress={async () => {
+                            await TrackPlayer.reset();
+                            const item_ = item;
+                            item_.artist = item.artist[0].name;
+                            item_.lyric = '';
+                            await TrackPlayer.add(item_)
+                            storeDataMusic(item_);
+                            navigation.navigate('Player');
+                        }}>
+                            <FavoriteItemView>
+                                <View style={{ flexDirection: "row" }}>                        
+                                    <McImage source={{uri: item.artwork}} style={{height: 42, width: 42, borderRadius: 21}}/>          
+                                    <View style={{ marginLeft: 12,width: 259 - 24 }}>
+                                        <McText semi size={14} color={Colors.grey5}>
+                                            {item.title}
+                                        </McText>
+                                        <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
+                                            {item.artist[0].name}
+                                        </McText>
+                                    </View>
+                                </View>                       
+                            </FavoriteItemView>
+                        </TouchableWithoutFeedback>
+                    )}
+                />
+            </View>
+
+            <View style={{height: 235}}>
+                <TitleSection>
+                    <McText medium size={15} color={Colors.grey4}> Nghệ sĩ : </McText>
+                </TitleSection>
+                <FlatList
+                    data={dataSearch[1]}
+                    keyExtractor={(item) => item._id}
+                    renderItem={({ item }) => (
+                        <TouchableWithoutFeedback onPress={async () => {
+                           
+                        }}>
+                            <FavoriteItemView>
+                                <View style={{ flexDirection: "row" }}>                        
+                                    <McImage source={{uri: item.thumbnail}} style={{height: 42, width: 42, borderRadius: 21}}/>          
+                                    <View style={{ marginLeft: 12,width: 259 - 24 }}>
+                                        <McText semi size={14} color={Colors.grey5}>
+                                            {item.name}
+                                        </McText>
+                                        <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
+                                            Nghệ sĩ
+                                        </McText>
+                                    </View>
+                                </View>                       
+                            </FavoriteItemView>
+                        </TouchableWithoutFeedback>
+                    )}
+                />
+            </View>                      
 
             <BottomSection>
                 <BottomBar>
@@ -122,5 +225,17 @@ const BottomSection = styled.View`
     bottom: 10px;
     left: 0px;
     z-index: 1;
+`;
+const TitleSection = styled.View`
+    margin: 10px 24px 10px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+`;
+const FavoriteItemView = styled.View`
+    margin: 10px 24px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
 `;
 export default Search;

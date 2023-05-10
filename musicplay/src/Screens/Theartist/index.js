@@ -27,14 +27,7 @@ const Theartist = ({ navigation, route }) => {
             console.error(error);
         }
     };
-
-    const initialLikeState = dummyData.Favorite.reduce((likeSongState, item) => {
-        likeSongState[item.id] = item.like;
-        return likeSongState;
-      }, {});
     
-    const [likeSongState, setLikeSongState] = useState(initialLikeState);
-
     const trackReset = async () => {
         await TrackPlayer.reset();
         await TrackPlayer.add(dummyData.ArtistMCK);
@@ -53,13 +46,6 @@ const Theartist = ({ navigation, route }) => {
         } else {
             setlikeArtist(true);
         }
-    }
-
-    const clickLikeSong = async (itemId) => {
-        setLikeSongState(prevState => ({
-            ...prevState,
-            [itemId]: !prevState[itemId]
-          }));
     }
 
     const storeDataMusic = async (value) => {
@@ -85,7 +71,7 @@ const Theartist = ({ navigation, route }) => {
             </HeaderSection>
             
             <DetailSection>
-                <McImage source={selected?.thumbnail} style={{
+                <McImage source={{uri: selected?.thumbnail}} style={{
                     alignItems: 'center',
                     marginVertical: 4,
                     width: 180,
@@ -112,7 +98,7 @@ const Theartist = ({ navigation, route }) => {
                 
                 
                 <TouchableOpacity onPress={async ()=>{
-                    await TrackPlayer.skip(Math.random() * dummyData.ArtistMCK.length);
+                    await TrackPlayer.skip(Math.random() * selected?.item.length);
                     await TrackPlayer.play();
                 }} 
                 style={{
@@ -139,7 +125,7 @@ const Theartist = ({ navigation, route }) => {
 
             <View style={{height: 204, width: 327, alignSelf: 'center'}}>
                 <FlatList
-                    data={dummyData.ArtistMCK}
+                    data={selected?.item}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item, index }) => {
                             return (
@@ -148,22 +134,19 @@ const Theartist = ({ navigation, route }) => {
                                     await TrackPlayer.skip(index);
                                     navigation.navigate('Player')
                                 }}>
-                                <FavoriteItemView>
-                                    <View style={{ flexDirection: "row" }}>
-                                    <MusicCirle>
-                                        <McImage source={Images.music} />
-                                    </MusicCirle>
-                                    <View style={{ marginLeft: 12, width: 246 }}>
-                                        <McText semi size={14} color={Colors.grey5}>
-                                        {item.title}
-                                        </McText>
-                                        <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
-                                        {item.artist}
-                                        </McText>
-                                    </View>
-                                    </View>
-                                    <TouchableOpacity onPress={() => clickLikeSong(item.id)}><McImage source={likeSongState[item.id] ? Images.fullLike : Images.like} /></TouchableOpacity>
-                                </FavoriteItemView>
+                                    <FavoriteItemView>
+                                        <View style={{ flexDirection: "row" }}>
+                                            <McImage source={{uri: item.artwork}} style={{height: 42, width: 42, borderRadius: 21}}/>
+                                            <View style={{ marginLeft: 12, width: 246 }}>
+                                                <McText semi size={14} color={Colors.grey5}>
+                                                {item.title}
+                                                </McText>
+                                                <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
+                                                {item.artist}
+                                                </McText>
+                                            </View>
+                                        </View>                                
+                                    </FavoriteItemView>
                                 </TouchableWithoutFeedback>
                             )
                     }}   

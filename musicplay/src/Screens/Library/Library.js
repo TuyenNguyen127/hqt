@@ -12,6 +12,60 @@ import { MusicContext } from "../../Context/MusicProvider";
 const Library = ({navigation}) => {
     const context = useContext(MusicContext);
     const {currentSong, isPlaying, resume, pause } = context;
+    const [favorite, setFavorite] = useState([]);
+    const [playlist, setPlaylist] = useState([]);
+
+    const getFavorite = async (id) => {
+        fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/user/"+id+"/favorite-song", {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }
+        )
+        .then(response => {
+            return response.text()
+        })
+        .then(data => {
+            let data_ = JSON.parse(data);
+            if (data_.success) {
+                setFavorite(data_.data.favorite_song)
+            } else {
+                alert(data_.message);
+            }
+        })
+        .catch(error => {
+            console.log("Have error: ", error )
+            getFavorite(id);
+        })
+    }
+
+    const getPlaylist = async (id) => {
+        fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/user/"+id+"/get-playlist", {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }
+        )
+        .then(response => {
+            return response.text()
+        })
+        .then(data => {
+            let data_ = JSON.parse(data);
+            if (data_.success) {
+                setPlaylist(data_.data)
+            } else {
+                alert(data_.message);
+            }
+        })
+        .catch(error => {
+            console.log("Have error: ", error )
+            getPlaylist(id);
+        })
+    }
 
     const handlePlayPress = async () => {
         try {
@@ -25,14 +79,15 @@ const Library = ({navigation}) => {
         }
     };
 
-    const getDataMusic = async () => {
+    const getDataUser = async () => {
         try {
-            const jsonValue = await AsyncStorage.getItem('@selectedMusic')
+            const jsonValue = await AsyncStorage.getItem('@user')
             return jsonValue != null ? JSON.parse(jsonValue) : null;
         } catch(e) {
             console.log(e);
         }
     }
+
     const storeDataMusic = async (value) => {
         try {
             const jsonValue = JSON.stringify(value);
@@ -40,20 +95,6 @@ const Library = ({navigation}) => {
         } catch (e) {
             console.log(e);
         }
-    }
-
-    const initialLikeState = dummyData.Favorite.reduce((likeSongState, item) => {
-        likeSongState[item.id] = item.like;
-        return likeSongState;
-      }, {});
-    
-    const [likeSongState, setLikeSongState] = useState(initialLikeState);
-
-    const touchContactSongs = async (itemId) => {
-        setLikeSongState(prevState => ({
-            ...prevState,
-            [itemId]: !prevState[itemId]
-          }));
     }
     
     const _renderItem = ({ item, index}) => {
@@ -65,19 +106,33 @@ const Library = ({navigation}) => {
                     <View style={{
                         marginTop:16,
                         marginLeft: index === 0? 24:0,
-                        marginRight:index === dummyData.Playlists.length - 1?0:24
+                        marginRight:index === playlist.length - 1?0:24
                     }}>
-                    <McImage key={index} source={item.thumbnail} style={{marginBottom:12, height: 80, width: 80}}/>
-                    <McText semi size={16} color={Colors.grey5}>{item.name}</McText>
+                    <McImage key={index} source={{uri: item.thumbnail}} style={{marginBottom:12, height: 80, width: 80, borderRadius: 20}}/>
+                    <View style={{width: 80}}>
+                        <McText semi size={16} color={Colors.grey5}>{item.name}</McText>
+                    </View>
+                    
                     <McText medium size={12} color={Colors.grey3} style={{
                         marginTop: 4
                     }}>
-                        {item.songs} songs</McText>
+                        {item.list_of_songs.length} bài hát</McText>
                     </View>
                 </View>
             </TouchableWithoutFeedback>
         )
     }
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            getDataUser().then(value => {
+                getFavorite(value._id);
+                getPlaylist(value._id);
+            })
+        });
+
+        return unsubscribe;
+    }, [navigation]);
     
     return(
         <Container>
@@ -88,12 +143,7 @@ const Library = ({navigation}) => {
                     <McImage source={Images.profile} style={{height: 30, width: 30}}></McImage>
                 </TouchableOpacity>
                     
-                <McText 
-                bold 
-                align='center'
-                size={28} 
-                color={Colors.primary}
-                >My Library</McText>
+                <McText bold align='center'size={28} color={Colors.primary}>My Library</McText>
 
                 <TouchableOpacity onPress={()=> navigation.navigate('Home')}>
                     <McImage source={Images.home}/>
@@ -105,7 +155,7 @@ const Library = ({navigation}) => {
                 <SearchSetion>
                     <McImage 
                         source={Images.find}
-                        style={{marginLeft: 16, marginRight:12}}
+                        style={{marginLeft: 16, marginRight:12}}lik
                     ></McImage>
                     <McText color={Colors.grey3} size={14}>Tìm kiếm bài hát, nghệ sĩ</McText>
                 </SearchSetion>
@@ -114,7 +164,7 @@ const Library = ({navigation}) => {
 
             <TouchableWithoutFeedback onPress={()=>{
                     console.log('Go to Playlist page');
-                    navigation.navigate('MyPlaylist', {id_song: null})
+                    navigation.navigate('MyPlaylist', {song_id: null})
                 }}>
                 <TitleSection>
                     <McText medium size={20} color={Colors.grey4}>Danh sách kết hợp</McText>           
@@ -124,11 +174,11 @@ const Library = ({navigation}) => {
 
             <View>
                 <FlatList
-                    keyExtractor={(item) => 'playlist_' + item.id}
+                    keyExtractor={(item) => 'playlist_' + item._id}
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{}}
-                    data={dummyData.Playlists}
+                    data={playlist}
                     renderItem={_renderItem}
                 />
 
@@ -145,31 +195,29 @@ const Library = ({navigation}) => {
 
             <View style={{marginTop: 10, height: 250}}>
             <FlatList
-                data={dummyData.Favorite}
-                keyExtractor={(item) => item.id}
+                data={favorite}
+                keyExtractor={(item) => item._id}
                 renderItem={({ item }) => (
                     <TouchableWithoutFeedback onPress={async () => {
-                        storeDataMusic(item); 
-                        
-                        navigation.navigate('Player')
+                        await TrackPlayer.reset();
+                        const item_ = item;
+                        item_.artist = item.artist[0].name;
+                        item_.lyric = '';
+                        storeDataMusic(item_);
+                        navigation.navigate('Player');
                     }}>
                     <FavoriteItemView>
                         <View style={{ flexDirection: "row" }}>
-                            <MusicCirle>
-                                <McImage source={Images.music} />
-                            </MusicCirle>
+                            <McImage source={{uri: item.artwork}} style={{height: 42, width: 42, borderRadius: 21}}/>
                             <View style={{ marginLeft: 12,width: 259 - 24 }}>
                                 <McText semi size={14} color={Colors.grey5}>
                                 {item.title}
                                 </McText>
                                 <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
-                                {item.artist}
+                                {item.artist[0].name}
                                 </McText>
                             </View>
                         </View>
-                        <TouchableOpacity onPress={() => touchContactSongs(item.id)}>
-                            <McImage source={likeSongState[item.id] ? Images.fullLike: Images.like} />
-                        </TouchableOpacity>
                         
                     </FavoriteItemView>
                     </TouchableWithoutFeedback>

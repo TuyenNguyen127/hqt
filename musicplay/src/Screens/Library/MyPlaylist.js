@@ -7,16 +7,98 @@ import { McText, McImage, PlayButton } from 'Components';
 import { dummyData } from 'Mock';
 import BottomBar from './BottomBar';
 import { MusicContext } from "../../Context/MusicProvider";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const MyPlaylist = ({navigation, route}) => {
     const context = useContext(MusicContext);
-    const [songItem, setSongItem] = useState(null);
+    const [songItem, setSongItem] = useState({song_id: ""});
     const [currentPlaylist, setCurrentPlaylist] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [modalAddVisible, setModalAddVisible] = useState(false);
     const [playlistName, setPlaylistName] = useState('');
     const {currentSong, isPlaying, resume, pause } = context;
+    const [playlist, setPlaylist] = useState([]);
+    const [selectedPlaylist, setSelectedPlaylist] = useState(null)
+    const [modalDelVisible, setModalDelVisible] = useState(false)
+    const [user, setUser] = useState({});
+
+    const getPlaylist = async (id) => {
+        fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/user/"+id+"/get-playlist", {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }
+        )
+        .then(response => {
+            return response.text()
+        })
+        .then(data => {
+            let data_ = JSON.parse(data);
+            if (data_.success) {
+                setPlaylist(data_.data)
+            } else {
+                alert(data_.message);
+            }
+        })
+        .catch(error => {
+            console.log("Have error: ", error )
+            getPlaylist(id);
+        })
+    }
+
+    const addSongToPlaylist = async (id) => {
+        fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/user/playlist/add-song", {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }, 
+            body: JSON.stringify({
+                user_id: user._id,
+                playlist_id: id,
+                song_id: songItem.song_id
+            })
+        }
+        )
+        .then(response => {
+            return response.text()
+        })
+        .then(data => {
+            let data_ = JSON.parse(data);
+            getPlaylist(user._id);
+            alert(data_.message);
+        })
+        .catch(error => {
+            console.log("Have error: ", error )
+            addSongToPlaylist(id);
+        })
+    }
+
+    const deletePlaylist = async (id) => {
+        fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/user/"+user._id+"/playlist/" + id, {
+            method: 'DELETE',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }
+        )
+        .then(response => {
+            return response.text()
+        })
+        .then(data => {
+            let data_ = JSON.parse(data);
+            alert(data_.message);
+            getPlaylist(user._id)
+        })
+        .catch(error => {
+            console.log("Have error: ", error )
+            deletePlaylist(id);
+        })
+    }
 
     const handlePlayPress = async () => {
         try {
@@ -45,16 +127,28 @@ const MyPlaylist = ({navigation, route}) => {
             alert('Vui lòng nhập tên playlist');
         }
     };
-    const handleYes = () => {
-        
-        alert('Đã thêm bài hát mới vào danh sách kết hợp thành công');
-        setModalAddVisible(false);
-        setSongItem(null);
-    };
+
+    const getDataUser = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@user')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch(e) {
+            console.log(e);
+        }
+    }
 
     useEffect(() => {
         setSongItem(route.params);
-    }, []);
+        
+        const unsubscribe = navigation.addListener('focus', () => {
+            getDataUser().then(value => {
+                getPlaylist(value._id);
+                setUser(value);
+            })
+        });
+
+        return unsubscribe;
+    }, [navigation]);
 
     return(
     <Container>
@@ -85,30 +179,66 @@ const MyPlaylist = ({navigation, route}) => {
         </TouchableOpacity>
         
         <FlatList
-            data={dummyData.Playlists}
-            keyExtractor={(item) => item.id}
+            data={playlist}
+            keyExtractor={(item) => item._id}
             renderItem={({ item }) => (
                 <TouchableWithoutFeedback onPress={() => {
-                    console.log(songItem?.id_song);
-                    if (songItem?.id_song === null) navigation.navigate('InPlaylist', {selected: item});
+                    console.log(songItem?.song_id);
+                    if (songItem?.song_id === null) navigation.navigate('InPlaylist', {selected: item});
                     else {
                         setModalAddVisible(true);
                         setCurrentPlaylist(item);
                     }
                 }}>
-                <FavoriteItemView>
-                    <View style={{ flexDirection: "row" }}>                                               
-                        <McImage source={(item.thumbnail)} style={{height: 50, width: 50, borderRadius: 10}}/>                                  
-                        <View style={{ marginLeft: 12,width: 259 - 24 }}>
-                            <McText semi size={14} color={Colors.grey5}>
-                                {item.name}
-                            </McText>
-                            <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
-                                {item.songs} songs
-                            </McText>
+                    <FavoriteItemView>
+                        <View style={{ flexDirection: "row" }}>                                               
+                            <McImage source={{uri: item.thumbnail}} style={{height: 50, width: 50, borderRadius: 10}}/>                                  
+                            <View style={{ marginLeft: 12,width: 259 - 24 }}>
+                                <McText semi size={14} color={Colors.grey5}>
+                                    {item.name}
+                                </McText>
+                                <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
+                                    {item.list_of_songs.length} bài hát
+                                </McText>
+                            </View>
                         </View>
-                    </View>   
-                </FavoriteItemView>
+                        <TouchableOpacity onPress={() => {
+                            setModalDelVisible(true);
+                            setSelectedPlaylist(item);
+                        }}>
+                            <McImage source={Images.menu_n} />
+                        </TouchableOpacity>
+                        <Modal animationType="slide" transparent={true} visible={modalDelVisible}>
+                            <View style={{
+                                marginLeft: 30,
+                                marginRight: 30,
+                                marginTop: 530,
+                                aliginItems: 'center',
+                                backgroundColor: Colors.grey4,
+                                borderRadius: 10
+                            }}>
+                                <View style={{marginTop: 10,paddingHorizontal: 20}}>
+                                    <McText>Bạn có muốn xóa "{selectedPlaylist?.title}" khỏi các danh sách kết hợp ?</McText>
+                                </View>
+                                <View style={{
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    marginHorizontal: 50,
+                                    marginVertical: 20
+                                }}>
+                                    <TouchableOpacity onPress={() => {setModalDelVisible(false)}}>
+                                        <McText>Không</McText>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => {
+                                        setModalDelVisible(false);
+                                        deletePlaylist(selectedPlaylist?._id)
+                                    }}>
+                                        <McText>Có</McText>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </Modal>   
+                    </FavoriteItemView>
                 </TouchableWithoutFeedback>
             )}
         />
@@ -207,7 +337,11 @@ const MyPlaylist = ({navigation, route}) => {
                     <TouchableOpacity onPress={handleCancel}>
                         <McText>Không</McText>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={handleYes}>
+                    <TouchableOpacity onPress={() => {
+                        addSongToPlaylist(item._id);
+                        setModalAddVisible(false);
+                        setSongItem(null);
+                    }}>
                         <McText>Có</McText>
                     </TouchableOpacity>
                 </View>

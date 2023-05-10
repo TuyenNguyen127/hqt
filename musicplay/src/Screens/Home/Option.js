@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, StatusBar, TouchableOpacity } from 'react-native';
 import styled, { useTheme } from 'styled-components/native';
 
@@ -6,11 +6,12 @@ import { Fonts, Images, Metrics, Colors } from 'Constants';
 import { McText, McImage, McAvatar, PlayButton } from 'Components';
 import BottomBar from '../Library/BottomBar';
 import { MusicContext } from '../../Context/MusicProvider';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Option = ({ navigation }) => {
     const context = useContext(MusicContext);
     const {currentSong, isPlaying, resume, pause } = context;
+    const [user, setUser] = useState({});
 
     const handlePlayPress = async () => {
         try {
@@ -23,8 +24,31 @@ const Option = ({ navigation }) => {
             console.error(error);
         }
     };
+    const logOut = async () => {
+        try {
+            await AsyncStorage.removeItem('@user');
+        } catch(e) {
+            console.log(e);
+        }
+    }
+
+
+    const getDataUser = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@user')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch(e) {
+            console.log(e);
+        }
+    }
+
+    useEffect(() => {
+        getDataUser().then(value => {
+            setUser(value);
+        })
+    }, [])
+
     return (
-        
         <Container>
            <StatusBar barStyle='light-content'/>
 
@@ -35,7 +59,7 @@ const Option = ({ navigation }) => {
                     <McImage source={Images.left}/>
                 </TouchableOpacity>
                 <McText size={15} medium color={Colors.grey5}>Tài khoản</McText>
-                <McImage source={Images.menu}/>
+                <View/>
             </HeaderSection>
             
             <View style={{
@@ -44,7 +68,7 @@ const Option = ({ navigation }) => {
             }}>
                 <McImage source={Images.profile}></McImage>
 
-                <McText size={14} bold color={Colors.grey5} style={{marginTop: 10}}>20020221@vnu.edu.vn</McText>
+                <McText size={14} bold color={Colors.grey5} style={{marginTop: 10}}>{user?.email}</McText>
             </View>
             
 
@@ -68,7 +92,7 @@ const Option = ({ navigation }) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={()=>{
-                        navigation.navigate('ResetPassword',{numS: false});
+                        navigation.navigate('ResetPassword',{form: true});
                 }}>
                     <SelectSection>
                         <McText medium size={20} color={Colors.grey4}>Đổi mật khẩu</McText>
@@ -77,6 +101,7 @@ const Option = ({ navigation }) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={()=>{
+                        logOut();
                         navigation.navigate('Login');
                 }}>
                     <SelectSection>
@@ -101,7 +126,7 @@ const Option = ({ navigation }) => {
                                 flexDirection: 'row',
                                 alignItems: 'center'
                             }}>
-                                <McImage source={{uri: currentSong?.artwork}} style={{
+                                <McImage source={require('Assets/images/Music_Circle.png')} style={{
                                     width: 38,
                                     height: 38,
                                     borderRadius: 19,

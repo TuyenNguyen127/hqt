@@ -14,35 +14,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const NotificationLink = ({ navigation }) => {
     const context = useContext(MusicContext);
     const {currentSong, isPlaying, resume, pause } = context;
-    const [dataNotifycation, setDataNotifycation] = useState(null);
-
-    // const getDataNotifycation = async () => {
-    //     fetch("https://0d11-2402-800-62d0-bf1c-5110-34ca-48cc-47eb.ap.ngrok.io/notify", {
-    //         method: 'GET',
-    //         headers: {
-    //             Accept: 'application/json, text/plain, */*',
-    //             'Content-Type': 'application/json',
-    //         }
-    //     }
-    //     )
-    //     .then(response => {
-    //         return response.text();
-    //     })
-    //     .then(data_ => {
-    //         //console.log(data_);
-    //         let data1 = JSON.parse(data_);
-    //         //console.log(data1.data);
-    //         if (data1.success) {
-    //             setDataNotifycation(data1.data);
-    //         } else {
-    //             alert("Có lỗi đã xảy ra! \n\n"+ data1.message);
-    //         }
-    //     })
-    //     .catch(error => {
-    //         console.log("Error: ", error )
-    //         getDataNotifycation();
-    //     })
-    // }
 
     const handlePlayPress = async () => {
         try {
@@ -76,22 +47,20 @@ const NotificationLink = ({ navigation }) => {
                     <McImage source={Images.left}/>
                 </TouchableOpacity>
                 <McText size={15} medium color={Colors.grey5}>Thông báo</McText>
-                <McImage source={Images.menu}/>
+                <View/>
             </HeaderSection>
 
             <View style={{marginTop: 28,height: 598 - 28 - 10, width: 316, alignSelf: 'center', alignItems: 'center'}}>
                 <FlatList
                     data={dummyData.NotificationLink}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => item._id}
                     renderItem={({ item }) => {
-                        if (item.id_noti === id_noti) {
                         return (
                             <TouchableOpacity onPress={async () => {
                                 if (item.navigation_link == 'Player') {
                                     await storeDataMusic(item.item);
-                                    await TrackPlayer.removeUpcomingTracks();
+                                    await TrackPlayer.reset();
                                     await TrackPlayer.add(item.item);
-                                    await TrackPlayer.skipToNext();
                                     navigation.navigate('Player');
                                 }
                                 if (item.navigation_link == 'Thealbums') {
@@ -100,9 +69,10 @@ const NotificationLink = ({ navigation }) => {
                             }}>
                                 <FavoriteItemView>
                                     <View style={{ flexDirection: "row" }}>                                        
-                                        <McImage source={item.thumbnail} style={{
+                                        <McImage source={{uri: item.thumbnail}} style={{
                                             height: 50,
-                                            width: 50
+                                            width: 50,
+                                            borderRadius: 25
                                         }}/>
                                         <View style={{ marginLeft: 12, width: 250 - 12 }}>
                                             <McText semi size={14} color={Colors.grey5}>
@@ -116,7 +86,7 @@ const NotificationLink = ({ navigation }) => {
                                     <McImage source={Images.right} />
                                 </FavoriteItemView>
                             </TouchableOpacity>
-                        )}
+                        )
                     }}   
                 />
             </View>
@@ -165,7 +135,7 @@ const Container = styled.SafeAreaView`
 `;
 
 const FavoriteItemView = styled.View`
-    marginBottom: 20px;
+    marginBottom: 30px;
     height: 50px;
     flex-direction: row;
     justify-content: center;

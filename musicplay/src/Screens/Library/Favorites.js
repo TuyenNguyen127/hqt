@@ -1,5 +1,5 @@
 import React, {useState, useEffect,useContext} from "react";
-import { TouchableOpacity, View, StatusBar, TextInput, TouchableWithoutFeedback, FlatList, ScrollView} from "react-native";
+import { TouchableOpacity, View, StatusBar, Modal, TouchableWithoutFeedback, FlatList, ScrollView} from "react-native";
 import styled from "styled-components";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -8,10 +8,74 @@ import { McText, McImage, PlayButton } from 'Components';
 import { dummyData } from 'Mock';
 import BottomBar from './BottomBar';
 import { MusicContext } from "../../Context/MusicProvider";
+import TrackPlayer from "react-native-track-player";
 
 const Favorite = ({navigation}) => {
     const context = useContext(MusicContext);
     const {currentSong, isPlaying, resume, pause } = context;
+    const [dataFavorite, setDataFavorite] = useState([]);
+    const [user, setUser] = useState({});
+    const [modalDelVisible, setModalDelVisible] = useState(false);
+    const [selectedSong, setSelectedSong] = useState(null);
+
+    const getFavorite = async (id) => {
+        fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/user/"+id+"/favorite-song", {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }
+        )
+        .then(response => {
+            return response.text()
+        })
+        .then(data => {
+            let data_ = JSON.parse(data);
+            if (data_.success) {
+                setDataFavorite(data_.data.favorite_song)
+            } else {
+                alert(data_.message);
+            }
+        })
+        .catch(error => {
+            console.log("Have error: ", error )
+            getFavorite(id);
+        })
+    }
+
+    const deleteSong = async (id) => {
+        fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/user/delete-song-from-favorite", {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({user_id: user._id, song_id: id}),
+        }
+        )
+        .then(response => {
+            return response.text()
+        })
+        .then(data => {
+            let data_ = JSON.parse(data);
+            alert(data_.message);
+            getFavorite(user._id)
+        })
+        .catch(error => {
+            console.log("Have error: ", error )
+            deleteSong(id);
+        })
+    }
+
+    const getDataUser = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@user')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch(e) {
+            console.log(e);
+        }
+    }
 
     const handlePlayPress = async () => {
         try {
@@ -25,20 +89,6 @@ const Favorite = ({navigation}) => {
         }
     };
 
-    const initialLikeState = dummyData.Favorite.reduce((likeSongState, item) => {
-        likeSongState[item.id] = item.like;
-        return likeSongState;
-      }, {});
-    
-    const [likeSongState, setLikeSongState] = useState(initialLikeState);
-
-    const touchContactSongs = async (itemId) => {
-        setLikeSongState(prevState => ({
-            ...prevState,
-            [itemId]: !prevState[itemId]
-          }));
-    }
-
     const storeDataMusic = async (value) => {
         try {
             const jsonValue = JSON.stringify(value);
@@ -47,6 +97,17 @@ const Favorite = ({navigation}) => {
             console.log(e);
         }
     }
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            getDataUser().then(value => {
+                setUser(value);
+                getFavorite(value._id);
+            })
+        });
+
+        return unsubscribe;
+    }, [navigation]);
 
     return(
     <Container>
@@ -60,34 +121,70 @@ const Favorite = ({navigation}) => {
                 <McImage source={Images.left}/>
             </TouchableOpacity>
             <McText bold size={14} color={Colors.grey5}>Danh sách bài hát yêu thích</McText>
-            <McImage source={Images.menu}/>
+            <View/>
         </HeaderSection>
 
         <FlatList
-            data={dummyData.Favorite}
-            keyExtractor={(item) => item.id}
+            data={dataFavorite}
+            keyExtractor={(item) => item._id}
             renderItem={({ item }) => (
                 <TouchableWithoutFeedback onPress={async () => {
-                    storeDataMusic(item); 
+                    await TrackPlayer.reset();
+                    const item_ = item;
+                    item_.artist = item.artist[0].name;
+                    item_.lyric = '';
+                    await TrackPlayer.add(item_)
+                    storeDataMusic(item_);
                     navigation.navigate('Player');
                 }}>
                 <FavoriteItemView>
                     <View style={{ flexDirection: "row" }}>                        
-                        <MusicCirle>
-                            <McImage source={Images.music} />
-                        </MusicCirle>          
+                        <McImage source={{uri: item.artwork}} style={{height: 42, width: 42, borderRadius: 21}}/>          
                         <View style={{ marginLeft: 12,width: 259 - 24 }}>
                             <McText semi size={14} color={Colors.grey5}>
                                 {item.title}
                             </McText>
                             <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
-                                {item.artist}
+                                {item.artist[0].name}
                             </McText>
                         </View>
+                        <TouchableOpacity onPress={() => {
+                            setModalDelVisible(true);
+                            setSelectedSong(item);
+                        }}>
+                            <McImage source={Images.menu_n} />
+                        </TouchableOpacity>
+                        <Modal animationType="slide" transparent={true} visible={modalDelVisible}>
+                            <View style={{
+                                marginLeft: 30,
+                                marginRight: 30,
+                                marginTop: 530,
+                                aliginItems: 'center',
+                                backgroundColor: Colors.grey4,
+                                borderRadius: 10
+                            }}>
+                                <View style={{marginTop: 10,paddingHorizontal: 20}}>
+                                    <McText>Bạn có muốn xóa bài hát "{selectedSong?.title}" khỏi danh sách yêu thích ?</McText>
+                                </View>
+                                <View style={{
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    marginHorizontal: 50,
+                                    marginVertical: 20
+                                }}>
+                                    <TouchableOpacity onPress={() => {setModalDelVisible(false)}}>
+                                        <McText>Không</McText>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => {
+                                        setModalDelVisible(false);
+                                        deleteSong(selectedSong?._id)
+                                    }}>
+                                        <McText>Có</McText>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </Modal>
                     </View>
-                    <TouchableOpacity onPress={() => touchContactSongs(item.id)}>
-                        <McImage source={likeSongState[item.id] ? Images.fullLike: Images.like} />
-                    </TouchableOpacity>
                     
                 </FavoriteItemView>
                 </TouchableWithoutFeedback>
@@ -141,6 +238,7 @@ const Container = styled.SafeAreaView`
 
 const HeaderSection = styled.View`
     marginHorizontal: 15px;
+    marginVertical: 10px;
     width: 327px;
     height: 30px;
     flex-direction: row;

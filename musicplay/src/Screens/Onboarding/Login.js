@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import {Colors, Images, Metrics, Fonts} from 'Constants';
 import { McText, McImage, PlayButton } from 'Components';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const Login = ({navigation}) => {
@@ -12,7 +13,7 @@ const Login = ({navigation}) => {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-        fetch("https://d388-2402-800-62d0-bf1c-9d5a-3ab-cb2e-b9b6.ap.ngrok.io/login", {
+        fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/login", {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -28,7 +29,8 @@ const Login = ({navigation}) => {
             let data_ = JSON.parse(data);
             if (data_.success) {
                 alert('Đăng nhập thành công');
-                setTimeout(()=> navigation.navigate('Home'), 2000 )
+                storeDataUser(data_.user)
+                setTimeout(()=> navigation.navigate('Home'), 1000 )
             } else {
                 alert("Đăng nhập thất bại! \n\n"+ data_.message);
             }
@@ -36,6 +38,15 @@ const Login = ({navigation}) => {
         .catch(error => {
             console.log("Have error: ", error )
         })
+    }
+
+    const storeDataUser = async (value) => {
+        try {
+            const jsonValue = JSON.stringify(value);
+            await AsyncStorage.setItem('@user', jsonValue);
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     return (
@@ -89,6 +100,7 @@ const Login = ({navigation}) => {
                         }}
                         value={password}
                         onChangeText={txt => setPassword(txt)}
+                        secureTextEntry={true}
                     ></TextInput>
                 </InputSection>
                 <TouchableOpacity style={{marginTop: 28}} onPress={() => {navigation.navigate('ForgetPassword')}}>

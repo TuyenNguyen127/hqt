@@ -4,8 +4,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Svg, {Circle, G, Path } from 'react-native-svg';
 
 import { Colors, Images, Metrics } from 'Constants';
-import { McText, McImage } from 'Components';
-
 
 const BottomBar = ({children}) => { 
     

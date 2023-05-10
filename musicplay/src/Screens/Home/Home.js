@@ -18,31 +18,6 @@ const Home = ({ navigation }) => {
     const [isPlaying_, setIsPlaying] = useState(false);
     const {currentSong, pause, resume} = context;
 
-    const getDataTopMusic = () => {
-        fetch("https://d388-2402-800-62d0-bf1c-9d5a-3ab-cb2e-b9b6.ap.ngrok.io/login", {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
-        }
-        )
-        .then(response => {
-            return response.text()
-        })
-        .then(data => {
-            let data_ = JSON.parse(data);
-            if (data_.success) {
-                
-            } else {
-                alert("Đăng nhập thất bại! \n\n"+ data_.message);
-            }
-        })
-        .catch(error => {
-            console.log("Have error: ", error )
-        })
-    }
-
     async function load() {
         try {
             await TrackPlayer.reset();
@@ -75,20 +50,6 @@ const Home = ({ navigation }) => {
         }
     };
 
-    const initialLikeState = dummyData.Favorite.reduce((likeSongState, item) => {
-        likeSongState[item.id] = item.like;
-        return likeSongState;
-      }, {});
-    
-    const [likeSongState, setLikeSongState] = useState(initialLikeState);
-
-    const clickLikeSong = async (itemId) => {
-        setLikeSongState(prevState => ({
-            ...prevState,
-            [itemId]: !prevState[itemId]
-        }));
-    }
-
     const storeDataMusic = async (value) => {
         try {
             const jsonValue = JSON.stringify(value);
@@ -106,8 +67,20 @@ const Home = ({ navigation }) => {
             console.log(e);
         }
     }
+
+    const getDataUser = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@user')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch(e) {
+            console.log(e);
+        }
+    }
     
     useEffect(() => {
+        getDataUser().then(value => {
+            if (!value) navigation.navigate('Login');
+        })
         const unsubscribe = navigation.addListener('focus', () => {
             checkPlay();
             load();
@@ -127,8 +100,8 @@ const Home = ({ navigation }) => {
                         marginLeft: index === 0? 24:0,
                         marginRight:index === dummyData.Albums.length - 1?0:24
                     }}>
-                        <McImage key={index} source={item.thumbnail} style={{marginBottom:12, borderRadius:20}}/>
-                        <McText semi size={16} color={Colors.grey5}>Albums {item.name}</McText>
+                        <McImage key={index} source={{uri: item.thumbnail}} style={{marginBottom:12, borderRadius:20, height: 153, width: 153}}/>
+                        <McText semi size={16} color={Colors.grey5} style={{marginTop: 4, width: 153}}>Albums {item.name}</McText>
                         <McText bold size={12} color={Colors.grey3} style={{marginTop: 4, width: 153}}>{item.artist}</McText>
                     </View>
                 </View>
@@ -147,7 +120,7 @@ const Home = ({ navigation }) => {
                         marginLeft: index === 0? 24:0,
                         marginRight:index === dummyData.Artist.length - 1?0:24
                     }}>
-                        <McImage key={index} source={item.thumbnail} style={{marginBottom:12, borderRadius:20}}/>
+                        <McImage key={index} source={{uri: item.thumbnail}} style={{marginBottom:12, borderRadius:20, height: 153, width: 153}}/>
                         <McText medium size={12} color={Colors.grey3} style={{marginTop: 4, width: 153}}>{item.title}</McText>
                     </View>
                 </View>
@@ -306,7 +279,7 @@ const Home = ({ navigation }) => {
                                 numColumns={Math.ceil(dummyData.Favorite.length / 6)}
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
-                                keyExtractor={(item) => item.id}
+                                keyExtractor={(item) => item._id}
                                 renderItem={({ item, index }) => {
                                     if (item.env === selectedEnv) {
                                         return (
@@ -319,9 +292,7 @@ const Home = ({ navigation }) => {
                                             }}>
                                             <FavoriteItemView>
                                                 <View style={{ flexDirection: "row" }}>
-                                                    <MusicCirle>
-                                                        <McImage source={Images.music} />
-                                                    </MusicCirle>
+                                                    <McImage source={{uri: item.artwork}} style={{height: 42, width: 42, borderRadius: 21}}/>
                                                     <View style={{ marginLeft: 12, width: 259 - 24 }}>
                                                         <McText semi size={14} color={Colors.grey5}>
                                                         {item.title}
@@ -331,9 +302,6 @@ const Home = ({ navigation }) => {
                                                         </McText>
                                                     </View>
                                                 </View>
-                                                <TouchableOpacity onPress={() => clickLikeSong(item.id)}>
-                                                    <McImage source={likeSongState[item.id] ? Images.fullLike : Images.like} />
-                                                </TouchableOpacity>
                                                 
                                             </FavoriteItemView>
                                             </TouchableWithoutFeedback>
@@ -351,7 +319,7 @@ const Home = ({ navigation }) => {
 
                     <View>
                         <FlatList
-                            keyExtractor={(item) => 'artist_' + item.id}
+                            keyExtractor={(item) => 'artist_' + item._id}
                             horizontal
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={{}}
@@ -367,7 +335,7 @@ const Home = ({ navigation }) => {
 
                     <View>
                         <FlatList
-                            keyExtractor={(item) => 'albums_' + item.id}
+                            keyExtractor={(item) => 'albums_' + item._id}
                             horizontal
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={{}}

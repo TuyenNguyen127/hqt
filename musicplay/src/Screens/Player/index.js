@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { StatusBar, Text, TouchableOpacity, View, Animated, Easing, ScrollView, PermissionsAndroid } from "react-native";
 import styled from "styled-components";
 import Slider from "@react-native-community/slider";
-import { Audio } from 'expo-av';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { Colors, Images, Metrics } from "/Constants";
@@ -16,18 +15,36 @@ const Player = ({ navigation}) => {
     const { position, duration } = useProgress()
     const [lyrics, setLyrics] = useState(null);
     const spinValue = useRef(new Animated.Value(0)).current;
-    const [likeSong, setLikeSong] = useState(false);
     const context = useContext(MusicContext);
     const [isPlaying_ , setIsPlaying] = useState(false);
     const {currentSong, pause, resume } = context;
-    const [pathURL, setPath] = useState('https://firebasestorage.googleapis.com/v0/b/music-app-2e474.appspot.com/o/01%2000%20Intro%20%20RPT%20MCK%20%2099%20the%20album.mp3?alt=media&token=6145a003-43f6-42bd-96b5-45cd95eb6452');
+    const [pathURL, setPath] = useState('https://');
+    const [user, setUser] = useState({});
 
-    const clickLike = () => {
-        if (likeSong) {
-            setLikeSong(false);
-        } else {
-            setLikeSong(true);
+    const addSongToFavorite = async (id) => {
+        fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/user/favorite/add-song", {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_id: user._id,
+                song_id: id
+            })
         }
+        )
+        .then(response => {
+            return response.text()
+        })
+        .then(data => {
+            let data_ = JSON.parse(data);
+            alert(data_.message);
+        })
+        .catch(error => {
+            console.log("Have error: ", error )
+            addSongToFavorite(id);
+        })
     }
 
     const storeDataMusic = async (value) => {
@@ -35,6 +52,15 @@ const Player = ({ navigation}) => {
             const jsonValue = JSON.stringify(value);
             await AsyncStorage.setItem('@selectedMusic', jsonValue);
         } catch (e) {
+            console.log(e);
+        }
+    }
+
+    const getDataUser = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@user')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch(e) {
             console.log(e);
         }
     }
@@ -46,10 +72,13 @@ const Player = ({ navigation}) => {
             let trackIndex = await TrackPlayer.getCurrentTrack();
             let trackObject = await TrackPlayer.getTrack(trackIndex);
             setIsPlaying(true);
-            setLikeSong(trackObject.like);
             const lyrics = trackObject.lyric;
             const sentences = lyrics.split(/\n/);
             setLyrics(sentences);
+            getDataUser().then(value => {
+                setUser(value);
+            });
+            setPath(trackObject.url)
         } catch (error) {
             console.error(error);
         }
@@ -157,7 +186,6 @@ const Player = ({ navigation}) => {
     };
 
     const downloadFile = () => {
-        console.log('Download');
         const {config, fs} = RNFetchBlob;
         const fileDir = fs.dirs.DownloadDir;
         config({
@@ -253,7 +281,7 @@ const Player = ({ navigation}) => {
                         </DetailLyricSection>
                         <ScrollView>
                             {lyrics?.map((sentence, index) => (
-                                <McText key={index} color={Colors.primary} size={18} style={{
+                                <McText key={index} color={Colors.primary} align='center' size={18} style={{
                                     marginVertical: 3
                                 }}>
                                 {sentence.trim()}
@@ -327,12 +355,14 @@ const Player = ({ navigation}) => {
                 <McImage source={Images.speedUp}/>
             </ControlSection>
             <ButtonSection>
-                <TouchableOpacity onPress={clickLike}>
-                    <McImage source={likeSong ? Images.fullLike : Images.like} style={{
+                <TouchableOpacity onPress={() => {
+                    addSongToFavorite(currentSong?._id);
+                }}>
+                    <McImage source={Images.like} style={{
                         marginLeft: 24
                     }}/>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={()=>{navigation.navigate('MyPlaylist', {id_song: currentSong?.id})}}>
+                <TouchableOpacity onPress={()=>{navigation.navigate('MyPlaylist', {id_song: currentSong?._id})}}>
                     <McImage source={Images.inplayList}/>
                 </TouchableOpacity>
                 

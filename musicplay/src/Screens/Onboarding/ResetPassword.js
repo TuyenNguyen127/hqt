@@ -1,21 +1,94 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { TextInput, View, StatusBar, TouchableOpacity} from "react-native";
 import styled from "styled-components";
 
 import {Colors, Images, Metrics, Fonts} from 'Constants';
 import { McText, McImage, PlayButton } from 'Components';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
-const ResetPassword = ({navigation}) => {
+const ResetPassword = ({navigation, route}) => {
     const [numS, setNumS] = useState(true);
+    const [oldPassword, setOldPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [user, setUser] = useState({});
 
-    const setNumS_ = () => {
-        if (numS) {
-            setNumS(false);
-        } else {
-            setNumS(true);
+    const getDataUser = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@user')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch(e) {
+            console.log(e);
         }
     }
+
+    const handleSubmit = () => {
+        if (numS) {
+            if (newPassword == confirmPassword) {
+                fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/change-password", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({user_id: user._id, password: oldPassword, newPassword: newPassword}),
+                }
+                )
+                .then(response => {
+                    return response.text()
+                })
+                .then(data_ => {
+                    let data = JSON.parse(data_);
+                    alert(data.message )
+                    if (data.success) {                        
+                        setTimeout(() => navigation.navigate('Option'), 1000)
+                    }
+                    
+                })
+                .catch(error => {
+                    alert('Đổi mật khẩu thất bại')
+                    console.log("Have error: ", error )
+                })
+            } else {
+                alert('Mật khẩu nhập lại không trùng khớp');
+            }
+        } else {
+            if (newPassword == confirmPassword) {
+                fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/reset-password", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({user_id: user._id, password: newPassword}),
+                }
+                )
+                .then(response => {
+                    return response.text()
+                })
+                .then(data_ => {
+                    let data = JSON.parse(data_);
+                    alert(data.message)
+                    if (data.success) {
+                        setTimeout(() => navigation.navigate('Login'), 1000)
+                    }
+                    
+                })
+                .catch(error => {
+                    alert('Đổi mật khẩu thất bại')
+                    console.log("Have error: ", error )
+                })
+            } else {
+                alert('Mật khẩu nhập lại không trùng khớp');
+            }
+        }
+    }
+
+    useEffect(() => {
+        setNumS(route.params.form)
+        getDataUser().then(value => {
+            setUser(value)
+        })
+    }, [])
 
     const renderScreen_ = (numS) => {
         if (!numS)
@@ -34,9 +107,10 @@ const ResetPassword = ({navigation}) => {
                             placeholder="Nhập mật khẩu mới"
                             placeholderTextColor={Colors.grey3}
                             style={{
-                                color: Colors.grey4,
-                            
+                                color: Colors.grey4,                            
                             }}
+                            value={newPassword}
+                            onChangeText={value => setNewPassword(value)}
                         ></TextInput>
                     </InputSection>
                     <InputSection>
@@ -48,9 +122,10 @@ const ResetPassword = ({navigation}) => {
                             placeholder="Nhập lại mật khẩu mới"
                             placeholderTextColor={Colors.grey3}
                             style={{
-                                color: Colors.grey4,
-                            
+                                color: Colors.grey4,                           
                             }}
+                            value={confirmPassword}
+                            onChangeText={value => setConfirmPassword(value)}
                         ></TextInput>
                     </InputSection>
                 </View>
@@ -71,8 +146,9 @@ const ResetPassword = ({navigation}) => {
                         placeholderTextColor={Colors.grey3}
                         style={{
                             color: Colors.grey4,
-                        
                         }}
+                        value={oldPassword}
+                        onChangeText={value => setOldPassword(value)}
                     ></TextInput>
                 </InputSection>
                 <InputSection>
@@ -84,9 +160,10 @@ const ResetPassword = ({navigation}) => {
                         placeholder="Nhập mật khẩu mới"
                         placeholderTextColor={Colors.grey3}
                         style={{
-                            color: Colors.grey4,
-                        
+                            color: Colors.grey4,                       
                         }}
+                        value={newPassword}
+                        onChangeText={value => setNewPassword(value)}
                     ></TextInput>
                 </InputSection>
                 <InputSection>
@@ -99,8 +176,9 @@ const ResetPassword = ({navigation}) => {
                         placeholderTextColor={Colors.grey3}
                         style={{
                             color: Colors.grey4,
-                        
                         }}
+                        value={confirmPassword}
+                        onChangeText={value => setConfirmPassword(value)}
                     ></TextInput>
                 </InputSection>
             </View>
@@ -140,7 +218,7 @@ const ResetPassword = ({navigation}) => {
                 circle={70} 
                 icon={Images.right_arrow}
                 onPress={ ()=>{
-                    navigation.navigate("Home")
+                    handleSubmit()
                 }}
             />
         </View>

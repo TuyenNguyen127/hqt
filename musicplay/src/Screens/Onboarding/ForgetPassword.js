@@ -4,16 +4,75 @@ import styled from "styled-components";
 
 import {Colors, Images, Metrics, Fonts} from 'Constants';
 import { McText, McImage, PlayButton } from 'Components';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const ForgetPassword = ({navigation}) => {
     const [numS, setNumS] = useState(true);
+    const [email, setEmail] = useState('');
+    const [otp, setOTP] = useState('');
 
-    const setNumS_ = () => {
+    const storeDataUser = async (value) => {
+        try {
+            const jsonValue = JSON.stringify(value);
+            await AsyncStorage.setItem('@user', jsonValue);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    const handleSubmit = () => {
         if (numS) {
-            setNumS(false);
+            fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/forget-password", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({email: email}),
+            }
+            )
+            .then(response => {
+                return response.text()
+            })
+            .then(data_ => {
+                let data = JSON.parse(data_);
+                alert('Gửi yêu cầu quên mật khẩu thành công vui lòng kiểm tra mail để lấy mã xác nhận')
+                if (data.success) {                        
+                    setNumS(false);
+                }
+                
+            })
+            .catch(error => {
+                alert('Yêu cầu thất bại')
+                console.log("Have error: ", error )
+            })
+            
         } else {
-            setNumS(true);
+            fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/otp", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({otp: otp, email: email}),
+            }
+            )
+            .then(response => {
+                return response.text()
+            })
+            .then(data_ => {
+                let data = JSON.parse(data_);
+                alert('Xác nhận thành công')
+                if (data.success) {
+                    const user_ = {_id: data.user_id}
+                    storeDataUser(user_);
+                    setTimeout(() => navigation.navigate('ResetPassword', {form: false}), 1000)
+                }
+                
+            })
+            .catch(error => {
+                alert('Yêu cầu thất bại')
+                console.log("Have error: ", error )
+            })
         }
     }
 
@@ -33,7 +92,8 @@ const ForgetPassword = ({navigation}) => {
                         <TextInput 
                             placeholder="Nhập email đã đăng ký"
                             placeholderTextColor={Colors.grey3}
-                            
+                            value={email}
+                            onChangeText={value => setEmail(value)}
                             style={{
                                 color: Colors.grey4,
                                 
@@ -78,7 +138,8 @@ const ForgetPassword = ({navigation}) => {
                         <TextInput 
                             placeholder="Nhập mã xác nhận"
                             placeholderTextColor={Colors.grey3}
-                            
+                            value={otp}
+                            onChangeText={value => setOTP(value)}
                             style={{
                                 color: Colors.grey4,
                                 
@@ -134,7 +195,7 @@ const ForgetPassword = ({navigation}) => {
                 size={78} 
                 circle={70} 
                 icon={Images.right_arrow}
-                onPress={ ()=>{numS ? setNumS(false) : navigation.navigate('Home') }}
+                onPress={ ()=>{handleSubmit()}}
             />
         </View>
     </Container>

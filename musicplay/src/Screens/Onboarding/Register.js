@@ -15,7 +15,7 @@ const Register = ({navigation}) => {
 
         e.preventDefault();
         if (password == confirmPassword) {
-            fetch("https://d388-2402-800-62d0-bf1c-9d5a-3ab-cb2e-b9b6.ap.ngrok.io/register", {
+            fetch("https://3ce0-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/register", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -32,7 +32,6 @@ const Register = ({navigation}) => {
                     alert('Đăng ký thành công')
                     setTimeout(() => navigation.navigate('Login'), 5000)
                 } else {
-                    
                     alert('Đăng ký thất bại \n\n'+ data.message )
                 }
                 
@@ -98,6 +97,7 @@ const Register = ({navigation}) => {
                         }}
                         value={password}
                         onChangeText={txt => setPassword(txt)}
+                        secureTextEntry={true}
                     ></TextInput>
                 </InputSection>
 
@@ -114,6 +114,7 @@ const Register = ({navigation}) => {
                         }}
                         value={confirmPassword}
                         onChangeText={txt => setConfirmPassword(txt)}
+                        secureTextEntry={true}
                     ></TextInput>
                 </InputSection>
 
