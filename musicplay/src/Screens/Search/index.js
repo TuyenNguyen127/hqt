@@ -102,11 +102,8 @@ const Search = ({ navigation }) => {
                     renderItem={({ item }) => (
                         <TouchableWithoutFeedback onPress={async () => {
                             await TrackPlayer.reset();
-                            const item_ = item;
-                            item_.artist = item.artist[0].name;
-                            item_.lyric = '';
-                            await TrackPlayer.add(item_)
-                            storeDataMusic(item_);
+                            await TrackPlayer.add(item)
+                            storeDataMusic(item);
                             navigation.navigate('Player');
                         }}>
                             <FavoriteItemView>
@@ -117,7 +114,7 @@ const Search = ({ navigation }) => {
                                             {item.title}
                                         </McText>
                                         <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
-                                            {item.artist[0].name}
+                                            {item.artist}
                                         </McText>
                                     </View>
                                 </View>                       
@@ -136,7 +133,7 @@ const Search = ({ navigation }) => {
                     keyExtractor={(item) => item._id}
                     renderItem={({ item }) => (
                         <TouchableWithoutFeedback onPress={async () => {
-                           
+                            navigation.navigate('Theartist',{id: item._id})
                         }}>
                             <FavoriteItemView>
                                 <View style={{ flexDirection: "row" }}>                        
