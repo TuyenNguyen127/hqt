@@ -26,7 +26,7 @@ const ResetPassword = ({navigation, route}) => {
     const handleSubmit = () => {
         if (numS) {
             if (newPassword == confirmPassword) {
-                fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/change-password", {
+                fetch("https://0ad3-2402-800-62d0-1d67-4db5-5f03-52ba-1400.ap.ngrok.io/change-password", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ const ResetPassword = ({navigation, route}) => {
             }
         } else {
             if (newPassword == confirmPassword) {
-                fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/reset-password", {
+                fetch("https://0ad3-2402-800-62d0-1d67-4db5-5f03-52ba-1400.ap.ngrok.io/reset-password", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

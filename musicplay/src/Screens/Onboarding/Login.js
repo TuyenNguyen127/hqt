@@ -13,7 +13,7 @@ const Login = ({navigation}) => {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-        fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/login", {
+        fetch("https://0ad3-2402-800-62d0-1d67-4db5-5f03-52ba-1400.ap.ngrok.io/login", {
             method: 'POST',
             headers: {
                 Accept: 'application/json',

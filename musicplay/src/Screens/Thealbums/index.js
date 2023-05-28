@@ -11,10 +11,36 @@ import { MusicContext } from "../../Context/MusicProvider";
 import TrackPlayer from "react-native-track-player";
 
 const Thealbums = ({ navigation, route }) => {
-    const [selected, setSelected] = useState(null);
     const [likeAlbum, setlikeAlbum] = useState(false);
     const context = useContext(MusicContext)
-    const {currentSong, isPlaying, resume, pause, load } = context;
+    const {currentSong, isPlaying, resume, pause } = context;
+    const [data, setData] = useState({artist_id:{}, list_of_songs:[]})
+
+    const getAlbum = async (id) => {
+        fetch("https://0ad3-2402-800-62d0-1d67-4db5-5f03-52ba-1400.ap.ngrok.io/album/"+ id, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }
+        )
+        .then(response => {
+            return response.text()
+        })
+        .then(data => {
+            let data_ = JSON.parse(data);
+            if (data_.success) {
+                setData(data_.data)
+            } else {
+                alert(data_.message);
+            }
+        })
+        .catch(error => {
+            console.log("Have error: ", error )
+            getAlbum(id);
+        })
+    }
 
     const handlePlayPress = async () => {
         try {
@@ -28,10 +54,31 @@ const Thealbums = ({ navigation, route }) => {
         }
     };
 
+    const getDataMusic = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@selectedMusic')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch(e) {
+            console.log(e);
+        }
+    }
+
+    async function load() {
+        try {
+            await TrackPlayer.reset();
+            await getDataMusic().then(async (value) => {
+                await TrackPlayer.add(value);
+            })
+            await TrackPlayer.add(data.list_of_songs);
+        } catch(error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
-        let { selected } = route.params;
-        setSelected(selected);
-        setlikeAlbum(selected.like);
+        let { id } = route.params;
+        getAlbum(id);
+        load();
     }, []);
 
     const clickLikeAlbum = async () => {
@@ -65,7 +112,7 @@ const Thealbums = ({ navigation, route }) => {
             </HeaderSection>
             
             <DetailSection>
-                <McImage source={{uri: selected?.thumbnail}} style={{
+                <McImage source={{uri: data?.thumbnail}} style={{
                     alignItems: 'center',
                     marginVertical: 4,
                     width: 180,
@@ -77,8 +124,8 @@ const Thealbums = ({ navigation, route }) => {
                     justifyContent: 'center',
                     alignItems: 'center'
                 }}>
-                    <McText semi size={24} color={Colors.grey5} align='center'>{selected?.name} the album</McText>
-                    <McText medium size={14} color={Colors.grey3} style={{marginTop: 8}} align='center'>{selected?.artist} - {selected?.songs} bài hát</McText>
+                    <McText semi size={24} color={Colors.grey5} align='center'>{data?.name} the album</McText>
+                    <McText medium size={14} color={Colors.grey3} style={{marginTop: 8}} align='center'>{data?.artist_id.name} - {data?.list_of_songs.length} bài hát</McText>
                 </View>
             </DetailSection> 
             
@@ -87,12 +134,12 @@ const Thealbums = ({ navigation, route }) => {
                     <TouchableWithoutFeedback onPress={clickLikeAlbum}>
                         <McImage source={likeAlbum ? Images.fullLike : Images.like}/>
                     </TouchableWithoutFeedback>
-                    <McText medium color={Colors.grey3} size={10}>{selected?.likeNumber}</McText>
+                    <McText medium color={Colors.grey3} size={10}>{data?.num_liked}</McText>
                 </ContactSection>
                 
                 
                 <TouchableOpacity onPress={async ()=>{
-                    await TrackPlayer.skip(Math.random() * selected?.item.length);
+                    await TrackPlayer.skip(Math.random() * data?.list_of_songs.length);
                     await TrackPlayer.play();
                 }} 
                 style={{
@@ -107,7 +154,7 @@ const Thealbums = ({ navigation, route }) => {
                 </TouchableOpacity>
                 <ContactSection style={{marginRight: 10}}>
                     <McImage source={Images.share}/>
-                    <McText medium color={Colors.grey3} size={10}>{selected?.shareNumber}</McText>
+                    <McText medium color={Colors.grey3} size={10}>{data?.num_shared}</McText>
                 </ContactSection>
                 
             </SelectOptionSection>
@@ -115,16 +162,16 @@ const Thealbums = ({ navigation, route }) => {
             <McText semi align='center' size={12} style={{
                 marginVertical: 25,
                 color: Colors.grey3
-            }}>{selected?.description}</McText>
+            }}>{data?.description}</McText>
 
             <View style={{height: 204, width: 327, alignSelf: 'center'}}>
                 <FlatList
-                    data={selected?.item}
-                    keyExtractor={(item) => item.id}
+                    data={data.list_of_songs}
+                    keyExtractor={(item) => item._id}
                     renderItem={({ item, index }) => {
                             return (
                                 <TouchableWithoutFeedback onPress={async () => {
-                                    storeDataMusic(item);
+                                    await storeDataMusic(item);
                                     await TrackPlayer.skip(index);
                                     navigation.navigate('Player')
                                 }}>
@@ -136,7 +183,7 @@ const Thealbums = ({ navigation, route }) => {
                                                 {item.title}
                                             </McText>
                                             <McText medium size={12} color={Colors.grey3} style={{ marginTop: 4 }}>
-                                                {item.artist}
+                                                {data?.artist_id.name}
                                             </McText>
                                         </View>
                                     </View>

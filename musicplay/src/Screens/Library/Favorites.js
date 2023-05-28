@@ -19,7 +19,7 @@ const Favorite = ({navigation}) => {
     const [selectedSong, setSelectedSong] = useState(null);
 
     const getFavorite = async (id) => {
-        fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/user/"+id+"/favorite-song", {
+        fetch("https://0ad3-2402-800-62d0-1d67-4db5-5f03-52ba-1400.ap.ngrok.io/user/"+id+"/favorite-song", {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -45,7 +45,7 @@ const Favorite = ({navigation}) => {
     }
 
     const deleteSong = async (id) => {
-        fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/user/delete-song-from-favorite", {
+        fetch("https://0ad3-2402-800-62d0-1d67-4db5-5f03-52ba-1400.ap.ngrok.io/user/delete-song-from-favorite", {
             method: 'POST',
             headers: {
                 Accept: 'application/json',

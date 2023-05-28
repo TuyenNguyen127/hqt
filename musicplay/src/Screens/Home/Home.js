@@ -17,6 +17,87 @@ const Home = ({ navigation }) => {
     const context = useContext(MusicContext);
     const [isPlaying_, setIsPlaying] = useState(false);
     const {currentSong, pause, resume} = context;
+    const [topSong, setTopSong] = useState([])
+    const [topArtist, setTopArtist] = useState([])
+    const [topAlbum, setTopAlbum] = useState([])
+
+    const getTopSong = async (id) => {
+        fetch("https://0ad3-2402-800-62d0-1d67-4db5-5f03-52ba-1400.ap.ngrok.io/song/top", {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }
+        )
+        .then(response => {
+            return response.text()
+        })
+        .then(data => {
+            let data_ = JSON.parse(data);
+            if (data_.success) {
+                setTopSong(data_.data)
+            } else {
+                alert(data_.message);
+            }
+        })
+        .catch(error => {
+            console.log("Have error: ", error )
+            getTopSong(id);
+        })
+    }
+
+    const getTopAlbum = async (id) => {
+        fetch("https://0ad3-2402-800-62d0-1d67-4db5-5f03-52ba-1400.ap.ngrok.io/album/top", {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }
+        )
+        .then(response => {
+            return response.text()
+        })
+        .then(data => {
+            let data_ = JSON.parse(data);
+            if (data_.success) {
+                setTopAlbum(data_.data)
+            } else {
+                alert(data_.message);
+            }
+        })
+        .catch(error => {
+            console.log("Have error: ", error )
+            getTopAlbum(id);
+        })
+    }
+
+    const getTopArtist = async (id) => {
+        fetch("https://0ad3-2402-800-62d0-1d67-4db5-5f03-52ba-1400.ap.ngrok.io/artist/top", {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }
+        )
+        .then(response => {
+            return response.text()
+        })
+        .then(data => {
+            let data_ = JSON.parse(data);
+            if (data_.success) {
+                setTopArtist(data_.data)
+            } else {
+                alert(data_.message);
+            }
+        })
+        .catch(error => {
+            console.log("Have error: ", error )
+            getTopArtist(id);
+        })
+    }
 
     async function load() {
         try {
@@ -24,7 +105,10 @@ const Home = ({ navigation }) => {
             await getDataMusic().then(async (value) => {
                 await TrackPlayer.add(value);
             })
-            await TrackPlayer.add(dummyData.Favorite)
+            getTopAlbum();
+            getTopArtist();
+            getTopSong();
+            await TrackPlayer.add(topSong);
         } catch(error) {
             console.log(error);
         }
@@ -92,13 +176,13 @@ const Home = ({ navigation }) => {
     const _renderAlbums = ({ item, index}) => {
         return(
             <TouchableWithoutFeedback onPress={() => {
-                navigation.navigate('Thealbums',{selected: item})
+                navigation.navigate('Thealbums',{id: item._id})
             }}>
                 <View>
                     <View style={{
                         marginTop:16,
                         marginLeft: index === 0? 24:0,
-                        marginRight:index === dummyData.Albums.length - 1?0:24
+                        marginRight:index === topAlbum.length - 1?0:24
                     }}>
                         <McImage key={index} source={{uri: item.thumbnail}} style={{marginBottom:12, borderRadius:20, height: 153, width: 153}}/>
                         <McText semi size={16} color={Colors.grey5} style={{marginTop: 4, width: 153}}>Albums {item.name}</McText>
@@ -112,16 +196,16 @@ const Home = ({ navigation }) => {
     const _renderArtist = ({ item, index}) => {
         return(
             <TouchableOpacity onPress={() => {
-                navigation.navigate('Theartist',{selected: item})
+                navigation.navigate('Theartist',{id: item._id})
             }}>
                 <View>
                     <View style={{
                         marginTop:16,
                         marginLeft: index === 0? 24:0,
-                        marginRight:index === dummyData.Artist.length - 1?0:24
+                        marginRight:index === topArtist.length - 1?0:24
                     }}>
                         <McImage key={index} source={{uri: item.thumbnail}} style={{marginBottom:12, borderRadius:20, height: 153, width: 153}}/>
-                        <McText medium size={12} color={Colors.grey3} style={{marginTop: 4, width: 153}}>{item.title}</McText>
+                        <McText medium size={12} color={Colors.grey3} style={{marginTop: 4, width: 153}}>{item.name}</McText>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -274,9 +358,9 @@ const Home = ({ navigation }) => {
                             alwaysBounceVertical={false}
                             >
                             <FlatList
-                                data={dummyData.Favorite}
+                                data={topSong}
                                 contentContainerStyle={{alignSelf: 'flex-start'}}
-                                numColumns={Math.ceil(dummyData.Favorite.length / 6)}
+                                numColumns={Math.ceil(2)}
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
                                 keyExtractor={(item) => item._id}
@@ -323,7 +407,7 @@ const Home = ({ navigation }) => {
                             horizontal
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={{}}
-                            data={dummyData.Artist}
+                            data={topArtist}
                             renderItem={_renderArtist}
                         />
                     </View>
@@ -339,7 +423,7 @@ const Home = ({ navigation }) => {
                             horizontal
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={{}}
-                            data={dummyData.Albums}
+                            data={topAlbum}
                             renderItem={_renderAlbums}
                         />
                     </View>

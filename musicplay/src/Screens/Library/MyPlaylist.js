@@ -24,7 +24,7 @@ const MyPlaylist = ({navigation, route}) => {
     const [user, setUser] = useState({});
 
     const getPlaylist = async (id) => {
-        fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/user/"+id+"/get-playlist", {
+        fetch("https://0ad3-2402-800-62d0-1d67-4db5-5f03-52ba-1400.ap.ngrok.io/user/"+id+"/get-playlist", {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -50,7 +50,7 @@ const MyPlaylist = ({navigation, route}) => {
     }
 
     const addSongToPlaylist = async (id) => {
-        fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/user/playlist/add-song", {
+        fetch("https://0ad3-2402-800-62d0-1d67-4db5-5f03-52ba-1400.ap.ngrok.io/user/playlist/add-song", {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -78,7 +78,7 @@ const MyPlaylist = ({navigation, route}) => {
     }
 
     const deletePlaylist = async (id) => {
-        fetch("https://821e-2402-800-62d0-bf1c-fca5-643-fd5b-d6a7.ap.ngrok.io/user/"+user._id+"/playlist/" + id, {
+        fetch("https://0ad3-2402-800-62d0-1d67-4db5-5f03-52ba-1400.ap.ngrok.io/user/"+user._id+"/playlist/" + id, {
             method: 'DELETE',
             headers: {
                 Accept: 'application/json',
