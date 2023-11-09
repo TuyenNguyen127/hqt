@@ -17,12 +17,6 @@ exports.getSong = async (req, res) => {
 
     try {
         const song = await Song.findOne({ _id: song_id })
-            .select('-single')
-            .populate({
-                path: 'artist',
-                select: 'name',
-            })
-            .lean()
 
         if (!song) {
             return res.status(401).json({
